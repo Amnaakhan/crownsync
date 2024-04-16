@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: double.infinity,
 
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: Color(0xffE2545E),
                       borderRadius: BorderRadius.circular(24.h)
 
                     ),

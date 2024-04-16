@@ -2,11 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mobiledesign/view/Controller/auth_controller.dart';
 import 'package:mobiledesign/view/inbox_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
+import 'package:google_sign_in/google_sign_in.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,9 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _googleSignIn = GoogleSignIn(
       scopes:
-           ['https://www.googleapis.com/auth/userinfo.email',
+      ['https://www.googleapis.com/auth/userinfo.email',
         'https://mail.google.com/',
-             // 'https://www.googleapis.com/auth/gmail.readonly'
+        // 'https://www.googleapis.com/auth/gmail.readonly'
       ],
 
 

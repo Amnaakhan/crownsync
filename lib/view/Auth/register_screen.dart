@@ -26,7 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           padding: EdgeInsets.only(top: 15.h,left: 7.w,right: 7.w),
           child: Column(
             children: [
-              Center(child: Image.asset('assets/images/logo.png',height: 13.h,)),
+              Center(child: Image.asset('assets/images/logo1.png',height: 11.h,)),
               SizedBox(height: 7.h,),
               Align(
                 alignment: Alignment.centerLeft,

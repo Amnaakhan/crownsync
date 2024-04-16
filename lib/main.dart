@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobiledesign/home_screen.dart';
+import 'package:mobiledesign/view/Auth/register_screen.dart';
 import 'package:mobiledesign/view/inbox_screen.dart';
 import 'package:sizer/sizer.dart';
 
