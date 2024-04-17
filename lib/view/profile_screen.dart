@@ -25,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             SizedBox(height: 5.h,),
             SizedBox(
-              height: 38.h,
+              height: 30.h,
               width: double.infinity,
               child: Card(
                 color: Colors.white,
@@ -83,13 +83,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                     Container(
-                      height: 20.h,
-                      width: 20.w,
+                      padding: EdgeInsets.all(2),
                       decoration: BoxDecoration(
-                        image: DecorationImage(image: AssetImage("assets/images/profile_icon.png")),
+                        color: Colors.white, // Choose the background color of the border
                         shape: BoxShape.circle,
-                        color: Colors.white,
-                        border: Border.all(color: Color(0xffE2545E))
+                        border: Border.all(
+                          color: Color(0xffE2545E), // Choose the border color
+                          width: 2, // Choose the border width
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        radius: 35.sp,
+                        backgroundImage: AssetImage("assets/images/profile_icon.png"),
                       ),
                     ),
                     Text(
@@ -105,13 +110,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            Expanded(
-              child: ListView(
+            Padding(
+              padding:  EdgeInsets.fromLTRB(5.w,8.h,5.w,0),
+              child: Column(
                 children: [
                   Row(
                     children: [
                       Icon(Icons.call,size: 20.sp,),
-                      SizedBox(width: 4.w,),
+                      SizedBox(width: 5.w,),
                       Text(
                         "+44 1234 567 8910",
                         style: GoogleFonts.inter(
@@ -120,14 +126,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-              
+
                     ],
                   ),
-                  SizedBox(height: 2.h,),
+                  SizedBox(height: 5.h,),
                   Row(
                     children: [
                       Icon(Icons.mail_outline_outlined,size: 20.sp,),
-                      SizedBox(width: 4.w,),
+                      SizedBox(width: 5.w,),
                       Text(
                         "kachiui909@gmail.com",
                         style: GoogleFonts.inter(
@@ -139,11 +145,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     ],
                   ),
-                  SizedBox(height: 2.h,),
+                  SizedBox(height: 5.h,),
                   Row(
                     children: [
                       Icon(Icons.location_on_outlined,size: 20.sp,),
-                      SizedBox(width: 4.w,),
+                      SizedBox(width: 5.w,),
                       Text(
                         "DC Washington",
                         style: GoogleFonts.inter(

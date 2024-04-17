@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobiledesign/view/profile_screen.dart';
 import 'package:sizer/sizer.dart';
@@ -54,12 +53,35 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
         ],
       ),
-      body:Padding(
+      body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: SizedBox.expand(
-          child: ListView(
-            children: [
-              Row(
+        child: Column(
+          children: [
+            Container(
+              height: 5.h,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(15)),
+              child: TextFormField(
+                cursorWidth: 0.3.w,
+                cursorColor: Colors.black,
+                decoration: InputDecoration(
+                  suffixIcon: Icon(Icons.search),
+                  hintText: "Search settings",
+                  contentPadding: EdgeInsets.only(left: 20, bottom: 1.7.h),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 7.h,
+            ),
+            InkWell(
+              onTap: (){
+                //Tap to see Users
+              },
+              child: Row(
                 children: [
                   Icon(
                     Icons.supervised_user_circle_sharp,
@@ -78,37 +100,42 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 2.h,
-              ),
-              InkWell(
-                onTap: (){
-                  Get.to(ProfileScreen());
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.person_2_outlined,
-                      size: 20.sp,
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            InkWell(
+              onTap: () {
+                Get.to(ProfileScreen());
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.person_2_outlined,
+                    size: 20.sp,
+                  ),
+                  SizedBox(
+                    width: 4.w,
+                  ),
+                  Text(
+                    "Profile",
+                    style: GoogleFonts.inter(
+                      color: Colors.black,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
                     ),
-                    SizedBox(
-                      width: 4.w,
-                    ),
-                    Text(
-                      "Profile",
-                      style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 2.h,
-              ),
-              Row(
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            InkWell(
+              onTap: (){
+                //Tap for Password Settings
+              },
+              child: Row(
                 children: [
                   Icon(
                     Icons.password_outlined,
@@ -127,11 +154,64 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            InkWell(
+              onTap: (){
+                //Tap to LogOut
+              },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.logout_outlined,
+                    size: 20.sp,
+                  ),
+                  SizedBox(
+                    width: 4.w,
+                  ),
+                  Text(
+                    "Log out",
+                    style: GoogleFonts.inter(
+                      color: Colors.black,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            InkWell(
+             onTap: (){
+               //Tap to Delete account
+             },
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.delete_outline,
+                    size: 20.sp,
+                  ),
+                  SizedBox(
+                    width: 4.w,
+                  ),
+                  Text(
+                    "Delete Account",
+                    style: GoogleFonts.inter(
+                      color: Colors.black,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
-
     );
   }
 }
