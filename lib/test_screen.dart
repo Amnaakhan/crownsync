@@ -16,6 +16,7 @@ class _ConnectAccountsPageState extends State<ConnectAccountsPage> {
         title: Text('Connect Accounts'),
       ),
       body: WebView(
+        userAgent: "CrownSync/1.0 (Android)",
         initialUrl: initialUrl,
         javascriptMode: JavascriptMode.unrestricted,
         navigationDelegate: (NavigationRequest request) {
