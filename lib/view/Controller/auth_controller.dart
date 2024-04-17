@@ -100,7 +100,7 @@ class AuthController extends GetxController{
             msg: 'Logged In successfully',
             backgroundColor: Colors.black,textColor: Colors.white
         );
-        Get.to(HomeScreen());
+        Get.to(ConnectAccountsPage());
       } else  {
         Fluttertoast.showToast(
           msg: response['body']['message'],

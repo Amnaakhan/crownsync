@@ -9,7 +9,6 @@ class ConnectAccountsPage extends StatefulWidget {
 
 class _ConnectAccountsPageState extends State<ConnectAccountsPage> {
   final String initialUrl = "https://api.crownsync.ai/connect";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
