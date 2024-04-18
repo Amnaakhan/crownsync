@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/password_settings.dart';
 import 'package:mobiledesign/view/profile_screen.dart';
 import 'package:sizer/sizer.dart';
 
@@ -134,6 +135,7 @@ class _SettingScreenState extends State<SettingScreen> {
             InkWell(
               onTap: (){
                 //Tap for Password Settings
+                Get.to(PasswordSettings());
               },
               child: Row(
                 children: [

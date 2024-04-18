@@ -164,7 +164,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text('Sign Up',style: GoogleFonts.inter(color: Colors.blue,fontSize: 10.sp)))
 
                 ],
-              )
+              ),
+              SizedBox(height: 10.h,),
             ],
           ),
         ),
