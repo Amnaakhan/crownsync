@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/Controller/auth_controller.dart';
 import 'package:sizer/sizer.dart';
 
 class PasswordSettings extends StatefulWidget {
@@ -13,6 +14,10 @@ class PasswordSettings extends StatefulWidget {
 }
 
 class _PasswordSettingsState extends State<PasswordSettings> {
+  final passwordController = TextEditingController();
+  final cnfrmpasswordController = TextEditingController();
+  final newpassword = TextEditingController();
+  AuthController authController = Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -68,7 +73,7 @@ class _PasswordSettingsState extends State<PasswordSettings> {
 
                       TextFormField(
                         cursorColor: Color(0xff00233D),
-
+controller: passwordController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(1.h),
@@ -92,6 +97,7 @@ class _PasswordSettingsState extends State<PasswordSettings> {
                       SizedBox(height: 3.h,),
 
                       TextFormField(
+                        controller: newpassword,
                         cursorColor:Color(0xff00233D),
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -115,6 +121,7 @@ class _PasswordSettingsState extends State<PasswordSettings> {
                       ),
                 SizedBox(height: 3.h,),
                       TextFormField(
+                        controller: cnfrmpasswordController,
                         cursorColor: Color(0xff00233D),
 
                         decoration: InputDecoration(
@@ -138,20 +145,56 @@ class _PasswordSettingsState extends State<PasswordSettings> {
                         ),
                       ),
                       SizedBox(height: 10.h,),
-                      InkWell(
-                        onTap: (){
-                          //Tap to update password
-                        },
-                        child: Container(
-                          height: 7.h,
-                          width: double.infinity,
+                      Obx(()=>authController.isLoading.value?Center(child: CircularProgressIndicator(),):
+                   InkWell(
 
-                          decoration: BoxDecoration(
-                              color: Color(0xffE2545E),
-                              borderRadius: BorderRadius.circular(24.h)
+                            onTap: (){
+                              if (passwordController.text.isEmpty) {
+                                Get.snackbar("Error", "Please Enter your email",
+                                    backgroundColor:
+                                    Colors.black,
+                                    colorText: Colors.white,
 
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    margin: EdgeInsets.only(
+                                        bottom: 8.h, left: 5.w, right: 5.w));
+                              } else if(cnfrmpasswordController.text.isEmpty){
+                                Get.snackbar("Error", "Please Enter your password",
+                                    backgroundColor:
+                                    Colors.black,
+                                    colorText: Colors.white,
+
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    margin: EdgeInsets.only(
+                                        bottom: 8.h, left: 5.w, right: 5.w));
+                              }
+                              else if(newpassword.text.isEmpty){
+                                Get.snackbar("Error", "Please Enter your password",
+                                    backgroundColor:
+                                    Colors.black,
+                                    colorText: Colors.white,
+
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    margin: EdgeInsets.only(
+                                        bottom: 8.h, left: 5.w, right: 5.w));
+                              }else{
+                        authController.password_update(oldpass: passwordController.text, newpass: newpassword.text,
+                            cnfrmpass: cnfrmpasswordController.text);
+                              }
+                            },
+                            //Tap to update password
+
+                          child: Container(
+                            height: 7.h,
+                            width: double.infinity,
+
+                            decoration: BoxDecoration(
+                                color: Color(0xffE2545E),
+                                borderRadius: BorderRadius.circular(24.h)
+
+                            ),
+                            child: Center(child: Text('Update',style: GoogleFonts.inter(color: Colors.white, fontSize: 15.sp))),
                           ),
-                          child: Center(child: Text('Update',style: GoogleFonts.inter(color: Colors.white, fontSize: 15.sp))),
                         ),
                       )
                     ],

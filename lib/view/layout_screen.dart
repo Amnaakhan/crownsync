@@ -1,6 +1,7 @@
 import 'package:bottom_bar/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/dashboard.dart';
 import 'package:mobiledesign/view/inbox_screen.dart';
 import 'package:mobiledesign/view/setting_screen.dart';
 import 'package:sizer/sizer.dart';
@@ -20,6 +21,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
       body: PageView(
         controller: _pageController,
         children: [
+          DashBoard(),
           InboxScreen(),
           SettingScreen(),
         ],

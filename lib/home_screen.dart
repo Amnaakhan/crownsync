@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _googleSignIn = GoogleSignIn(
       scopes:
       ['https://www.googleapis.com/auth/userinfo.email',
-        'https://mail.google.com/',
+        // 'https://mail.google.com/',
         // 'https://www.googleapis.com/auth/gmail.readonly'
       ],
 
@@ -89,26 +89,56 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: InkWell(
-          onTap: () {
-            googleSignIn();
-          },
-          child: Container(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: InkWell(
+              onTap: () {
+                googleSignIn();
+              },
+              child: Container(
+                height: 7.h,
+                width: double.infinity,
+                margin: EdgeInsets.only(left: 5.w, right: 5.w),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color(0xffE2545E), // Change this to your desired border color
+                      width: 1, // Change the width of the border if needed
+                    ),
+                     borderRadius: BorderRadius.circular(4.h)),
+                child: Center(
+                  child: Text('Connect with Google',
+                      style: GoogleFonts.inter(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18.sp)),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 2.h,),
+          Container(
             height: 7.h,
             width: double.infinity,
             margin: EdgeInsets.only(left: 5.w, right: 5.w),
             decoration: BoxDecoration(
-                color: Colors.black, borderRadius: BorderRadius.circular(4.h)),
+                border: Border.all(
+                  color: Color(0xffE2545E), // Change this to your desired border color
+                  width: 1, // Change the width of the border if needed
+                ),
+
+                borderRadius: BorderRadius.circular(4.h)),
             child: Center(
-              child: Text('Connect with google',
+              child: Text('Connect with Facebook',
                   style: GoogleFonts.inter(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20.sp)),
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18.sp)),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

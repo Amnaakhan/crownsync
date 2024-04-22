@@ -1,7 +1,14 @@
+import 'dart:convert';
+
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/Controller/getcontroller.dart';
 import 'package:mobiledesign/view/email_preview.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
+
 
 class DetailsScreen extends StatefulWidget {
   const DetailsScreen({super.key});
@@ -11,6 +18,150 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
+
+  List<String> asignuserlist = [];
+  String? selectedUser;
+  List<String> collectionlist= [];
+  String? selectedcollection;
+  List<String> templatelist= [];
+  String? selectedtemplate;
+
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAssignUserList();
+    fetchCollectionList();
+    fetchTemplateList();
+
+
+  }
+  Future<void> fetchTemplateList() async {
+    try {
+      final response = await http.get(Uri.parse('https://api.crownsync.ai/api/rolex_models'),
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+              ".eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0ND"
+              "IxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNz"
+              "QwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5"
+              "iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyM"
+              "jMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmo"
+              "g2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVz"
+              "B5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2De"
+              "BDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfh"
+              "jX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTE"
+              "q70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy02"
+              "4HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dC"
+              "POdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISw"
+              "pAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHs"
+              "bwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YG"
+              "eE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9"
+              "i4NHVNzlFLeCw",
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        List<String> userList = [];
+        for (var user in data['data']) {
+          userList.add(user['name']);
+        }
+        setState(() {
+          templatelist = userList;
+        });
+      } else {
+        throw Exception('Failed to load user list');
+      }
+    } catch (e) {
+      print('Error fetching user list: $e');
+      // Handle error here
+    }
+  }
+  Future<void> fetchCollectionList() async {
+    try {
+      final response = await http.get(Uri.parse('https://api.crownsync.ai/api/collects'),
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+              ".eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0ND"
+              "IxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNz"
+              "QwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5"
+              "iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyM"
+              "jMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmo"
+              "g2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVz"
+              "B5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2De"
+              "BDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfh"
+              "jX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTE"
+              "q70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy02"
+              "4HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dC"
+              "POdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISw"
+              "pAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHs"
+              "bwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YG"
+              "eE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9"
+              "i4NHVNzlFLeCw",
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        List<String> userList = [];
+        for (var user in data['data']) {
+          userList.add(user['name']);
+        }
+        setState(() {
+          collectionlist = userList;
+        });
+      } else {
+        throw Exception('Failed to load user list');
+      }
+    } catch (e) {
+      print('Error fetching user list: $e');
+      // Handle error here
+    }
+  }
+  Future<void> fetchAssignUserList() async {
+    try {
+      final response = await http.get(Uri.parse('https://api.crownsync.ai/api/getassignuser'),
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+              ".eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0ND"
+              "IxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNz"
+              "QwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5"
+              "iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyM"
+              "jMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmo"
+              "g2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVz"
+              "B5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2De"
+              "BDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfh"
+              "jX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTE"
+              "q70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy02"
+              "4HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dC"
+              "POdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISw"
+              "pAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHs"
+              "bwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YG"
+              "eE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9"
+              "i4NHVNzlFLeCw",
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        List<String> userList = [];
+        for (var user in data['data']) {
+          userList.add(user['team_id']);
+        }
+        setState(() {
+          asignuserlist = userList;
+        });
+      } else {
+        throw Exception('Failed to load user list');
+      }
+    } catch (e) {
+      print('Error fetching user list: $e');
+      // Handle error here
+    }
+  }
+
+  ApiController apiController = Get.put(ApiController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +170,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
         child: Column(
             children: [
               Container(
-                height: 25.h,
+                height: 15.h,
                 width: double.infinity,
                 color: Colors.white,
                 padding:  EdgeInsets.only(top: 7.h,left: 4.w,right: 4.w),
@@ -39,197 +190,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           ],
                         ),
                         Spacer(),
-                        Container(
-                          height: 6.h,
-                          width: 6.h,
 
-                          child: Padding(
-                              padding:
-                              EdgeInsets.only(left: 3.w, right: 3.w,top: 1.h),
-                              child: Image.asset(
-                                'assets/images/settings.png',
-                              )),
-                        ),
-                        SizedBox(
-                          width: 1.w,
-                        ),
-                        Container(
-                          height: 6.h,
-                          width: 6.h,
-
-                          child: Padding(
-                              padding:
-                              EdgeInsets.only(top: 1.h),
-                              child: Image.asset(
-                                'assets/images/profile.png',height: 4.h,
-                              )),
-                        ),
                       ],
                     ),
-                    SizedBox(height: 2.h,),
-                    Row(
-                      children: [
-                        Container(
-                            height: 6.h,
-                            width: 55.w,
-                            padding: EdgeInsets.only(right: 2.w),
-                            decoration: BoxDecoration(
-                                color: Color(0xff4D4D4D),
-                                borderRadius: BorderRadius.circular(4.h)),
-                            child: Center(
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 2.w,
-                                    ),
-                                    Stack(
-                                      children: [
-                                        Container(
-                                          height: 4.h,
-                                          width: 4.h,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xffF4DC5A),
-                                              shape: BoxShape.circle),
-                                          child: Center(child: Image.asset('assets/images/img.png')),
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(top: 2.h,left: 5.w),
-                                            child: Image.asset('assets/images/mail.png',height: 2.5.h,)),
 
-                                      ],
-
-                                    ),
-                                    SizedBox(
-                                      width: 2.w,
-                                    ),
-                                    Text(
-                                      'info@manfredije...',
-                                      style: GoogleFonts.inter(
-                                          color: Colors.white,
-                                          fontSize: 11.sp),
-                                    ),
-                                    SizedBox(
-                                      width: 2.w,
-                                    ),
-                                    Image.asset(
-                                      'assets/images/drop_arrow.png',
-                                      height: 1.h,
-                                    )
-                                  ],
-                                ))),
-                        SizedBox(
-                          width: 2.w,
-                        ),
-                        Container(
-                            height: 6.h,
-                            width: 30.w,
-                            decoration: BoxDecoration(
-
-                                borderRadius: BorderRadius.circular(4.h),
-                                border: Border.all(color: Color(0xff4D4D4D),)
-                            ),
-                            child: Center(
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 2.w,
-                                    ),
-
-                                    Text(
-                                      'Assigned',
-                                      style: GoogleFonts.inter(
-                                          color: Color(0xff4D4D4D),
-                                          fontSize: 11.sp),
-                                    ),
-                                    SizedBox(
-                                      width: 2.w,
-                                    ),
-                                    Image.asset(
-                                      'assets/images/drop_arrow.png',
-                                      height: 1.h,
-                                      color: Color(0xff4D4D4D),
-                                    )
-                                  ],
-                                ))),
-                      ],
-                    )
                   ],
                 ),
               ),
-              SizedBox(height: 2.h,),
+SizedBox(height: 2.h,),
               Container(
-                height: 15.h,
-                width: double.infinity,
-                margin: EdgeInsets.only(left: 4.w,right: 4.w),
-                padding: EdgeInsets.only(left: 5.w,top: 1.h,right: 2.w),
-
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(1.h),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0xff000000).withOpacity(0.10),
-                      blurRadius: 4, // soften the shadow
-                      spreadRadius: 0, //extend the shadow
-                      offset: Offset(
-                        0, // Move to right 10  horizontally
-                        4, // Move to bottom 10 Vertically
-                      ),
-                    )
-                  ],
-
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(
-                          children: [
-                            Image.asset('assets/images/profile_icon.png',height: 6.h,),
-                            Padding(
-                                padding: EdgeInsets.only(top: 4.h,left: 7.w),
-                                child: Image.asset('assets/images/mail.png',height: 3.h,))
-                          ],
-
-                        ),
-                        SizedBox(width: 1.w,),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-
-                            Text('Puja Lopez', style: GoogleFonts.inter(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12.sp),),
-                            Row(
-                              children: [
-                                Text('1min', style: GoogleFonts.inter(
-                                    color: Color(0xff7B7B7D),
-                                    fontSize: 8.sp),),
-                                SizedBox(width: 1.w,),
-                                Icon(Icons.history,size: 10.sp,color: Color(0xff7B7B7D),)
-                              ],
-                            ),
-                            Container(
-                              width: 66.w,
-                              // color: Colors.blue,
-                              child: Text('I m interested in the Rolex Oyster Perpetual 31, is it still available?', style: GoogleFonts.inter(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 10.sp),),
-                            ),
-
-                          ],),
-                        Icon(Icons.more_vert,size: 12.sp,color: Color(0xff7B7B7D))
-                      ],),
-                    Image.asset('assets/images/row.png')
-                  ],
-                ),
-              ),
-              SizedBox(height: 2.h,),
-              Container(
-                height: 10.h,
+                height: 12.h,
                 width: double.infinity,
                 margin: EdgeInsets.only(left: 4.w,right: 4.w),
                 padding: EdgeInsets.only(left: 4.w,top: 1.h,right: 4.w),
@@ -254,62 +224,99 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Initial Greeting/Ending Greeting',
+                      'Assign Email',
                       style: GoogleFonts.inter(
                           fontWeight: FontWeight.w500,
+                          color: Color(0xff808686),
                            fontSize: 12.sp),
                     ),
                     SizedBox(height: 1.h,),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                      Container(
-                        height: 3.h,
-                        width: 25.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(1.h),
-                          border: Border.all(color: Color(0xff000000).withOpacity(0.60))
-
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
+                        hint: Row(
+                          children: [
+                            SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                'Select team member',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff808686),
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
-                        child: Center(child: Text('Morning',style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 10.sp),),),
+                        items: asignuserlist.map((String email) {
+                          return DropdownMenuItem<String>(
+                            value: email,
+                            child: Text(
+                              email,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff808686),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
+                        }).toList(),
+                        value: selectedUser,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedUser = value;
+                          });
+                        },
+                        buttonStyleData: ButtonStyleData(
+                          height: 5.h,
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Color(0xff808686),
+                            ),
+                            color: Color(0xffE0E1E1),
+                          ),
+                          elevation: 2,
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_outlined,
+                          ),
+                          iconSize: 30,
+                          iconEnabledColor: Color(0xff808686),
+                          iconDisabledColor: Color(0xff808686),
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 200,
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color(0xffE0E1E1),
+                          ),
+                          scrollbarTheme: ScrollbarThemeData(
+                            radius: const Radius.circular(40),
+                            thickness: MaterialStateProperty.all<double>(6),
+                            thumbVisibility: MaterialStateProperty.all<bool>(true),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                        ),
                       ),
-                      Container(
-                        height: 3.h,
-                        width: 25.w,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(1.h),
-                            border: Border.all(color: Color(0xff000000).withOpacity(0.60))
+                    ),
 
-                        ),
-                        child: Center(child: Text('Afternoon',style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 10.sp),),),
-                      ),
-                      Container(
-                        height: 3.h,
-                        width: 25.w,
-                        decoration: BoxDecoration(
-                          color: Color(0xff000000),
-                            borderRadius: BorderRadius.circular(1.h),
-
-                        ),
-                        child: Center(child: Text('Evening',style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
-
-                            fontSize: 10.sp),),),
-
-                      )
-                    ],)
                   ],
                 ),
               ),
               SizedBox(height: 2.h,),
               Container(
-                height: 10.h,
+                height: 12.h,
                 width: double.infinity,
                 margin: EdgeInsets.only(left: 4.w,right: 4.w),
                 padding: EdgeInsets.only(left: 4.w,top: 1.h,right: 4.w),
@@ -334,20 +341,47 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Initial Greeting/Ending Greeting',
+                      'Responder Email',
                       style: GoogleFonts.inter(
                           fontWeight: FontWeight.w500,
+                          color: Color(0xff808686),
+
                           fontSize: 12.sp),
                     ),
                     SizedBox(height: 1.h,),
 
+Container(
+  height: 6.h,
+  width: double.infinity,
+  padding: EdgeInsets.only(top: 1.5.h,left: 3.w,),
+  decoration: BoxDecoration(
+    color: Color(0xffE0E1E1),
+    borderRadius: BorderRadius.circular(1.h),
+    border: Border.all(
+      color: Color(0xff808686),
+    )
+
+  ),
+
+    child: Text(
+      'khanamna983@gmail.com',
+      style: GoogleFonts.inter(
+          fontWeight: FontWeight.w500,
+          color: Color(0xff808686),
+
+          fontSize: 12.sp),
+    ),
+
+),
 
                   ],
                 ),
               ),
+
               SizedBox(height: 2.h,),
+
               Container(
-                height: 10.h,
+                height: 12.h,
                 width: double.infinity,
                 margin: EdgeInsets.only(left: 4.w,right: 4.w),
                 padding: EdgeInsets.only(left: 4.w,top: 1.h,right: 4.w),
@@ -375,6 +409,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       'Store Location',
                       style: GoogleFonts.inter(
                           fontWeight: FontWeight.w500,
+                          color: Color(0xff808686),
+
                           fontSize: 12.sp),
                     ),
                     SizedBox(height: 1.h,),
@@ -383,40 +419,43 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          height: 3.h,
+                          height: 4.h,
                           width: 27.w,
                           decoration: BoxDecoration(
-                            color: Color(0xff000000),
+                            color: Color(0xffE0E1E1),
                             borderRadius: BorderRadius.circular(1.h),
 
                           ),
-                          child: Center(child: Text('New Canaan,CT',style: GoogleFonts.inter(
+                          child: Center(child: Text('${apiController.rolexModel?.data?[0].location}',style: GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
-                              color: Colors.white,
+                              color: Color(0xff808686),
 
                               fontSize: 9.sp),),),
                         ),
                         Container(
-                          height: 3.h,
+                          height: 4.h,
                           width: 27.w,
                           decoration: BoxDecoration(
+                              color: Color(0xffE0E1E1),
                               borderRadius: BorderRadius.circular(1.h),
-                              border: Border.all(color: Color(0xff000000).withOpacity(0.60))
 
                           ),
-                          child: Center(child: Text('Greenwich,CT',style: GoogleFonts.inter(
+                          child: Center(child: Text('${apiController.rolexModel?.data?[1].location}',style: GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
+                              color: Color(0xff808686),
+
                               fontSize: 9.sp),),),
                         ),
                         Container(
-                          height: 3.h,
+                          height: 4.h,
                           width: 25.w,
                           decoration: BoxDecoration(
+                              color: Color(0xffE0E1E1),
                               borderRadius: BorderRadius.circular(1.h),
-                              border: Border.all(color: Color(0xff000000).withOpacity(0.60))
                           ),
-                          child: Center(child: Text('New York,NY',style: GoogleFonts.inter(
+                          child: Center(child: Text('${apiController.rolexModel?.data?[2].location}',style: GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
+                              color: Color(0xff808686),
 
                               fontSize: 10.sp),),),
 
@@ -428,7 +467,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               SizedBox(height: 2.h,),
 
               Container(
-                height: 10.h,
+                height: 12.h,
                 width: double.infinity,
                 margin: EdgeInsets.only(left: 4.w,right: 4.w),
                 padding: EdgeInsets.only(left: 4.w,top: 1.h,right: 4.w),
@@ -456,38 +495,98 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       'Collections',
                       style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
+                          color: Color(0xff828282),
+
                           fontSize: 13.sp),
                     ),
                     SizedBox(height: 1.h,),
-                    Container(
-                      height: 4.h,
-                      width: double.infinity,
-                      padding: EdgeInsets.only(left: 4.w,right: 4.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(1.h),
-                        border: Border.all(color: Color(0xff000000).withOpacity(0.60),
-                        )
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
+                        hint: Row(
+                          children: [
+                            SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                'Select a selection',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff808686),
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        items: collectionlist.map((String email) {
+                          return DropdownMenuItem<String>(
+                            value: email,
+                            child: Text(
+                              email,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff808686),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
+                        }).toList(),
+                        value: selectedcollection,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedcollection = value;
+                          });
+                        },
+                        buttonStyleData: ButtonStyleData(
+                          height: 5.h,
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Color(0xff808686),
+                            ),
+                            color: Color(0xffE0E1E1),
+                          ),
+                          elevation: 2,
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_outlined,
+                          ),
+                          iconSize: 30,
+                          iconEnabledColor: Color(0xff808686),
+                          iconDisabledColor: Color(0xff808686),
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 200,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color(0xffE0E1E1),
+                          ),
+                          scrollbarTheme: ScrollbarThemeData(
+                            radius: const Radius.circular(40),
+                            thickness: MaterialStateProperty.all<double>(6),
+                            thumbVisibility: MaterialStateProperty.all<bool>(true),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                        ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Select an option',style: GoogleFonts.inter(
-                              fontSize: 12.sp,
-                            color: Color(0xff828282)
-                          ),),
-        Image.asset('assets/images/drop_arrow.png', color: Color(0xff828282),height: 1.5.h,)
-                        ],
-                      ),
-                    )
+                    ),
 
 
                   ],
                 ),
               ),
               SizedBox(height: 2.h,),
-
               Container(
-                height: 10.h,
+                height: 12.h,
                 width: double.infinity,
                 margin: EdgeInsets.only(left: 4.w,right: 4.w),
                 padding: EdgeInsets.only(left: 4.w,top: 1.h,right: 4.w),
@@ -512,108 +611,100 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Model number',
+                      'Choose Template',
                       style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
+                          color: Color(0xff828282),
+
                           fontSize: 13.sp),
                     ),
                     SizedBox(height: 1.h,),
-                    Container(
-                      height: 4.h,
-                      width: double.infinity,
-                      padding: EdgeInsets.only(left: 4.w,right: 4.w),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(1.h),
-                          border: Border.all(color: Color(0xff000000).withOpacity(0.60),
-                          )
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Select an option',style: GoogleFonts.inter(
-                              fontSize: 12.sp,
-                              color: Color(0xff828282)
-                          ),),
-                          Image.asset('assets/images/drop_arrow.png', color: Color(0xff828282),height: 1.5.h,)
-                        ],
-                      ),
-                    )
-
-
-                  ],
-                ),
-              ),
-              SizedBox(height: 2.h,),
-              Container(
-                height: 10.h,
-                width: double.infinity,
-                margin: EdgeInsets.only(left: 4.w,right: 4.w),
-                padding: EdgeInsets.only(left: 4.w,top: 1.h,right: 4.w),
-
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(1.h),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0xff000000).withOpacity(0.10),
-                      blurRadius: 4, // soften the shadow
-                      spreadRadius: 0, //extend the shadow
-                      offset: Offset(
-                        0, // Move to right 10  horizontally
-                        4, // Move to bottom 10 Vertically
-                      ),
-                    )
-                  ],
-
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Inventory level',
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12.sp),
-                    ),
-                    SizedBox(height: 1.h,),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: 3.h,
-                          width: 40.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(1.h),
-                            border: Border.all(color: Color(0xff000000).withOpacity(0.60))
-                          ),
-                          child: Center(child: Text('In Stock',style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-
-                              fontSize: 9.sp),),),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
+                        hint: Row(
+                          children: [
+                            SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                'Select a selection',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff808686),
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
-
-                        Container(
-                          height: 3.h,
-                          width: 40.w,
+                        items: templatelist.map((String email) {
+                          return DropdownMenuItem<String>(
+                            value: email,
+                            child: Text(
+                              email,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff808686),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
+                        }).toList(),
+                        value: selectedtemplate,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedtemplate = value;
+                          });
+                        },
+                        buttonStyleData: ButtonStyleData(
+                          height: 5.h,
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
                           decoration: BoxDecoration(
-
-                            color: Color(0xff000000),
-                            borderRadius: BorderRadius.circular(1.h),
-
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Color(0xff808686),
+                            ),
+                            color: Color(0xffE0E1E1),
                           ),
-                          child: Center(child: Text('Out Of Stock',style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
+                          elevation: 2,
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_outlined,
+                          ),
+                          iconSize: 30,
+                          iconEnabledColor: Color(0xff808686),
+                          iconDisabledColor: Color(0xff808686),
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 200,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color(0xffE0E1E1),
+                          ),
+                          scrollbarTheme: ScrollbarThemeData(
+                            radius: const Radius.circular(40),
+                            thickness: MaterialStateProperty.all<double>(6),
+                            thumbVisibility: MaterialStateProperty.all<bool>(true),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                        ),
+                      ),
+                    ),
 
-                              fontSize: 10.sp),),),
 
-                        )
-                      ],)
                   ],
                 ),
               ),
+
+
               SizedBox(height: 2.h,),
               InkWell(
                 onTap: (){
@@ -624,7 +715,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   width: double.infinity,
                   margin: EdgeInsets.only(left: 5.w,right: 5.w),
                   decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: Color(0xffE2545E),
                       borderRadius: BorderRadius.circular(4.h)
                   ),
                   child: Center(
@@ -639,8 +730,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 2.h,)
-
 
 
 
@@ -648,63 +737,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
       ),
 
-    );
-  }
-}
-class DropdownWidget extends StatefulWidget {
-  @override
-  _DropdownWidgetState createState() => _DropdownWidgetState();
-}
-
-class _DropdownWidgetState extends State<DropdownWidget> {
-  String? _selectedItem;
-
-  // List of dropdown items
-  List<String> _dropdownItems = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-    body:  Center(
-      child: Container(
-        height: 5.h,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.black, // Border color here
-          ),
-          borderRadius: BorderRadius.circular(5.0), // Optional: for rounded borders
-        ),
-        child:DropdownButtonHideUnderline(
-          child: DropdownButton(
-            value: _selectedItem,
-            items: _dropdownItems.map((String item) {
-              return DropdownMenuItem(
-                value: item,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        item,
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Icon(Icons.arrow_drop_down),
-                  ],
-                ),
-              );
-            }).toList(),
-            onChanged: (String? selectedItem) {
-              setState(() {
-                _selectedItem = selectedItem;
-              });
-            },
-            hint: Text('Select an item'),
-          ),
-        )
-      )
-    ),
     );
   }
 }

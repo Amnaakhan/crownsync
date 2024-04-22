@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/Controller/getcontroller.dart';
 import 'package:sizer/sizer.dart';
 
 class EmailPreview extends StatefulWidget {
@@ -11,6 +13,8 @@ class EmailPreview extends StatefulWidget {
 }
 
 class _EmailPreviewState extends State<EmailPreview> {
+  ApiController apiController = Get.put(ApiController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +23,7 @@ body:
    Column(
       children: [
         Container(
-          height: 25.h,
+          height: 18.h,
           width: double.infinity,
           color: Colors.white,
           padding:  EdgeInsets.only(top: 7.h,left: 4.w,right: 4.w),
@@ -40,41 +44,11 @@ body:
                   ),
                   Spacer(),
                   Container(
-                    height: 6.h,
-                    width: 6.h,
-
-                    child: Padding(
-                        padding:
-                        EdgeInsets.only(left: 3.w, right: 3.w, bottom: 1.h),
-                        child: Image.asset(
-                          'assets/images/settings.png',
-                        )),
-                  ),
-                  SizedBox(
-                    width: 1.w,
-                  ),
-                  Container(
-                    height: 6.h,
-                    width: 6.h,
-
-                    child: Padding(
-                        padding:
-                        EdgeInsets.only(left: 2.w, right: 2.w, bottom: 1.h),
-                        child: Image.asset(
-                          'assets/images/profile.png',
-                        )),
-                  ),
-                ],
-              ),
-              SizedBox(height: 2.h,),
-              Row(
-                children: [
-                  Container(
-                      height: 6.h,
-                      width: 41.w,
-                      padding: EdgeInsets.only(right: 1.w),
+                      height: 5.h,
+                      width: 32.w,
+                      padding: EdgeInsets.only(right: 1.w,left: 1.w),
                       decoration: BoxDecoration(
-                          color: Color(0xff4D4D4D),
+                          color: Color(0xffE2545E),
                           borderRadius: BorderRadius.circular(4.h)),
                       child: Center(
                           child: Row(
@@ -82,28 +56,12 @@ body:
                               SizedBox(
                                 width: 2.w,
                               ),
-                              Stack(
-                                children: [
-                                  Container(
-                                    height: 4.h,
-                                    width: 4.h,
-                                    decoration: BoxDecoration(
-                                        color: Color(0xffF4DC5A),
-                                        shape: BoxShape.circle),
-                                    child: Center(child: Image.asset('assets/images/img.png')),
-                                  ),
-                                  Padding(
-                                      padding: EdgeInsets.only(top: 2.5.h,left: 5.w),
-                                      child: Image.asset('assets/images/mail.png',height: 2.h,)),
 
-                                ],
-
-                              ),
                               SizedBox(
                                 width: 1.w,
                               ),
                               Text(
-                                'info@manfredije...',
+                                'khanamna983@gmail',
                                 style: GoogleFonts.inter(
                                     color: Colors.white,
                                     fontSize: 7.sp),
@@ -117,41 +75,11 @@ body:
                               )
                             ],
                           ))),
-                  SizedBox(
-                    width: 2.w,
-                  ),
-                  Container(
-                      height: 8.h,
-                      width: 49.w,
-                      padding: EdgeInsets.only(left: 1.w,right: 1.w),
-                      decoration: BoxDecoration(
-    color: Colors.white,
-                          borderRadius: BorderRadius.circular(1.h),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xff000000).withOpacity(0.20),
-                            blurRadius: 4, // soften the shadow
-                            spreadRadius: 0, //extend the shadow
-                            offset: Offset(
-                              0, // Move to right 10  horizontally
-                              4, // Move to bottom 10 Vertically
-                            ),
-                          )
-                        ],
 
-                      ),
-                      child: Column(
-                        children: [
-                          Text('From: Darla Jo Brown <darlajo@manfredijewels.com>'
-                              ' Date: March 3, 2024 at 10:17:20 PM EST To:'
-                              ' Pujalopez@micaelaerlanger.comSubject: Manfredi Jewels-Oyster Perpetual 31',style: GoogleFonts.inter(
-                              color: Colors.black,
-                              fontSize: 7.sp),)
-                        ],
-                      )
-                  ),
                 ],
-              )
+              ),
+              SizedBox(height: 2.h,),
+
             ],
           ),
         ),
@@ -285,7 +213,7 @@ body:
             width: double.infinity,
               margin: EdgeInsets.only(left: 5.w,right: 5.w),
               decoration: BoxDecoration(
-                color: Colors.black,
+                  color: Color(0xffE2545E),
                 borderRadius: BorderRadius.circular(4.h)
               ),
               child: Center(

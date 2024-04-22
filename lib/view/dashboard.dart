@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/home_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class DashBoard extends StatefulWidget {
@@ -94,17 +95,25 @@ class _DashBoardState extends State<DashBoard> {
               ],
             ),
             SizedBox(height: 30,),
-            Container(
-              height: 7.h,
-              width: 40.w,
+            InkWell(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
+              },
+              child: Container(
+                height: 7.h,
+                width: 40.w,
 
-              decoration: BoxDecoration(
-                  color: Color(0xffE2545E),
-                  borderRadius: BorderRadius.circular(24.h)
+                decoration: BoxDecoration(
+                    color: Color(0xffE2545E),
+                    borderRadius: BorderRadius.circular(24.h)
 
+                ),
+                child: Center(child: Text("+",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 30,color: Colors.white),
+                )),
               ),
-              child: Center(child: Text("+",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 30,color: Colors.white),
-              )),
             ),
             SizedBox(width: 30,),
 

@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:mobiledesign/home_screen.dart';
 import 'package:mobiledesign/test_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
 
 import '../../Helper/helper.dart';
 
@@ -100,7 +102,7 @@ class AuthController extends GetxController{
             msg: 'Logged In successfully',
             backgroundColor: Colors.black,textColor: Colors.white
         );
-        Get.to(ConnectAccountsPage());
+        Get.to(HomeScreen());
       } else  {
         Fluttertoast.showToast(
           msg: response['body']['message'],
@@ -114,6 +116,45 @@ class AuthController extends GetxController{
       isLoading.value = false;
     }
   }
+  password_update({required String oldpass, required String newpass,required String cnfrmpass}) async {
+    try {
+      isLoading.value = true;
+      EmailPasswordError.value ='';
+      var data = {
+        'current_password': oldpass,
+        'password': newpass,
+        'password_confirmation': cnfrmpass
+      };
+      http.Response response = await http
+          .post(Uri.tryParse('https://api.crownsync.ai/api/update/password')!,headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0NDIxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNzQwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyMjMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmog2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVzB5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2DeBDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfhjX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTEq70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy024HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dCPOdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISwpAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHsbwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YGeE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9i4NHVNzlFLeCw"
+      },body: data);
+      print("response1::$response");
+      if (response.statusCode == 200) {
+        print("Response2::${response}");
+
+
+        Fluttertoast.showToast(
+            msg: 'Update Password successfully',
+            backgroundColor: Colors.black,textColor: Colors.white
+        );
+        Get.to(HomeScreen());
+      } else  {
+        Fluttertoast.showToast(
+            msg: 'Error , Please Try Again',
+
+            backgroundColor: Colors.black,textColor: Colors.white
+        );
+      }
+    }catch (e) {
+      print("Error" + e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
 
 
   Future<String?> getToken() async {
