@@ -1,21 +1,21 @@
 // To parse this JSON data, do
 //
-//     final emailMessagesModel = emailMessagesModelFromJson(jsonString);
+//     final inboxModel = inboxModelFromJson(jsonString);
 
 import 'dart:convert';
 
-EmailMessagesModel emailMessagesModelFromJson(String str) => EmailMessagesModel.fromJson(json.decode(str));
+InboxModel inboxModelFromJson(String str) => InboxModel.fromJson(json.decode(str));
 
-String emailMessagesModelToJson(EmailMessagesModel data) => json.encode(data.toJson());
+String inboxModelToJson(InboxModel data) => json.encode(data.toJson());
 
-class EmailMessagesModel {
+class InboxModel {
   List<Datum>? data;
 
-  EmailMessagesModel({
+  InboxModel({
     this.data,
   });
 
-  factory EmailMessagesModel.fromJson(Map<String, dynamic> json) => EmailMessagesModel(
+  factory InboxModel.fromJson(Map<String, dynamic> json) => InboxModel(
     data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
   );
 
@@ -38,7 +38,6 @@ class Datum {
     detail: Detail.fromJson(jsonDecode(json["detail"])),
   );
 
-
   Map<String, dynamic> toJson() => {
     "log_user": logUser?.toJson(),
     "detail": detail?.toJson(),
@@ -48,20 +47,28 @@ class Datum {
 class Detail {
   String? snippet;
   Headers? headers;
+  String? body; // Changed to string
 
   Detail({
     this.snippet,
     this.headers,
+    this.body, // Changed to string
   });
 
-  factory Detail.fromJson(Map<String, dynamic> json) => Detail(
-    snippet: json["snippet"],
-    headers: Headers.fromJson(json["headers"]),
-  );
+  factory Detail.fromJson(Map<String, dynamic> json) {
+    var bodyString = json["body"]; // Get the string value
+    var bodyJson = jsonDecode(bodyString); // Decode the string
+    return Detail(
+      snippet: bodyJson["snippet"],
+      headers: Headers.fromJson(bodyJson["headers"]),
+      body: bodyString, // Store the original string
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "snippet": snippet,
     "headers": headers?.toJson(),
+    "body": body, // Store the original string
   };
 }
 
@@ -72,6 +79,25 @@ class Headers {
   String? xReceived;
   String? arcSeal;
   String? arcMessageSignature;
+  String? arcAuthenticationResults;
+  String? returnPath;
+  String? receivedSpf;
+  String? authenticationResults;
+  String? freelancerDomainSigner;
+  String? dkimSignature;
+  String? listUnsubscribe;
+  String? subject;
+  String? to;
+  String? from;
+  String? replyTo;
+  String? mimeVersion;
+  String? contentLanguage;
+  String? xPriority;
+  String? xAcceptLanguage;
+  String? contentType;
+  String? date;
+  String? messageId;
+  String? feedbackId;
 
   Headers({
     this.deliveredTo,
@@ -80,6 +106,25 @@ class Headers {
     this.xReceived,
     this.arcSeal,
     this.arcMessageSignature,
+    this.arcAuthenticationResults,
+    this.returnPath,
+    this.receivedSpf,
+    this.authenticationResults,
+    this.freelancerDomainSigner,
+    this.dkimSignature,
+    this.listUnsubscribe,
+    this.subject,
+    this.to,
+    this.from,
+    this.replyTo,
+    this.mimeVersion,
+    this.contentLanguage,
+    this.xPriority,
+    this.xAcceptLanguage,
+    this.contentType,
+    this.date,
+    this.messageId,
+    this.feedbackId,
   });
 
   factory Headers.fromJson(Map<String, dynamic> json) => Headers(
@@ -89,6 +134,25 @@ class Headers {
     xReceived: json["X-Received"],
     arcSeal: json["ARC-Seal"],
     arcMessageSignature: json["ARC-Message-Signature"],
+    arcAuthenticationResults: json["ARC-Authentication-Results"],
+    returnPath: json["Return-Path"],
+    receivedSpf: json["Received-SPF"],
+    authenticationResults: json["Authentication-Results"],
+    freelancerDomainSigner: json["freelancer-domain-signer"],
+    dkimSignature: json["DKIM-Signature"],
+    listUnsubscribe: json["List-Unsubscribe"],
+    subject: json["Subject"],
+    to: json["To"],
+    from: json["From"],
+    replyTo: json["Reply-To"],
+    mimeVersion: json["MIME-version"],
+    contentLanguage: json["Content-language"],
+    xPriority: json["X-Priority"],
+    xAcceptLanguage: json["X-Accept-Language"],
+    contentType: json["Content-Type"],
+    date: json["Date"],
+    messageId: json["Message-Id"],
+    feedbackId: json["Feedback-ID"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -98,6 +162,25 @@ class Headers {
     "X-Received": xReceived,
     "ARC-Seal": arcSeal,
     "ARC-Message-Signature": arcMessageSignature,
+    "ARC-Authentication-Results": arcAuthenticationResults,
+    "Return-Path": returnPath,
+    "Received-SPF": receivedSpf,
+    "Authentication-Results": authenticationResults,
+    "freelancer-domain-signer": freelancerDomainSigner,
+    "DKIM-Signature": dkimSignature,
+    "List-Unsubscribe": listUnsubscribe,
+    "Subject": subject,
+    "To": to,
+    "From": from,
+    "Reply-To": replyTo,
+    "MIME-version": mimeVersion,
+    "Content-language": contentLanguage,
+    "X-Priority": xPriority,
+    "X-Accept-Language": xAcceptLanguage,
+    "Content-Type": contentType,
+    "Date": date,
+    "Message-Id": messageId,
+    "Feedback-ID": feedbackId,
   };
 }
 
@@ -143,7 +226,7 @@ class UserId {
   String? email;
   dynamic address;
   dynamic phone;
-  Profile? profile;
+  dynamic profile;
   String? createdAt;
 
   UserId({
@@ -162,7 +245,7 @@ class UserId {
     email: json["email"],
     address: json["address"],
     phone: json["phone"],
-    profile: Profile.fromJson(json["profile"]),
+    profile: json["profile"],
     createdAt: json["created_at"],
   );
 
@@ -172,17 +255,7 @@ class UserId {
     "email": email,
     "address": address,
     "phone": phone,
-    "profile": profile?.toJson(),
+    "profile": profile,
     "created_at": createdAt,
-  };
-}
-
-class Profile {
-  Profile();
-
-  factory Profile.fromJson(Map<String, dynamic> json) => Profile(
-  );
-
-  Map<String, dynamic> toJson() => {
   };
 }

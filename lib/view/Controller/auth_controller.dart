@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:mobiledesign/home_screen.dart';
 import 'package:mobiledesign/test_screen.dart';
+import 'package:mobiledesign/view/inbox_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -102,7 +103,7 @@ class AuthController extends GetxController{
             msg: 'Logged In successfully',
             backgroundColor: Colors.black,textColor: Colors.white
         );
-        Get.to(HomeScreen());
+        Get.to(InboxScreen());
       } else  {
         Fluttertoast.showToast(
           msg: response['body']['message'],

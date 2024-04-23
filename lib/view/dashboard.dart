@@ -34,30 +34,28 @@ class _DashBoardState extends State<DashBoard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  height: 8.h,
-                  width: 40.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Color(0xffE2545E), // Change this to your desired border color
-                      width: 1, // Change the width of the border if needed
+                SizedBox(  height: 20.h,
+                  width: 45.w,
+                  child: Card(
+                    color: Color(0xffEAE5F5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("Connected\nAccounts",style: GoogleFonts.inter(color: Colors.black, fontSize: 10.sp,),),
+                        SizedBox(height: 1.h,),
+                        Text("5",style: GoogleFonts.inter(color: Colors.black, fontSize: 22.sp,fontWeight:FontWeight.w600),),
+                      ],
                     ),
                   ),
-                  child: Center(child: Text("Connected\nAccounts",style: GoogleFonts.inter(color: Colors.black, fontSize: 12.sp,),)),
                 ),
-                SizedBox(width: 20,),
-                Container(
-                  height: 8.h,
-                  width: 40.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Color(0xffE2545E), // Change this to your desired border color
-                      width: 1, // Change the width of the border if needed
-                    ),
+                SizedBox(
+                  height: 20.h,
+                  width: 45.w,
+                  child: Card(
+                    color: Color(0xffE0E9F5),
+                    child: Center(child: Text("Sent",style: GoogleFonts.inter(color: Colors.black, fontSize: 12.sp,),)),
                   ),
-                  child: Center(child: Text("Sent",style: GoogleFonts.inter(color: Colors.black, fontSize: 12.sp,),)),
                 ),
               ],
             ),
@@ -66,31 +64,20 @@ class _DashBoardState extends State<DashBoard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
               children: [
-                Container(
-                  height: 8.h,
-                  width: 40.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Color(0xffE2545E), // Change this to your desired border color
-                      width: 1, // Change the width of the border if needed
-                    ),
+                SizedBox(
+                  height: 20.h,
+                  width: 45.w,
+                  child: Card(
+color: Color(0xffF3E3E3),
+                    child: Center(child: Text("Messages",style: GoogleFonts.inter(color: Colors.black, fontSize: 12.sp,),)),
                   ),
-                  child: Center(child: Text("Messages",style: GoogleFonts.inter(color: Colors.black, fontSize: 12.sp,),)),
                 ),
-                SizedBox(width: 20,),
-
-                Container(
-                  height: 8.h,
-                  width: 40.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Color(0xffE2545E), // Change this to your desired border color
-                      width: 1, // Change the width of the border if needed
-                    ),
+                SizedBox(  height: 20.h,
+                  width: 45.w,
+                  child: Card(
+                    color: Color(0xffF3E3E3),
+                    child: Center(child: Text("Assigned",style: GoogleFonts.inter(color: Colors.black, fontSize: 12.sp,),)),
                   ),
-                  child: Center(child: Text("Assigned",style: GoogleFonts.inter(color: Colors.black, fontSize: 12.sp,),)),
                 ),
               ],
             ),

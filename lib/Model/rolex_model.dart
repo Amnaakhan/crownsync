@@ -1,21 +1,21 @@
 // To parse this JSON data, do
 //
-//     final collectionModel = collectionModelFromJson(jsonString);
+//     final rolexxModel = rolexxModelFromJson(jsonString);
 
 import 'dart:convert';
 
-RolexModel collectionModelFromJson(String str) => RolexModel.fromJson(json.decode(str));
+RolexxModel rolexxModelFromJson(String str) => RolexxModel.fromJson(json.decode(str));
 
-String collectionModelToJson(RolexModel data) => json.encode(data.toJson());
+String rolexxModelToJson(RolexxModel data) => json.encode(data.toJson());
 
-class RolexModel {
+class RolexxModel {
   List<Datum>? data;
 
-  RolexModel({
+  RolexxModel({
     this.data,
   });
 
-  factory RolexModel.fromJson(Map<String, dynamic> json) => RolexModel(
+  factory RolexxModel.fromJson(Map<String, dynamic> json) => RolexxModel(
     data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
   );
 

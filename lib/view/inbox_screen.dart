@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobiledesign/view/Controller/getcontroller.dart';
+import 'package:mobiledesign/view/details_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
@@ -45,52 +46,41 @@ class _InboxScreenState extends State<InboxScreen>
     super.dispose();
   }
 
-  // void searchEmails(String keyword) {
-  //   // Filter emails based on the keyword
-  //   List<Email> filteredEmails = emails.where((email) {
-  //     return email.subject.toLowerCase().contains(keyword.toLowerCase()) ||
-  //         email.sender.toLowerCase().contains(keyword.toLowerCase()) ||
-  //         email.body.toLowerCase().contains(keyword.toLowerCase());
-  //   }).toList();
-  //
-  //   // Update the UI with filtered emails
-  //   setState(() {
-  //     displayedEmails = filteredEmails;
-  //   });
-  // }
+
   Future<void> fetchUserList() async {
     try {
-      final response = await http.get(Uri.parse('https://api.crownsync.ai/api/userlist'),
+      final response = await http.get(Uri.parse('https://api.crownsync.ai/api/getuserlist'),
         headers: {
           "Accept": "application/json",
           "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
-              ".eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0ND"
-              "IxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNz"
-              "QwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5"
-              "iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyM"
-              "jMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmo"
-              "g2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVz"
-              "B5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2De"
-              "BDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfh"
-              "jX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTE"
-              "q70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy02"
-              "4HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dC"
-              "POdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISw"
-              "pAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHs"
-              "bwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YG"
-              "eE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9"
-              "i4NHVNzlFLeCw",
+              ".eyJhdWQiOiIzIiwianRpIjoiY2UwYzIyMmI1NjZiMWRlYzM2ZWJjOGU3"
+              "YzBmMDE3NzI2NmM4ZmFkMTZiMTk3MWFiMzU0MDJmMDRmZmMwNTliNjQ0Yz"
+              "NkZDE1NmYyYWE5ZjkiLCJpYXQiOjE3MTM3ODMwMjIuMzg4MTI5LCJuYmYiO"
+              "jE3MTM3ODMwMjIuMzg4MTMxLCJleHAiOjE3NDUzMTkwMjIuMzg3MTk3LCJzdW"
+              "IiOiIxOSIsInNjb3BlcyI6W119.IfaT156xsXoW1XYj64vNkt5PmdWuCV1IWyG"
+              "HimKAE7fEaYQFCYbMZBC_wBeYJYDYzMwcAVtbqKp1gyBmibromFLtJNWkqQtYrL"
+              "VkWajOzs1C0YhHAAdibCX0Zt9IBg6oImbfmqQNXkPSWSzXh6y2JQx3R-3NwFdbxaCf"
+              "Ixd_conJKcuuWEoU504-sHkLfHdqKlJJwJ_ZkWpJSo68qPhtBkZ_1OCqXL6BVhnnCmN"
+              "NKfmZpw5oKVXp26iwRHnwlDGjgXdMrvIrGCLcw2XbI3SCczgpoWeRLdBOu7RQwPhbA69_"
+              "3UMb0ILSGgHX1zRMrpeJK8RiZzdeEMUh825LaBGpPk_ooRtwl11vi2b10kFDueNR-lBb2Wj"
+              "3JSBi5wKAghgCvfhsklgqbTlQtDJwv71sCO0m5fMCPtXjetYKan5D4G_4LuVKdbnllFb_uyr"
+              "TVKo-AYgUK4mYeXbmgROpbJgCZPSynz5I5We3j3CIRv-h_V-xApewvMe2xrgxKtDq445MkBLuZu"
+              "VPsBoXx6_oLX2Gx_2HuDYBDXITrbBNn7RNGTQUjNFnF60YDVRwxkz-aohfRJhrrSprn85YdkmXgUuN"
+              "QAHhlhUyYhMHXXCV1TxDXLmd5Iwo1seeTEUnt_wDHCurONDkudWPFwykOx1m2zvbrCvJi6ixNN1pwKF"
+              "2od9SIRc",
         },
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<String> emailList = [];
         for (var user in data['data']) {
-          emailList.add(user['email']);
+          emailList.add(user['user_email']);
         }
         setState(() {
           emails = emailList;
         });
+        print('userlist ${emails}');
+
       } else {
         throw Exception('Failed to load user list');
       }
@@ -108,7 +98,6 @@ class _InboxScreenState extends State<InboxScreen>
         });
       }
     });
-    apiController.get_userlist();
     return Scaffold(
       body:  Padding(
           padding: EdgeInsets.only(
@@ -125,12 +114,14 @@ class _InboxScreenState extends State<InboxScreen>
                         Text(
                           'Inbox',
                           style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w500, fontSize: 20.sp),
+                              fontWeight: FontWeight.w500, fontSize: 18.sp),
                         ),
-                       Spacer(),
+                        Spacer(),
+                        apiController.profileModel?.data?.email ==null?
+                        Container():
                         Container(
                             height: 5.h,
-                            width: 60.w,
+                            width: 71.w,
                             padding: EdgeInsets.only(right: 2.w),
                             decoration: BoxDecoration(
                                 color: Color(0xffF0F0F0),
@@ -143,10 +134,11 @@ class _InboxScreenState extends State<InboxScreen>
                                     ),
 
                                     Text(
+
                                       '${apiController.profileModel?.data?.email}',
                                       style: GoogleFonts.inter(
                                           color: Colors.grey,
-                                          fontSize: 11.sp),
+                                          fontSize: 10.sp),
                                     ),
                                     SizedBox(
                                       width: 2.w,
@@ -249,18 +241,24 @@ class _InboxScreenState extends State<InboxScreen>
                         SizedBox(
                           width: 2.w,
                         ),
-                        Container(
-                            height: 5.h,
-                            width: 5.h,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(1.h),
-                                border: Border.all(
-                                  color: Color(0xff4D4D4D),
-                                )),
-                          child: Center(
-                            child: Icon(Icons.calendar_month_outlined),
-                          ),
-                           ),
+                        InkWell(
+                          onTap: (){
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => DetailsScreen(selectedemail: selectedEmail,)));
+                          },
+                          child: Container(
+                              height: 5.h,
+                              width: 5.h,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(1.h),
+                                  border: Border.all(
+                                    color: Color(0xff4D4D4D),
+                                  )),
+                            child: Center(
+                              child: Icon(Icons.calendar_month_outlined),
+                            ),
+                             ),
+                        ),
                         SizedBox(width: 2.w,),
                         Container(
                           height: 5.h,

@@ -164,7 +164,7 @@ borderRadius: BorderRadius.circular(10),
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.call,size: 20.sp,),
+                      Image.asset("assets/images/telephone.png",height: 5.h,width: 5.w,color: Colors.black,),
                       SizedBox(width: 5.w,),
                       Text(
                         "+44 1234 567 8910",

@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobiledesign/view/Auth/login_screen.dart';
 import 'package:mobiledesign/view/details_screen.dart';
-import 'package:mobiledesign/view/dropDownExample.dart';
 import 'package:mobiledesign/view/inbox_screen.dart';
-import 'package:mobiledesign/view/send_emails.dart';
+
 import 'package:sizer/sizer.dart';
 
 
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          home: DetailsScreen()
+          home: InboxScreen()
         );
       },
     );

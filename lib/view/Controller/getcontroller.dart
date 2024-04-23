@@ -5,21 +5,24 @@ import 'package:http/http.dart' as http;
 import 'package:mobiledesign/Model/collection_model.dart';
 import 'package:mobiledesign/Model/emailmessages_model.dart';
 import 'package:mobiledesign/Model/getsentmails_model.dart';
+import 'package:mobiledesign/Model/login_model.dart';
 import 'package:mobiledesign/Model/rolex_model.dart';
 import 'package:mobiledesign/Model/user_model.dart';
 import 'package:mobiledesign/Model/user_profile.dart';
 
 class ApiController extends GetxController {
   CollectionModel? collectionModel;
-  RolexModel? rolexModel;
-  EmailMessagesModel? emailMessagesModel;
+  RolexxModel? rolexxModel;
+  InboxModel? emailMessagesModel;
   GetSentMailsModel? getSentMailsModel;
   RxList<Userlist> user = RxList();
+  LoginModel? loginModel;
+
 
   // Userlist? userlist;
-  var userList = <EmailMessagesModel>[].obs;
 
   ProfileModel? profileModel;
+
   // var userList = <Userlist>[].obs; // List to store user models
   // var selectedUser = Rxn<Userlist>(); // Rxn<User> for an optional user
 
@@ -29,8 +32,8 @@ class ApiController extends GetxController {
   Future<void> onInit() async {
     get_collection();
     get_rolexmodel();
-    get_userlist();
-    get_emailmsgs();
+    postlogin();
+    getEmailMsgs();
     get_sentemails();
     get_profile();
     super.onInit();
@@ -40,7 +43,7 @@ class ApiController extends GetxController {
     isLoading(true);
     // log(isLoading.toString());
     http.Response response =
-        await http.get(Uri.tryParse('https://api.crownsync.ai/api/collects')!);
+    await http.get(Uri.tryParse('https://api.crownsync.ai/api/collects')!);
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
       collectionModel = CollectionModel.fromJson(result);
@@ -57,17 +60,33 @@ class ApiController extends GetxController {
         Uri.tryParse('https://api.crownsync.ai/api/rolex_models')!,
         headers: {
           "Accept": "application/json",
-          "Authorization":
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0NDIxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNzQwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyMjMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmog2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVzB5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2DeBDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfhjX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTEq70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy024HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dCPOdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISwpAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHsbwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YGeE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9i4NHVNzlFLeCw",
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+              ".eyJhdWQiOiIzIiwianRpIjoiZGFiNmY1YTRkMTM5ZTY5YWZmYjJjN2Z"
+              "lNjQ4NjUyZmVjYzIzNzk4YWVjN2U5YTM5OWNlNzhlNWYwZTRkOTViOG"
+              "RhNmQ5ODU4OGExZjM0OGYiLCJpYXQiOjE3MTM3ODYwMzEuODcxMDQsIm"
+              "5iZiI6MTcxMzc4NjAzMS44NzEwNDIsImV4cCI6MTc0NTMyMjAzMS44NzA"
+              "xODEsInN1YiI6IjE5Iiwic2NvcGVzIjpbXX0.MmKAS-eNgm12sKqzfS_T9"
+              "80dGBEJpXVxT7xOuJ0zcrxiq7ri0geSjWMTYecUvfFxWShPbDoHNE_jy4O"
+              "DFvEwTkG-byCZdWflKEc72HC1zfeuTZUblWKfP4R1nNh6qbQTdUdyvzpue0I"
+              "1MTTztpsKcLpbe96VYvaOQM3nn8_G4qYQ7td0P7oNSpbwrwE85x6g1wuRTj8u"
+              "8acZ4OZhrYvxEf0nZgZiYqBPwFkQiTe8bFOfJV9CR3zLHUupVG_Ba0OCi9fcgL"
+              "ZGRGs7Y_WaDIu-CLaTUIaJ3JW3ivnJyZDMo2xm_icxx-xWtE5xb-8M_urP7gOJm"
+              "Xp6lUBFmFcRKxwLfVuwkGSWktjss_PVB7TNBryuxNsEAtWVtQmM50eOLCUw5VOdyy"
+              "LIAqujuxIsLhQ604-bQQH-OpeO6SgDdcJ8amNt3fyveD-weWWUMw5yeG9yL27k7Eez9"
+              "YAmFdCeeYZDe1hmE5RJ3DIZWt75q2Kml9AkqhVi2BIYhf9PD_FHZ7K0Fq9apjnWh0iRxc"
+              "VYlA8Hbn4aE4OxB8AL08hjON7nDl0pTfrDIqiRQH0ex3shkle0a-whKFv1RR__B4Urp9scn"
+              "RcTTxbMexwC20dIgHTaDnXb-hWoqdOiAMBPU3rj7i84ko7QTbVYhgduixC4MjfZe5Lmwr9h6nSLpM3_uwoI82Y",
+
         });
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-      rolexModel = RolexModel.fromJson(result);
+      rolexxModel = RolexxModel.fromJson(result);
       // log(result.toString());
-      print('Response = ${result}');
+      print('Rolex Model = ${result}');
       isLoading(false);
     }
   }
+
   // void fetchUsers() async {
   //   try {
   //     isLoading(true);
@@ -93,13 +112,28 @@ class ApiController extends GetxController {
         headers: {
           "Accept": "application/json",
           "Authorization":
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0NDIxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNzQwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyMjMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmog2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVzB5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2DeBDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfhjX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTEq70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy024HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dCPOdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISwpAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHsbwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YGeE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9i4NHVNzlFLeCw"
+          "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0NDIxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNzQwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyMjMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmog2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVzB5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2DeBDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfhjX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTEq70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy024HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dCPOdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISwpAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHsbwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YGeE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9i4NHVNzlFLeCw"
         });
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
       getSentMailsModel = GetSentMailsModel.fromJson(result);
       // log(result.toString());
       print('Emails = ${result}');
+      isLoading(false);
+    }
+  }
+
+  postlogin() async {
+    isLoading(true);
+    // log(isLoading.toString());
+    http.Response response = await http.post(
+      Uri.tryParse('https://api.crownsync.ai/api/login')!,
+    );
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+      loginModel = LoginModel.fromJson(result);
+      // log(result.toString());
+      print('Logins = ${result}');
       isLoading(false);
     }
   }
@@ -111,20 +145,21 @@ class ApiController extends GetxController {
         .get(Uri.tryParse('https://api.crownsync.ai/api/profile')!, headers: {
       "Accept": "application/json",
       "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
-          ".eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0NDI"
-          "xMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNzQwO"
-          "WU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5iZiI6MTc"
-          "xMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyMjMsInN1YiI6I"
-          "jkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmog2OpW_xfSEXXKjk"
-          "-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVzB5T1huKcjoOKTVeRjm"
-          "XFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2DeBDqs02YWgsxB3PxcF51Ro"
-          "QWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfhjX-ZrWxs7U77Ewf_qFF3JHdV"
-          "MmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTEq70kOrCpEV2O2Q_Cu8IgS0cF9aR"
-          "jF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy024HriBBoq3lXjnmb2TNr6oULn5khQmYBX8f"
-          "j_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dCPOdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o"
-          "-DyQBRhnpMm9ScQzTpIHISwpAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk"
-          "0f7rKpICJkYTzrHsbwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0v"
-          "q_Y9gnY1YGeE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9i4NHVNzlFLeCw",
+          ".eyJhdWQiOiIzIiwianRpIjoiZGFiNmY1YTRkMTM5ZTY5YWZmYjJjN2Z"
+          "lNjQ4NjUyZmVjYzIzNzk4YWVjN2U5YTM5OWNlNzhlNWYwZTRkOTViOG"
+          "RhNmQ5ODU4OGExZjM0OGYiLCJpYXQiOjE3MTM3ODYwMzEuODcxMDQsIm"
+          "5iZiI6MTcxMzc4NjAzMS44NzEwNDIsImV4cCI6MTc0NTMyMjAzMS44NzA"
+          "xODEsInN1YiI6IjE5Iiwic2NvcGVzIjpbXX0.MmKAS-eNgm12sKqzfS_T9"
+          "80dGBEJpXVxT7xOuJ0zcrxiq7ri0geSjWMTYecUvfFxWShPbDoHNE_jy4O"
+          "DFvEwTkG-byCZdWflKEc72HC1zfeuTZUblWKfP4R1nNh6qbQTdUdyvzpue0I"
+          "1MTTztpsKcLpbe96VYvaOQM3nn8_G4qYQ7td0P7oNSpbwrwE85x6g1wuRTj8u"
+          "8acZ4OZhrYvxEf0nZgZiYqBPwFkQiTe8bFOfJV9CR3zLHUupVG_Ba0OCi9fcgL"
+          "ZGRGs7Y_WaDIu-CLaTUIaJ3JW3ivnJyZDMo2xm_icxx-xWtE5xb-8M_urP7gOJm"
+          "Xp6lUBFmFcRKxwLfVuwkGSWktjss_PVB7TNBryuxNsEAtWVtQmM50eOLCUw5VOdyy"
+          "LIAqujuxIsLhQ604-bQQH-OpeO6SgDdcJ8amNt3fyveD-weWWUMw5yeG9yL27k7Eez9"
+          "YAmFdCeeYZDe1hmE5RJ3DIZWt75q2Kml9AkqhVi2BIYhf9PD_FHZ7K0Fq9apjnWh0iRxc"
+          "VYlA8Hbn4aE4OxB8AL08hjON7nDl0pTfrDIqiRQH0ex3shkle0a-whKFv1RR__B4Urp9scn"
+          "RcTTxbMexwC20dIgHTaDnXb-hWoqdOiAMBPU3rj7i84ko7QTbVYhgduixC4MjfZe5Lmwr9h6nSLpM3_uwoI82Y",
 
     },);
     if (response.statusCode == 200) {
@@ -171,90 +206,90 @@ class ApiController extends GetxController {
   // }
 
 
-  Future<void> get_userlist() async {
-    isLoading.value = true;
-    try {
-      http.Response response = await http.get(
-        Uri.parse('https://api.crownsync.ai/api/userlist'),
-        headers: {
-          "Accept": "application/json",
-          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
-              ".eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0ND"
-              "IxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNz"
-              "QwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5"
-              "iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyM"
-              "jMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmo"
-              "g2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVz"
-              "B5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2De"
-              "BDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfh"
-              "jX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTE"
-              "q70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy02"
-              "4HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dC"
-              "POdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISw"
-              "pAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHs"
-              "bwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YG"
-              "eE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9"
-              "i4NHVNzlFLeCw",
-        },
-      );
-
-      if (response.statusCode == 200) {
-        var result = jsonDecode(response.body);
-        List users = result['data'];
-
-        // Clear the existing list and populate with new users
-        userList.clear();
-        for (var userJson in users) {
-          // userList.add(Userlist.fromJson(userJson));
-        }
-        isLoading.value = false; // Set loading to false after data is fetched
-      } else {
-        // Print the actual error message
-        print("Error fetching user list: ${response.statusCode}, ${response.body}");
-        isLoading.value = false; // Also set loading to false in case of error
-      }
-    } catch (e) {
-      print('Error fetching userlist : $e');
-      isLoading.value = false; // Set loading to false on exception
-    }
-  }
-  get_emailmsgs() async {
+  // Future<void> get_userlist() async {
+  //   isLoading.value = true;
+  //   try {
+  //     http.Response response = await http.get(
+  //       Uri.parse('https://api.crownsync.ai/api/userlist'),
+  //       headers: {
+  //         "Accept": "application/json",
+  //         "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+  //             ".eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0ND"
+  //             "IxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNz"
+  //             "QwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5"
+  //             "iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyM"
+  //             "jMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmo"
+  //             "g2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVz"
+  //             "B5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2De"
+  //             "BDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfh"
+  //             "jX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTE"
+  //             "q70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy02"
+  //             "4HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dC"
+  //             "POdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISw"
+  //             "pAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHs"
+  //             "bwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YG"
+  //             "eE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9"
+  //             "i4NHVNzlFLeCw",
+  //       },
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       var result = jsonDecode(response.body);
+  //       List users = result['data'];
+  //
+  //       // Clear the existing list and populate with new users
+  //       userList.clear();
+  //       for (var userJson in users) {
+  //         // userList.add(Userlist.fromJson(userJson));
+  //       }
+  //       isLoading.value = false; // Set loading to false after data is fetched
+  //     } else {
+  //       // Print the actual error message
+  //       print("Error fetching user list: ${response.statusCode}, ${response.body}");
+  //       isLoading.value = false; // Also set loading to false in case of error
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching userlist : $e');
+  //     isLoading.value = false; // Set loading to false on exception
+  //   }
+  // }
+  Future<void> getEmailMsgs() async {
     isLoading(true);
 
-    try {
-      http.Response response = await http.get(
-        Uri.tryParse('https://api.crownsync.ai/api/email-messages')!,
-        headers: {
-          "Accept": "application/json",
-          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
-              ".eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0ND"
-              "IxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNz"
-              "QwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5"
-              "iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyM"
-              "jMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmo"
-              "g2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVz"
-              "B5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2De"
-              "BDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfh"
-              "jX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTE"
-              "q70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy02"
-              "4HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dC"
-              "POdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISw"
-              "pAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHs"
-              "bwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YG"
-              "eE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9"
-              "i4NHVNzlFLeCw",
-        },
-      );
+    http.Response response = await http.get(
+      Uri.tryParse('https://api.crownsync.ai/api/email-messages')!,
+      headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+            ".eyJhdWQiOiIzIiwianRpIjoiY2UwYzIyMmI1NjZiMWRlYzM2ZWJjOGU3Y"
+            "zBmMDE3NzI2NmM4ZmFkMTZiMTk3MWFiMzU0MDJmMDRmZmMwNTliNjQ0YzNk"
+            "ZDE1NmYyYWE5ZjkiLCJpYXQiOjE3MTM3ODMwMjIuMzg4MTI5LCJuYmYiOjE3"
+            "MTM3ODMwMjIuMzg4MTMxLCJleHAiOjE3NDUzMTkwMjIuMzg3MTk3LCJzdWIiOi"
+            "IxOSIsInNjb3BlcyI6W119.IfaT156xsXoW1XYj64vNkt5PmdWuCV1IWyGHimKAE"
+            "7fEaYQFCYbMZBC_wBeYJYDYzMwcAVtbqKp1gyBmibromFLtJNWkqQtYrLVkWajOzs1C"
+            "0YhHAAdibCX0Zt9IBg6oImbfmqQNXkPSWSzXh6y2JQx3R-3NwFdbxaCfIxd_conJKcuuW"
+            "EoU504-sHkLfHdqKlJJwJ_ZkWpJSo68qPhtBkZ_1OCqXL6BVhnnCmNNKfmZpw5oKVXp26iw"
+            "RHnwlDGjgXdMrvIrGCLcw2XbI3SCczgpoWeRLdBOu7RQwPhbA69_3UMb0ILSGgHX1zRMrpeJK"
+            "8RiZzdeEMUh825LaBGpPk_ooRtwl11vi2b10kFDueNR-lBb2Wj3JSBi5wKAghgCvfhsklgqbTl"
+            "QtDJwv71sCO0m5fMCPtXjetYKan5D4G_4LuVKdbnllFb_uyrTVKo-AYgUK4mYeXbmgROpbJgCZPS"
+            "ynz5I5We3j3CIRv-h_V-xApewvMe2xrgxKtDq445MkBLuZuVPsBoXx6_oLX2Gx_2HuDYBDXITrbBNn7"
+            "RNGTQUjNFnF60YDVRwxkz-aohfRJhrrSprn85YdkmXgUuNQAHhlhUyYhMHXXCV1TxDXLmd5Iwo1seeTEU"
+            "nt_wDHCurONDkudWPFwykOx1m2zvbrCvJi6ixNN1pwKF2od9SIRc",
+      },
+    );
 
-      if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
+      print('Email Msgs: ${response.body}');
+
+      // Parse response body only if it is valid JSON
+
         var result = jsonDecode(response.body);
-        emailMessagesModel = EmailMessagesModel.fromJson(result);
-        print('Email Msgs = ${result}');
-      } else {
-        print('Failed to load email messages: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error fetching email messages: $e');
+        emailMessagesModel = InboxModel.fromJson(result);
+        print('Email Msgs == ${result}');
+
+    } else {
+      print('Failed to load email messages: ${response.statusCode}');
+      print('Response Body: ${response.body}');
     }
 
     isLoading(false);

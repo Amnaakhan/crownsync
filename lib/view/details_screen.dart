@@ -11,9 +11,12 @@ import 'package:http/http.dart' as http;
 
 
 class DetailsScreen extends StatefulWidget {
-  const DetailsScreen({super.key});
+  final String? selectedemail;
 
-  @override
+  const DetailsScreen({super.key, this.selectedemail});
+
+
+
   State<DetailsScreen> createState() => _DetailsScreenState();
 }
 
@@ -25,6 +28,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
   String? selectedcollection;
   List<String> templatelist= [];
   String? selectedtemplate;
+  List<String> _watchNames = [];
+  String? _selectedWatch;
+  String? _selectedModel;
+  List<Map<String, dynamic>> _rolexModels = [];
+
+
 
 
   @override
@@ -33,12 +42,97 @@ class _DetailsScreenState extends State<DetailsScreen> {
     fetchAssignUserList();
     fetchCollectionList();
     fetchTemplateList();
+    _fetchData();
 
 
   }
+  Future<void> _fetchData() async {
+    try {
+      List<String> watchNames = await fetchWatchNames();
+      setState(() {
+        _watchNames = watchNames;
+      });
+    } catch (error) {
+      print('Error fetching watch names: $error');
+    }
+  }
+  Future<List<String>> fetchWatchNames() async {
+    final response = await http.get(Uri.parse('https://api.crownsync.ai/api/collects'), headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+          ".eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0ND"
+          "IxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNz"
+          "QwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5"
+          "iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyM"
+          "jMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmo"
+          "g2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVz"
+          "B5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2De"
+          "BDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfh"
+          "jX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTE"
+          "q70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy02"
+          "4HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dC"
+          "POdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISw"
+          "pAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHs"
+          "bwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YG"
+          "eE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9"
+          "i4NHVNzlFLeCw",
+    },);
+
+    if (response.statusCode == 200) {
+      List<String> watchNames = [];
+      final List<dynamic> data = json.decode(response.body)['data'];
+
+      for (var item in data) {
+        watchNames.add(item['name']);
+      }
+
+      return watchNames;
+    } else {
+      throw Exception('Failed to load watch names');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchModelsForWatch(String watchName) async {
+    final response = await http.get(Uri.parse('https://api.crownsync.ai/api/collects'), headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+          ".eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0ND"
+          "IxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNz"
+          "QwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5"
+          "iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyM"
+          "jMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmo"
+          "g2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVz"
+          "B5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2De"
+          "BDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfh"
+          "jX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTE"
+          "q70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy02"
+          "4HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dC"
+          "POdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISw"
+          "pAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHs"
+          "bwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YG"
+          "eE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9"
+          "i4NHVNzlFLeCw",
+    },);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body)['data'];
+      List<Map<String, dynamic>> models = [];
+
+      for (var item in data) {
+        if (item['name'] == watchName) {
+          models = List<Map<String, dynamic>>.from(item['rolexModels']);
+          break;
+        }
+      }
+
+      return models;
+    } else {
+      throw Exception('Failed to load models for $watchName');
+    }
+  }
   Future<void> fetchTemplateList() async {
     try {
-      final response = await http.get(Uri.parse('https://api.crownsync.ai/api/rolex_models'),
+      final response = await http.get(Uri.parse('https://api.crownsync.ai/api/admin/mail_templates'),
         headers: {
           "Accept": "application/json",
           "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
@@ -64,7 +158,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
         final data = json.decode(response.body);
         List<String> userList = [];
         for (var user in data['data']) {
-          userList.add(user['name']);
+          userList.add(user['template_name']);
         }
         setState(() {
           templatelist = userList;
@@ -120,37 +214,37 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
   Future<void> fetchAssignUserList() async {
     try {
-      final response = await http.get(Uri.parse('https://api.crownsync.ai/api/getassignuser'),
+      final response = await http.get(Uri.parse('https://api.crownsync.ai/api/getuserlist'),
         headers: {
           "Accept": "application/json",
           "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
-              ".eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0ND"
-              "IxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNz"
-              "QwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5"
-              "iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyM"
-              "jMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmo"
-              "g2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVz"
-              "B5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2De"
-              "BDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfh"
-              "jX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTE"
-              "q70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy02"
-              "4HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dC"
-              "POdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISw"
-              "pAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHs"
-              "bwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YG"
-              "eE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9"
-              "i4NHVNzlFLeCw",
+              ".eyJhdWQiOiIzIiwianRpIjoiY2UwYzIyMmI1NjZiMWRlYzM2ZWJjOGU3"
+              "YzBmMDE3NzI2NmM4ZmFkMTZiMTk3MWFiMzU0MDJmMDRmZmMwNTliNjQ0Yz"
+              "NkZDE1NmYyYWE5ZjkiLCJpYXQiOjE3MTM3ODMwMjIuMzg4MTI5LCJuYmYiO"
+              "jE3MTM3ODMwMjIuMzg4MTMxLCJleHAiOjE3NDUzMTkwMjIuMzg3MTk3LCJzdW"
+              "IiOiIxOSIsInNjb3BlcyI6W119.IfaT156xsXoW1XYj64vNkt5PmdWuCV1IWyG"
+              "HimKAE7fEaYQFCYbMZBC_wBeYJYDYzMwcAVtbqKp1gyBmibromFLtJNWkqQtYrL"
+              "VkWajOzs1C0YhHAAdibCX0Zt9IBg6oImbfmqQNXkPSWSzXh6y2JQx3R-3NwFdbxaCf"
+              "Ixd_conJKcuuWEoU504-sHkLfHdqKlJJwJ_ZkWpJSo68qPhtBkZ_1OCqXL6BVhnnCmN"
+              "NKfmZpw5oKVXp26iwRHnwlDGjgXdMrvIrGCLcw2XbI3SCczgpoWeRLdBOu7RQwPhbA69_"
+              "3UMb0ILSGgHX1zRMrpeJK8RiZzdeEMUh825LaBGpPk_ooRtwl11vi2b10kFDueNR-lBb2Wj"
+              "3JSBi5wKAghgCvfhsklgqbTlQtDJwv71sCO0m5fMCPtXjetYKan5D4G_4LuVKdbnllFb_uyr"
+              "TVKo-AYgUK4mYeXbmgROpbJgCZPSynz5I5We3j3CIRv-h_V-xApewvMe2xrgxKtDq445MkBLuZu"
+              "VPsBoXx6_oLX2Gx_2HuDYBDXITrbBNn7RNGTQUjNFnF60YDVRwxkz-aohfRJhrrSprn85YdkmXgUuN"
+              "QAHhlhUyYhMHXXCV1TxDXLmd5Iwo1seeTEUnt_wDHCurONDkudWPFwykOx1m2zvbrCvJi6ixNN1pwKF"
+              "2od9SIRc",
         },
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<String> userList = [];
         for (var user in data['data']) {
-          userList.add(user['team_id']);
+          userList.add(user['user_email']);
         }
         setState(() {
           asignuserlist = userList;
         });
+        print('userlist ${asignuserlist}');
       } else {
         throw Exception('Failed to load user list');
       }
@@ -164,6 +258,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('Sender Email ${widget.selectedemail}');
     return Scaffold(
       body:
       SingleChildScrollView(
@@ -379,6 +474,123 @@ Container(
               ),
 
               SizedBox(height: 2.h,),
+              Container(
+                height: 12.h,
+                width: double.infinity,
+                margin: EdgeInsets.only(left: 4.w,right: 4.w),
+                padding: EdgeInsets.only(left: 4.w,top: 1.h,right: 4.w),
+
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(1.h),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xff000000).withOpacity(0.10),
+                      blurRadius: 4, // soften the shadow
+                      spreadRadius: 0, //extend the shadow
+                      offset: Offset(
+                        0, // Move to right 10  horizontally
+                        4, // Move to bottom 10 Vertically
+                      ),
+                    )
+                  ],
+
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Choose Template',
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff808686),
+                          fontSize: 12.sp),
+                    ),
+                    SizedBox(height: 1.h,),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
+                        hint: Row(
+                          children: [
+                            SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                'Select Template',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff808686),
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        items: templatelist.map((String email) {
+                          return DropdownMenuItem<String>(
+                            value: email,
+                            child: Text(
+                              email,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff808686),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
+                        }).toList(),
+                        value: selectedtemplate,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedtemplate = value;
+                          });
+                        },
+                        buttonStyleData: ButtonStyleData(
+                          height: 5.h,
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Color(0xff808686),
+                            ),
+                            color: Color(0xffE0E1E1),
+                          ),
+                          elevation: 2,
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_outlined,
+                          ),
+                          iconSize: 30,
+                          iconEnabledColor: Color(0xff808686),
+                          iconDisabledColor: Color(0xff808686),
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 200,
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Color(0xffE0E1E1),
+                          ),
+                          scrollbarTheme: ScrollbarThemeData(
+                            radius: const Radius.circular(40),
+                            thickness: MaterialStateProperty.all<double>(6),
+                            thumbVisibility: MaterialStateProperty.all<bool>(true),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                        ),
+                      ),
+                    ),
+
+                  ],
+                ),
+              ),
+              SizedBox(height: 2.h,),
 
               Container(
                 height: 12.h,
@@ -426,7 +638,9 @@ Container(
                             borderRadius: BorderRadius.circular(1.h),
 
                           ),
-                          child: Center(child: Text('${apiController.rolexModel?.data?[0].location}',style: GoogleFonts.inter(
+                          child: Center(child:
+                          Text('${apiController.rolexxModel?.data?[0].location}'
+                            ,style: GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
                               color: Color(0xff808686),
 
@@ -440,7 +654,9 @@ Container(
                               borderRadius: BorderRadius.circular(1.h),
 
                           ),
-                          child: Center(child: Text('${apiController.rolexModel?.data?[1].location}',style: GoogleFonts.inter(
+                          child: Center(child:
+                          Text('${apiController.rolexxModel?.data?[1].location}'
+                            ,style: GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
                               color: Color(0xff808686),
 
@@ -453,7 +669,9 @@ Container(
                               color: Color(0xffE0E1E1),
                               borderRadius: BorderRadius.circular(1.h),
                           ),
-                          child: Center(child: Text('${apiController.rolexModel?.data?[2].location}',style: GoogleFonts.inter(
+                          child: Center(child:
+                          Text('${apiController.rolexxModel?.data?[2].location}',
+                            style: GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
                               color: Color(0xff808686),
 
@@ -508,7 +726,7 @@ Container(
                             SizedBox(width: 4),
                             Expanded(
                               child: Text(
-                                'Select a selection',
+                                'Select collection',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -519,11 +737,11 @@ Container(
                             ),
                           ],
                         ),
-                        items: collectionlist.map((String email) {
+                        items: _watchNames.map((String watchName) {
                           return DropdownMenuItem<String>(
-                            value: email,
+                            value: watchName,
                             child: Text(
-                              email,
+                              watchName,
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -533,15 +751,26 @@ Container(
                             ),
                           );
                         }).toList(),
-                        value: selectedcollection,
-                        onChanged: (String? value) {
+                        value: _selectedWatch,
+                        onChanged: (String? value) async {
                           setState(() {
-                            selectedcollection = value;
+                            _selectedWatch = value;
+                            _rolexModels = []; // Clear previous models
                           });
+                          if (value != null) {
+                            try {
+                              List<Map<String, dynamic>> models = await fetchModelsForWatch(value);
+                              setState(() {
+                                _rolexModels = models;
+                              });
+                            } catch (error) {
+                              print('Error fetching models: $error');
+                            }
+                          }
                         },
                         buttonStyleData: ButtonStyleData(
                           height: 5.h,
-                          width: double.infinity,
+                          width: 300,
                           padding: const EdgeInsets.only(left: 14, right: 14),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -562,7 +791,7 @@ Container(
                         ),
                         dropdownStyleData: DropdownStyleData(
                           maxHeight: 200,
-                          width: 200,
+                          width: 300,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xffE0E1E1),
@@ -611,7 +840,7 @@ Container(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Choose Template',
+                      'Choose Model',
                       style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
                           color: Color(0xff828282),
@@ -627,7 +856,7 @@ Container(
                             SizedBox(width: 4),
                             Expanded(
                               child: Text(
-                                'Select a selection',
+                                'Select a model',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -638,11 +867,11 @@ Container(
                             ),
                           ],
                         ),
-                        items: templatelist.map((String email) {
+                        items: _rolexModels.map((Map<String, dynamic> model) {
                           return DropdownMenuItem<String>(
-                            value: email,
+                            value: model['id'].toString(),
                             child: Text(
-                              email,
+                              model['name'],
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -652,10 +881,10 @@ Container(
                             ),
                           );
                         }).toList(),
-                        value: selectedtemplate,
+                        value: _selectedModel,
                         onChanged: (String? value) {
                           setState(() {
-                            selectedtemplate = value;
+                            _selectedModel = value;
                           });
                         },
                         buttonStyleData: ButtonStyleData(
@@ -681,7 +910,7 @@ Container(
                         ),
                         dropdownStyleData: DropdownStyleData(
                           maxHeight: 200,
-                          width: 200,
+                          width: 300,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xffE0E1E1),
@@ -698,6 +927,7 @@ Container(
                         ),
                       ),
                     ),
+
 
 
                   ],
