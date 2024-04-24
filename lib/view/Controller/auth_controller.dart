@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:mobiledesign/home_screen.dart';
 import 'package:mobiledesign/test_screen.dart';
+import 'package:mobiledesign/view/email_preview.dart';
 import 'package:mobiledesign/view/inbox_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -156,7 +157,122 @@ class AuthController extends GetxController{
   }
 
 
+  email_preview(
+      {
+    required String? respondername, required String? responderemail,
+    required String recivername,required String? reciveremail,
+    required String? productid,   String? tempelateid}
+      ) async {
 
+      isLoading.value = true;
+      EmailPasswordError.value ='';
+      var data = {
+        'responder_mail': respondername,
+        'responder_name': responderemail,
+        'reciever_email': reciveremail,
+        'reciever_name': recivername,
+        'product_id': productid,
+        'template_id': tempelateid
+
+      };
+      http.Response response = await http
+          .post(Uri.tryParse('https://api.crownsync.ai/api/email-preview')!,headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiZjBiYjViY2FjOTM5MzEzNjI2MDlmYmYzZGYwYzA4ZGE5ZDFjNTRjMDgyNzY3ZTAzOWIyZjdkNzlhMDgzYjU4OTEzMjYxMjg5NWJjOTI4ZjgiLCJpYXQiOjE3MTM5MzU0MjIuMDgyNzgsIm5iZiI6MTcxMzkzNTQyMi4wODI3ODIsImV4cCI6MTc0NTQ3MTQyMi4wODIwMjQsInN1YiI6IjI1Iiwic2NvcGVzIjpbXX0.L0ypgsJFChQDmFq9Vr6w3DgxyXEGiSedTQHPokyp8aMgTj7uKMOce3aMvJ0bRsRFUHR0m284VVVjUpqL15JYdVw6YuNA13_RfmvtihDRs9LaxM9g-ZIz_avrxd-QGJ000zisk63vG_NegXBRgVp8jsp2DiG_D3YdNAs4e1wQKGlYoQyYNifS21w4hY2g7_qhZi_wJa28RdpKdWqgYefJ-vHEMgicnRuNTfXWkWwzWM-rr_cZLwhib7tQRXA9oTBLSRq8tkqP1u0vxy5s1w6CqBtVdiyJ-fGMTCBOXCpB2oMFUOJipxMVDu6vSmFiBWGJQ6XLZ3KXZxs_2qXTjCj3pYC2vEf8MSFKmOMze4ZP11md2HpEzBmeAqbtVxTmbBPN8nXovzdXcz_Ma35d-P49qvZZ-By0kVa3utmSTqcsLG7iYZfJe7OKJ7nSUI3R5kjQ0fMZ_hfLJOtqcb-1NauNlh-qvuNeiPfQw40m3BChSsmlXzoMTHpPuWIr2M-Mp4omUdnGJ0SOvzL9UxCWmnBTRv0jOIW5FcewScqsYbkiWXzplTws_43pY26U4MbdqteQ5t7UwONCbQA_8WKwzeWzu4LEdjMj1pS3vFy3HzY8EreFSTV6VMa7oj7Go57lccmKGSNFx74CV0CKSFCZ5RJPG0bdpMB4XQLZXTQrE30XLwA"
+      },body: data);
+      print("response1::$response");
+      if (response.statusCode == 200) {
+        print("Response2::${response}");
+
+
+        Fluttertoast.showToast(
+            msg: 'Success',
+            backgroundColor: Colors.black,textColor: Colors.white
+        );
+        print("Email preview::${response}");
+
+        Get.to(EmailPreview(responseBody: response.body,));
+      } else  {
+        Fluttertoast.showToast(
+            msg: 'Error , Please Try Again',
+
+            backgroundColor: Colors.black,textColor: Colors.white
+        );
+      }
+
+  }
+  sendemail(
+      // {
+      //   // required String? recivermail, required String? responderemail,
+      //   }
+      ) async {
+
+    isLoading.value = true;
+    EmailPasswordError.value ='';
+    var data = {
+      'responder_mail': 'khanamna983@gmail.com',
+      'reply_to': 'thezubairkhan.developer@gmail.com',
+      'response':'',
+      'subject': '',
+      'received_message':'Dear  thezubairkhan.developer@gmail.com,\n\nMy name is Amna khan.'
+          '  I am one of the Rolex Specialists here at Hamra Jewelers.  Hamra Jewelers has '
+          'been an Official Rolex Jeweler for over 20 years and we welcome the opportunity '
+          'to assist you.\nThank you for inquiring about the Rolex Rolex 1908 39 mm, 18 ct '
+          'white gold, polished finish, M52509-0006\n\nWhat a fantastic timepiece!  This watch'
+          ' combines many of the features that has secured Rolex’s position as the premier brand'
+          ' in the timepiece industry.  It features .  Additionally, the Rolex 1908 39 mm, 18 ct'
+          ' white gold, polished finish, M52509-0006, like all Rolex watches, are entirely Swiss'
+          ' Made, highly waterproof, come with 5-year warranties, and are amongst the most reliable'
+          ' and durable watches in the world.\nCurrently I do have a  Rolex 1908 39 mm, 18 ct white'
+          ' gold, polished finish, M52509-0006  in stock Please let me know if you are interested '
+          'in viewing the Rolex 1908 39 mm, 18 ct white gold, polished finish, M52509-0006 and I '
+          'would be happy to make an appointment with you.  Please note all Rolex sales are in store, '
+          'over the counter.  I can be reached at [SenderPhone]. \nThank you again for your inquiry '
+          'and your interest in Rolex.\nI hope you have a wonderful day and I look forward to assisting'
+          ' you with all your timepiece needs.\n\n\nBest,\nAmna khan\nZubair khan\nGeneva',
+        'from':'mobile'
+
+
+    };
+    http.Response response = await http
+        .post(Uri.tryParse('https://api.crownsync.ai/api/gmail/send-email')!,headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+          ".eyJhdWQiOiIzIiwianRpIjoiZjBiYjViY2FjOTM5MzEzNjI2MDlmYmYzZGYwYz"
+          "A4ZGE5ZDFjNTRjMDgyNzY3ZTAzOWIyZjdkNzlhMDgzYjU4OTEzMjYxMjg5NWJj"
+          "OTI4ZjgiLCJpYXQiOjE3MTM5MzU0MjIuMDgyNzgsIm5iZiI6MTcxMzkzNTQyMi"
+          "4wODI3ODIsImV4cCI6MTc0NTQ3MTQyMi4wODIwMjQsInN1YiI6IjI1Iiwic2Nv"
+          "cGVzIjpbXX0.L0ypgsJFChQDmFq9Vr6w3DgxyXEGiSedTQHPokyp8aMgTj7uKMOc"
+          "e3aMvJ0bRsRFUHR0m284VVVjUpqL15JYdVw6YuNA13_RfmvtihDRs9LaxM9g-ZIz"
+          "_avrxd-QGJ000zisk63vG_NegXBRgVp8jsp2DiG_D3YdNAs4e1wQKGlYoQyYNifS2"
+          "1w4hY2g7_qhZi_wJa28RdpKdWqgYefJ-vHEMgicnRuNTfXWkWwzWM-rr_cZLwhib7"
+          "tQRXA9oTBLSRq8tkqP1u0vxy5s1w6CqBtVdiyJ-fGMTCBOXCpB2oMFUOJipxMVDu6"
+          "vSmFiBWGJQ6XLZ3KXZxs_2qXTjCj3pYC2vEf8MSFKmOMze4ZP11md2HpEzBmeAqbtVx"
+          "TmbBPN8nXovzdXcz_Ma35d-P49qvZZ-By0kVa3utmSTqcsLG7iYZfJe7OKJ7nSUI3R5k"
+          "jQ0fMZ_hfLJOtqcb-1NauNlh-qvuNeiPfQw40m3BChSsmlXzoMTHpPuWIr2M-Mp4omUdn"
+          "GJ0SOvzL9UxCWmnBTRv0jOIW5FcewScqsYbkiWXzplTws_43pY26U4MbdqteQ5t7UwONCb"
+          "QA_8WKwzeWzu4LEdjMj1pS3vFy3HzY8EreFSTV6VMa7oj7Go57lccmKGSNFx74CV0CKSFCZ"
+          "5RJPG0bdpMB4XQLZXTQrE30XLwA"
+    },body: data);
+    print("response1::$response");
+    if (response.statusCode == 200) {
+      print("Response2::${response}");
+
+
+      Fluttertoast.showToast(
+          msg: 'Success',
+          backgroundColor: Colors.black,textColor: Colors.white
+      );
+
+    } else  {
+      Fluttertoast.showToast(
+          msg: 'Error , Please Try Again',
+
+          backgroundColor: Colors.black,textColor: Colors.white
+      );
+    }
+
+  }
 
   Future<String?> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

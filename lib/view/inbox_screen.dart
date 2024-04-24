@@ -22,10 +22,14 @@ class _InboxScreenState extends State<InboxScreen>
     with TickerProviderStateMixin {
   int _activeIndex = 0;
   late TabController _tabController;
+  List<Map<String, dynamic>> emailMessages = [];
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
     fetchUserList();
+    fetchEmailMessages();
     _tabController = new TabController(vsync: this, length: 3);
 
   }
@@ -87,6 +91,47 @@ class _InboxScreenState extends State<InboxScreen>
     } catch (e) {
       print('Error fetching user list: $e');
       // Handle error here
+    }
+  }
+  Future<void> fetchEmailMessages() async {
+    try {
+      final response = await http.get(Uri.parse('https://api.crownsync.ai/api/email-messages'), headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+            ".eyJhdWQiOiIzIiwianRpIjoiY2UwYzIyMmI1NjZiMWRlYzM2ZWJjOGU3"
+            "YzBmMDE3NzI2NmM4ZmFkMTZiMTk3MWFiMzU0MDJmMDRmZmMwNTliNjQ0Yz"
+            "NkZDE1NmYyYWE5ZjkiLCJpYXQiOjE3MTM3ODMwMjIuMzg4MTI5LCJuYmYiO"
+            "jE3MTM3ODMwMjIuMzg4MTMxLCJleHAiOjE3NDUzMTkwMjIuMzg3MTk3LCJzdW"
+            "IiOiIxOSIsInNjb3BlcyI6W119.IfaT156xsXoW1XYj64vNkt5PmdWuCV1IWyGH"
+            "imKAE7fEaYQFCYbMZBC_wBeYJYDYzMwcAVtbqKp1gyBmibromFLtJNWkqQtYrLVkW"
+            "ajOzs1C0YhHAAdibCX0Zt9IBg6oImbfmqQNXkPSWSzXh6y2JQx3R-3NwFdbxaCfIxd"
+            "_conJKcuuWEoU504-sHkLfHdqKlJJwJ_ZkWpJSo68qPhtBkZ_1OCqXL6BVhnnCmNNKf"
+            "mZpw5oKVXp26iwRHnwlDGjgXdMrvIrGCLcw2XbI3SCczgpoWeRLdBOu7RQwPhbA69_3U"
+            "Mb0ILSGgHX1zRMrpeJK8RiZzdeEMUh825LaBGpPk_ooRtwl11vi2b10kFDueNR-lBb2Wj3"
+            "JSBi5wKAghgCvfhsklgqbTlQtDJwv71sCO0m5fMCPtXjetYKan5D4G_4LuVKdbnllFb_uyrT"
+            "VKo-AYgUK4mYeXbmgROpbJgCZPSynz5I5We3j3CIRv-h_V-xApewvMe2xrgxKtDq445MkBLuZu"
+            "VPsBoXx6_oLX2Gx_2HuDYBDXITrbBNn7RNGTQUjNFnF60YDVRwxkz-aohfRJhrrSprn85YdkmXg"
+            "UuNQAHhlhUyYhMHXXCV1TxDXLmd5Iwo1seeTEUnt_wDHCurONDkudWPFwykOx1m2zvbrCvJi6ixNN"
+            "1pwKF2od9SIRc",
+
+      }
+      );
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        setState(() {
+          emailMessages = List<Map<String, dynamic>>.from(jsonData['data']);
+          isLoading = false;
+
+        });
+      } else {
+        print('Failed to load email messages');
+        isLoading = false;
+
+      }
+    } catch (e) {
+      print('Exception: $e');
+      isLoading = false;
+
     }
   }
   @override
@@ -295,16 +340,21 @@ class _InboxScreenState extends State<InboxScreen>
                 Expanded(
 
 
-                 child:  Obx(()=> apiController.isLoading.value?Center(child: CircularProgressIndicator(),):
-                 apiController.emailMessagesModel?.data == null?Center(child: Text('Nothing to show',style: GoogleFonts.inter(
+                 child:   isLoading?Center(child: CircularProgressIndicator(),)
+                   : emailMessages.isEmpty ?
+                 Center(child: Text('Nothing to show',style: GoogleFonts.inter(
                      color: Colors.black,
                      fontWeight: FontWeight.w500,
                      fontSize: 12.sp),),):
                     ListView.builder(
-                     itemCount: apiController.emailMessagesModel?.data?.length,
+                     itemCount:emailMessages.length,
                      itemBuilder: (context, index) {
+                       final email = emailMessages[index];
+                       final detail = json.decode(email['detail']);
+                       final fromField = _parseField(detail['headers'], 'From');
+                       final toField = _parseField(detail['headers'], 'To');
                        return Container(
-                         height: 15.h,
+                         height: 16.h,
                          width: double.infinity,
                          margin: EdgeInsets.only(left: 4.w, right: 4.w,top: 1.h,bottom: 1.h),
                          padding: EdgeInsets.only(left: 4.w, top: 2.5.h, right: 2.w),
@@ -351,7 +401,7 @@ class _InboxScreenState extends State<InboxScreen>
                                    crossAxisAlignment: CrossAxisAlignment.start,
                                    children: [
                                      Text(
-                                       '${apiController.emailMessagesModel?.data?[index].detail?.headers?.received}',
+                                       '${fromField}',
                                        style: GoogleFonts.inter(
                                            color: Colors.black,
                                            fontWeight: FontWeight.w500,
@@ -360,7 +410,7 @@ class _InboxScreenState extends State<InboxScreen>
                                      Row(
                                        children: [
                                          Text(
-                                           '1min',
+                                           '${_parseField(detail['headers'], 'Date')}',
                                            style: GoogleFonts.inter(
                                                color: Color(0xff7B7B7D),
                                                fontSize: 7.sp),
@@ -379,7 +429,7 @@ class _InboxScreenState extends State<InboxScreen>
                                        width: 60.w,
                                        // color: Colors.blue,
                                        child: Text(
-                                         'I m interested in the Rolex Oyster Perpetual 31, is it still available?',
+                                         '${detail['headers']['Subject']}',
                                          style: GoogleFonts.inter(
                                              color: Colors.black,
                                              fontWeight: FontWeight.w500,
@@ -421,7 +471,7 @@ class _InboxScreenState extends State<InboxScreen>
                        );
                      }
                    ),
-                 ),
+
                ),
 
 
@@ -906,5 +956,25 @@ class _InboxScreenState extends State<InboxScreen>
         ),
 
     );
+
+  }
+  String _parseField(Map<String, dynamic> headers, String fieldName) {
+    String fieldValue = headers[fieldName] ?? 'Unknown';
+    if (fieldName == 'From' || fieldName == 'To') {
+      // Remove the email part from the field value
+      int emailStartIndex = fieldValue.lastIndexOf('<');
+      int emailEndIndex = fieldValue.lastIndexOf('>');
+      if (emailStartIndex != -1 && emailEndIndex != -1) {
+        fieldValue = fieldValue.substring(0, emailStartIndex).trim();
+      }
+    }
+    if (fieldName == 'Date') {
+      // Remove any unnecessary text from the date field
+      int commaIndex = fieldValue.indexOf(',');
+      if (commaIndex != -1) {
+        fieldValue = fieldValue.substring(commaIndex + 1).trim();
+      }
+    }
+    return fieldValue;
   }
 }

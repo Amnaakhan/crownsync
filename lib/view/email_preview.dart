@@ -2,11 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/Controller/auth_controller.dart';
 import 'package:mobiledesign/view/Controller/getcontroller.dart';
 import 'package:sizer/sizer.dart';
 
 class EmailPreview extends StatefulWidget {
-  const EmailPreview({super.key});
+  final String responseBody;
+
+  EmailPreview({required this.responseBody});
 
   @override
   State<EmailPreview> createState() => _EmailPreviewState();
@@ -14,9 +17,11 @@ class EmailPreview extends StatefulWidget {
 
 class _EmailPreviewState extends State<EmailPreview> {
   ApiController apiController = Get.put(ApiController());
+  AuthController authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
 body:
 
@@ -109,90 +114,17 @@ body:
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Dear Puja,Good evening. Thank you for your'
-            ' inquiry.My name is Darla Jo Brown.I am the store manager'
-            ' at Manfredi Jewels and have been selling Rolex watches for'
-            'over twenty years. Our store is located in the charming town'
-            ' of New Canaan, CT.There are beautiful shops, delicious'
-            ' restaurants and lovely surrounding parks.Please feel'
-            ' free to stop in our store if you are in the area. '
-            'I would love to show you our collection of Rolex watches.'
-            'I see you are interested in the Rolex Oyster Perpetual 31, '
-                'reference #M277200-0001. That is one of my favorite'
-                ' new Rolex watches. The sunray finish creates delicate'
-                ' light reflections on many dials in the Oyster Perpetual'
-                ' collection. It is obtained using masterful brushing'
-                     ' techniques that create grooves running outwards from the center of the dial'
+                Text('${widget.responseBody}'
                 ,
                   style: GoogleFonts.inter(
                     color: Colors.black,
                     fontSize: 10.sp),),
-                Text('https://www.rolex.com/en-us/watches/oyster-perpetual/m277200-0001',
-                    style: GoogleFonts.inter(
-                    color: Colors.blue,
-                    fontSize: 10.sp)),
+
                 SizedBox(height: 2.h,),
             Image.asset('assets/images/img1.png'),
                 SizedBox(height: 2.h,),
 
-                Text('We do not have this model in stock for'
-                    ' sale at the moment. However, you will be'
-                    ' happy to know we currently do have the Rolex'
-                    ' Oyster Perpetual in our collection of exhibition watches.'
-                    ' I would love to set up an appointment for you to'
-                    ' try this model on and register your interest for'
-                    ' this watch in person.If you would like to view other'
-                    ' options, please feel free to peruse Rolex.com and'
-                    ' use the configurator to view the other options of'
-                    ' this model. If you are interested in exploring'
-                    ' the Rolex brand, you can also visit '
-                    'https://www.rolex.org/. If you would like further information,'
-                    ' I am happy to send you a current catalog via U.S. mail.'
-                    ' If you have any other questions, please do not hesitate to call.'
-                    ' I am here to assist you with any concerns you may have.'
-                    ' Again, I look forward to making your acquaintance in our New'
-                    ' Canaan store in the near future and can register your interest at that time.'
-                    'Have a nice evening.'
-                  ,
-                  style: GoogleFonts.inter(
-                      color: Colors.black,
-                      fontSize: 10.sp),),
-                SizedBox(height: 5.h,),
-                Text('Best Regards,' ,
-                    style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontSize: 10.sp)),
-                Text('Darla Jo Brown' ,
-                    style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
 
-                        fontSize: 10.sp)),
-                Text('Manager' ,
-                    style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 10.sp)),
-                Text('Manfredi Jewels' ,
-                    style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontSize: 10.sp)),
-                Text('72 Elm Street' ,
-                    style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontSize: 10.sp)),
-                Text('New Canaan, CT 06840' ,
-                    style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontSize: 10.sp)),
-                Text('2039668705' ,
-                    style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontSize: 10.sp)),
-                Text('https://g.page/ManfrediNewCanaan/review' ,
-                    style: GoogleFonts.inter(
-                        color: Colors.blue,
-                        fontSize: 10.sp))
 
 
 
@@ -209,21 +141,27 @@ body:
         Expanded(
           child: Align(
             alignment: Alignment.bottomCenter,
-            child: Container(height: 7.h,
-            width: double.infinity,
-              margin: EdgeInsets.only(left: 5.w,right: 5.w),
-              decoration: BoxDecoration(
-                  color: Color(0xffE2545E),
-                borderRadius: BorderRadius.circular(4.h)
-              ),
-              child: Center(
-                child: Text(
-                  'Send',
-                    style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
+            child: InkWell(
+              onTap: (){
+authController.sendemail();
+              },
+              child: Container(
+                height: 7.h,
+              width: double.infinity,
+                margin: EdgeInsets.only(left: 5.w,right: 5.w),
+                decoration: BoxDecoration(
+                    color: Color(0xffE2545E),
+                  borderRadius: BorderRadius.circular(4.h)
+                ),
+                child: Center(
+                  child: Text(
+                    'Send',
+                      style: GoogleFonts.inter(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
 
-                        fontSize: 20.sp)
+                          fontSize: 20.sp)
+                  ),
                 ),
               ),
             ),

@@ -1,11 +1,10 @@
 import 'dart:convert';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/Controller/auth_controller.dart';
 import 'package:mobiledesign/view/Controller/getcontroller.dart';
-import 'package:mobiledesign/view/email_preview.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
@@ -27,11 +26,17 @@ class _DetailsScreenState extends State<DetailsScreen> {
   List<String> collectionlist= [];
   String? selectedcollection;
   List<String> templatelist= [];
+  List id = [];
   String? selectedtemplate;
   List<String> _watchNames = [];
   String? _selectedWatch;
   String? _selectedModel;
   List<Map<String, dynamic>> _rolexModels = [];
+  int? templateId;
+  int? collectionid;
+  String? _selectedModelId;
+  int? _selectedModelIdInt;
+  AuthController authController = Get.put(AuthController());
 
 
 
@@ -157,11 +162,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<String> userList = [];
+        List ids =[];
         for (var user in data['data']) {
           userList.add(user['template_name']);
+          ids.add(user['id']);
         }
         setState(() {
           templatelist = userList;
+          id = ids;
+          print('id == ${id}');
+
         });
       } else {
         throw Exception('Failed to load user list');
@@ -459,7 +469,7 @@ Container(
   ),
 
     child: Text(
-      'khanamna983@gmail.com',
+      '${apiController.profileModel?.data?.email}',
       style: GoogleFonts.inter(
           fontWeight: FontWeight.w500,
           color: Color(0xff808686),
@@ -527,6 +537,7 @@ Container(
                           ],
                         ),
                         items: templatelist.map((String email) {
+                          int index = templatelist.indexOf(email);
                           return DropdownMenuItem<String>(
                             value: email,
                             child: Text(
@@ -538,6 +549,7 @@ Container(
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
+                            key: ValueKey(id[index]),
                           );
                         }).toList(),
                         value: selectedtemplate,
@@ -545,6 +557,8 @@ Container(
                           setState(() {
                             selectedtemplate = value;
                           });
+                          int index = templatelist.indexOf(value!);
+                          templateId = id[index]; // Update the selected ID
                         },
                         buttonStyleData: ButtonStyleData(
                           height: 5.h,
@@ -810,7 +824,12 @@ Container(
                     ),
 
 
-                  ],
+
+
+
+
+  ]
+
                 ),
               ),
               SizedBox(height: 2.h,),
@@ -848,85 +867,89 @@ Container(
                           fontSize: 13.sp),
                     ),
                     SizedBox(height: 1.h,),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton2<String>(
-                        isExpanded: true,
-                        hint: Row(
-                          children: [
-                            SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                'Select a model',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff808686),
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        items: _rolexModels.map((Map<String, dynamic> model) {
-                          return DropdownMenuItem<String>(
-                            value: model['id'].toString(),
-                            child: Text(
-                              model['name'],
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff808686),
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          );
-                        }).toList(),
-                        value: _selectedModel,
-                        onChanged: (String? value) {
-                          setState(() {
-                            _selectedModel = value;
-                          });
-                        },
-                        buttonStyleData: ButtonStyleData(
-                          height: 5.h,
-                          width: double.infinity,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
+                DropdownButtonHideUnderline(
+                  child: DropdownButton2<String>(
+                    isExpanded: true,
+                    hint: Row(
+                      children: [
+                        SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            'Select a model',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
                               color: Color(0xff808686),
                             ),
-                            color: Color(0xffE0E1E1),
-                          ),
-                          elevation: 2,
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_outlined,
-                          ),
-                          iconSize: 30,
-                          iconEnabledColor: Color(0xff808686),
-                          iconDisabledColor: Color(0xff808686),
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          maxHeight: 200,
-                          width: 300,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xffE0E1E1),
-                          ),
-                          scrollbarTheme: ScrollbarThemeData(
-                            radius: const Radius.circular(40),
-                            thickness: MaterialStateProperty.all<double>(6),
-                            thumbVisibility: MaterialStateProperty.all<bool>(true),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 40,
-                          padding: EdgeInsets.only(left: 14, right: 14),
+                      ],
+                    ),
+                    items: _rolexModels.map((Map<String, dynamic> model) {
+                      return DropdownMenuItem<String>(
+                        value: model['id'].toString(),
+                        child: Text(
+                          model['name'],
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff808686),
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
+                      );
+                    }).toList(),
+                    value: _selectedModel,
+                    // Update onChanged to assign selected model ID to _selectedModelId and _selectedModelIdInt
+                    onChanged: (String? value) {
+                      setState(() {
+                        _selectedModel = value;
+                        _selectedModelId = value; // Assign the selected model ID as String
+                        // Convert the selected model ID to an int
+                        _selectedModelIdInt = value != null ? int.tryParse(value) : null;
+                      });
+                    },
+                    buttonStyleData: ButtonStyleData(
+                      height: 5.h,
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(left: 14, right: 14),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Color(0xff808686),
+                        ),
+                        color: Color(0xffE0E1E1),
+                      ),
+                      elevation: 2,
+                    ),
+                    iconStyleData: const IconStyleData(
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_outlined,
+                      ),
+                      iconSize: 30,
+                      iconEnabledColor: Color(0xff808686),
+                      iconDisabledColor: Color(0xff808686),
+                    ),
+                    dropdownStyleData: DropdownStyleData(
+                      maxHeight: 200,
+                      width: 300,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color(0xffE0E1E1),
+                      ),
+                      scrollbarTheme: ScrollbarThemeData(
+                        radius: const Radius.circular(40),
+                        thickness: MaterialStateProperty.all<double>(6),
+                        thumbVisibility: MaterialStateProperty.all<bool>(true),
                       ),
                     ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      height: 40,
+                      padding: EdgeInsets.only(left: 14, right: 14),
+                    ),
+                  ),
+                )
 
 
 
@@ -938,8 +961,13 @@ Container(
               SizedBox(height: 2.h,),
               InkWell(
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => EmailPreview()));
+                  authController.email_preview(respondername: "Zubair khan",
+                      responderemail: "thezubairkhan.developer@gmail.com",
+                      recivername: 'Amna khan',reciveremail: 'khanamna983@gmail.com',
+                    productid: _selectedModelId, tempelateid: templateId.toString()
+
+                       );
+
                 },
                 child: Container(height: 7.h,
                   width: double.infinity,

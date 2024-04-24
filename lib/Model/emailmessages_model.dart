@@ -35,7 +35,7 @@ class Datum {
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     logUser: LogUser.fromJson(json["log_user"]),
-    detail: Detail.fromJson(jsonDecode(json["detail"])),
+    detail: Detail.fromJson(json["detail"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -47,28 +47,20 @@ class Datum {
 class Detail {
   String? snippet;
   Headers? headers;
-  String? body; // Changed to string
 
   Detail({
     this.snippet,
     this.headers,
-    this.body, // Changed to string
   });
 
-  factory Detail.fromJson(Map<String, dynamic> json) {
-    var bodyString = json["body"]; // Get the string value
-    var bodyJson = jsonDecode(bodyString); // Decode the string
-    return Detail(
-      snippet: bodyJson["snippet"],
-      headers: Headers.fromJson(bodyJson["headers"]),
-      body: bodyString, // Store the original string
-    );
-  }
+  factory Detail.fromJson(Map<String, dynamic> json) => Detail(
+    snippet: json["snippet"],
+    headers: Headers.fromJson(json["headers"]),
+  );
 
   Map<String, dynamic> toJson() => {
     "snippet": snippet,
     "headers": headers?.toJson(),
-    "body": body, // Store the original string
   };
 }
 
