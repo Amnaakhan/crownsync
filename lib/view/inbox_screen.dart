@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/Controller/auth_controller.dart';
 import 'package:mobiledesign/view/Controller/getcontroller.dart';
 import 'package:mobiledesign/view/details_screen.dart';
 import 'package:sizer/sizer.dart';
@@ -52,26 +53,14 @@ class _InboxScreenState extends State<InboxScreen>
 
 
   Future<void> fetchUserList() async {
+    String? token = await AuthController().getToken();
+    print('usertoken $token');
     try {
       final response = await http.get(Uri.parse('https://api.crownsync.ai/api/getuserlist'),
+
         headers: {
           "Accept": "application/json",
-          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
-              ".eyJhdWQiOiIzIiwianRpIjoiY2UwYzIyMmI1NjZiMWRlYzM2ZWJjOGU3"
-              "YzBmMDE3NzI2NmM4ZmFkMTZiMTk3MWFiMzU0MDJmMDRmZmMwNTliNjQ0Yz"
-              "NkZDE1NmYyYWE5ZjkiLCJpYXQiOjE3MTM3ODMwMjIuMzg4MTI5LCJuYmYiO"
-              "jE3MTM3ODMwMjIuMzg4MTMxLCJleHAiOjE3NDUzMTkwMjIuMzg3MTk3LCJzdW"
-              "IiOiIxOSIsInNjb3BlcyI6W119.IfaT156xsXoW1XYj64vNkt5PmdWuCV1IWyG"
-              "HimKAE7fEaYQFCYbMZBC_wBeYJYDYzMwcAVtbqKp1gyBmibromFLtJNWkqQtYrL"
-              "VkWajOzs1C0YhHAAdibCX0Zt9IBg6oImbfmqQNXkPSWSzXh6y2JQx3R-3NwFdbxaCf"
-              "Ixd_conJKcuuWEoU504-sHkLfHdqKlJJwJ_ZkWpJSo68qPhtBkZ_1OCqXL6BVhnnCmN"
-              "NKfmZpw5oKVXp26iwRHnwlDGjgXdMrvIrGCLcw2XbI3SCczgpoWeRLdBOu7RQwPhbA69_"
-              "3UMb0ILSGgHX1zRMrpeJK8RiZzdeEMUh825LaBGpPk_ooRtwl11vi2b10kFDueNR-lBb2Wj"
-              "3JSBi5wKAghgCvfhsklgqbTlQtDJwv71sCO0m5fMCPtXjetYKan5D4G_4LuVKdbnllFb_uyr"
-              "TVKo-AYgUK4mYeXbmgROpbJgCZPSynz5I5We3j3CIRv-h_V-xApewvMe2xrgxKtDq445MkBLuZu"
-              "VPsBoXx6_oLX2Gx_2HuDYBDXITrbBNn7RNGTQUjNFnF60YDVRwxkz-aohfRJhrrSprn85YdkmXgUuN"
-              "QAHhlhUyYhMHXXCV1TxDXLmd5Iwo1seeTEUnt_wDHCurONDkudWPFwykOx1m2zvbrCvJi6ixNN1pwKF"
-              "2od9SIRc",
+          "Authorization": "Bearer $token",
         },
       );
       if (response.statusCode == 200) {
@@ -94,25 +83,13 @@ class _InboxScreenState extends State<InboxScreen>
     }
   }
   Future<void> fetchEmailMessages() async {
+    String? token = await AuthController().getToken();
+    print('usertoken $token');
     try {
-      final response = await http.get(Uri.parse('https://api.crownsync.ai/api/email-messages'), headers: {
+      final response = await http.get(Uri.parse('https://api.crownsync.ai/api/email-messages'),
+          headers: {
         "Accept": "application/json",
-        "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
-            ".eyJhdWQiOiIzIiwianRpIjoiY2UwYzIyMmI1NjZiMWRlYzM2ZWJjOGU3"
-            "YzBmMDE3NzI2NmM4ZmFkMTZiMTk3MWFiMzU0MDJmMDRmZmMwNTliNjQ0Yz"
-            "NkZDE1NmYyYWE5ZjkiLCJpYXQiOjE3MTM3ODMwMjIuMzg4MTI5LCJuYmYiO"
-            "jE3MTM3ODMwMjIuMzg4MTMxLCJleHAiOjE3NDUzMTkwMjIuMzg3MTk3LCJzdW"
-            "IiOiIxOSIsInNjb3BlcyI6W119.IfaT156xsXoW1XYj64vNkt5PmdWuCV1IWyGH"
-            "imKAE7fEaYQFCYbMZBC_wBeYJYDYzMwcAVtbqKp1gyBmibromFLtJNWkqQtYrLVkW"
-            "ajOzs1C0YhHAAdibCX0Zt9IBg6oImbfmqQNXkPSWSzXh6y2JQx3R-3NwFdbxaCfIxd"
-            "_conJKcuuWEoU504-sHkLfHdqKlJJwJ_ZkWpJSo68qPhtBkZ_1OCqXL6BVhnnCmNNKf"
-            "mZpw5oKVXp26iwRHnwlDGjgXdMrvIrGCLcw2XbI3SCczgpoWeRLdBOu7RQwPhbA69_3U"
-            "Mb0ILSGgHX1zRMrpeJK8RiZzdeEMUh825LaBGpPk_ooRtwl11vi2b10kFDueNR-lBb2Wj3"
-            "JSBi5wKAghgCvfhsklgqbTlQtDJwv71sCO0m5fMCPtXjetYKan5D4G_4LuVKdbnllFb_uyrT"
-            "VKo-AYgUK4mYeXbmgROpbJgCZPSynz5I5We3j3CIRv-h_V-xApewvMe2xrgxKtDq445MkBLuZu"
-            "VPsBoXx6_oLX2Gx_2HuDYBDXITrbBNn7RNGTQUjNFnF60YDVRwxkz-aohfRJhrrSprn85YdkmXg"
-            "UuNQAHhlhUyYhMHXXCV1TxDXLmd5Iwo1seeTEUnt_wDHCurONDkudWPFwykOx1m2zvbrCvJi6ixNN"
-            "1pwKF2od9SIRc",
+        "Authorization": "Bearer $token",
 
       }
       );
@@ -162,7 +139,7 @@ class _InboxScreenState extends State<InboxScreen>
                               fontWeight: FontWeight.w500, fontSize: 18.sp),
                         ),
                         Spacer(),
-                        apiController.profileModel?.data?.email ==null?
+                        apiController.loginModel?.data?.contact ==null?
                         Container():
                         Container(
                             height: 5.h,
@@ -180,7 +157,7 @@ class _InboxScreenState extends State<InboxScreen>
 
                                     Text(
 
-                                      '${apiController.profileModel?.data?.email}',
+                                      '${apiController.loginModel?.data?.contact}',
                                       style: GoogleFonts.inter(
                                           color: Colors.grey,
                                           fontSize: 10.sp),
@@ -405,7 +382,7 @@ class _InboxScreenState extends State<InboxScreen>
                                        style: GoogleFonts.inter(
                                            color: Colors.black,
                                            fontWeight: FontWeight.w500,
-                                           fontSize: 12.sp),
+                                           fontSize: 10.sp),
                                      ),
                                      Row(
                                        children: [

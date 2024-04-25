@@ -3,8 +3,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:mobiledesign/home_screen.dart';
 import 'package:mobiledesign/test_screen.dart';
+import 'package:mobiledesign/view/Auth/login_screen.dart';
 import 'package:mobiledesign/view/email_preview.dart';
 import 'package:mobiledesign/view/inbox_screen.dart';
+import 'package:mobiledesign/view/layout_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -54,6 +56,8 @@ class AuthController extends GetxController{
 
             backgroundColor: Colors.black,textColor: Colors.white
         );
+        Get.to(LoginScreen());
+
         print(response);
 
       } else {
@@ -104,7 +108,7 @@ class AuthController extends GetxController{
             msg: 'Logged In successfully',
             backgroundColor: Colors.black,textColor: Colors.white
         );
-        Get.to(InboxScreen());
+        Get.to(LayoutScreen());
       } else  {
         Fluttertoast.showToast(
           msg: response['body']['message'],
@@ -127,10 +131,12 @@ class AuthController extends GetxController{
         'password': newpass,
         'password_confirmation': cnfrmpass
       };
+      String? token = await AuthController().getToken();
+
       http.Response response = await http
           .post(Uri.tryParse('https://api.crownsync.ai/api/update/password')!,headers: {
         "Accept": "application/json",
-        "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiZmVlOTA5NTRiZWY2YjcwYTJhOTM0NDIxMmJlZjExNzAyODhiNjhmYjg2YWJhMWNhMzFlN2JhNmViOTlhYjYxNzQwOWU3NTIxMGYxOTMyOTUiLCJpYXQiOjE3MTM1ODA5NzYuMTQ5OTIsIm5iZiI6MTcxMzU4MDk3Ni4xNDk5MjIsImV4cCI6MTc0NTExNjk3Ni4xNDkyMjMsInN1YiI6IjkiLCJzY29wZXMiOltdfQ.cGLvvj6_Psy-cbfwbj-43iqmog2OpW_xfSEXXKjk-1H0MIRUyg3mtYlHGgMDL8gMEstRXuNLAk5Tka-Jb4zVzB5T1huKcjoOKTVeRjmXFElDBtu-nVJTxy3alN77YxwO16zhuV-46SujWlu2DeBDqs02YWgsxB3PxcF51RoQWI3lR6xnYadUPOLsCeA5uvrH5h4XkwXKNMsIxPfhjX-ZrWxs7U77Ewf_qFF3JHdVMmmRBhR1HOQHsp3rJwa2o2Vqn0t8mgs86H7iXTEq70kOrCpEV2O2Q_Cu8IgS0cF9aRjF8fjvS84ujkQPXn1gjTj0gDFBThZVBiTBy024HriBBoq3lXjnmb2TNr6oULn5khQmYBX8fj_qGKd-_Oz-kS1QTYd9UEKTbHBHY2dCPOdTJZcNALTipPQ2iLulg3pVOXURPJ-ty2pu9Igt15o-DyQBRhnpMm9ScQzTpIHISwpAfNPOaU5sLnV0wxCRR_-xdO4vBRGLBy3zrMdKkQmfol1DjWbtk0f7rKpICJkYTzrHsbwPo_Pef2XOgA6Dn2uA_MmBkld7aTZoqXg8CcJGGwseTmqB7SNsSe5Dj0vq_Y9gnY1YGeE57HW0G-yOxp76hTgvcs5xF-AYGjOvG91aHZqUzYVi7NIb_ujRKYNiw2EuNehLxk__V9i4NHVNzlFLeCw"
+        "Authorization": "Bearer $token"
       },body: data);
       print("response1::$response");
       if (response.statusCode == 200) {
@@ -141,7 +147,7 @@ class AuthController extends GetxController{
             msg: 'Update Password successfully',
             backgroundColor: Colors.black,textColor: Colors.white
         );
-        Get.to(HomeScreen());
+        Get.to(LayoutScreen());
       } else  {
         Fluttertoast.showToast(
             msg: 'Error , Please Try Again',
@@ -175,11 +181,12 @@ class AuthController extends GetxController{
         'template_id': tempelateid
 
       };
+      String? token = await AuthController().getToken();
+
       http.Response response = await http
           .post(Uri.tryParse('https://api.crownsync.ai/api/email-preview')!,headers: {
         "Accept": "application/json",
-        "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiZjBiYjViY2FjOTM5MzEzNjI2MDlmYmYzZGYwYzA4ZGE5ZDFjNTRjMDgyNzY3ZTAzOWIyZjdkNzlhMDgzYjU4OTEzMjYxMjg5NWJjOTI4ZjgiLCJpYXQiOjE3MTM5MzU0MjIuMDgyNzgsIm5iZiI6MTcxMzkzNTQyMi4wODI3ODIsImV4cCI6MTc0NTQ3MTQyMi4wODIwMjQsInN1YiI6IjI1Iiwic2NvcGVzIjpbXX0.L0ypgsJFChQDmFq9Vr6w3DgxyXEGiSedTQHPokyp8aMgTj7uKMOce3aMvJ0bRsRFUHR0m284VVVjUpqL15JYdVw6YuNA13_RfmvtihDRs9LaxM9g-ZIz_avrxd-QGJ000zisk63vG_NegXBRgVp8jsp2DiG_D3YdNAs4e1wQKGlYoQyYNifS21w4hY2g7_qhZi_wJa28RdpKdWqgYefJ-vHEMgicnRuNTfXWkWwzWM-rr_cZLwhib7tQRXA9oTBLSRq8tkqP1u0vxy5s1w6CqBtVdiyJ-fGMTCBOXCpB2oMFUOJipxMVDu6vSmFiBWGJQ6XLZ3KXZxs_2qXTjCj3pYC2vEf8MSFKmOMze4ZP11md2HpEzBmeAqbtVxTmbBPN8nXovzdXcz_Ma35d-P49qvZZ-By0kVa3utmSTqcsLG7iYZfJe7OKJ7nSUI3R5kjQ0fMZ_hfLJOtqcb-1NauNlh-qvuNeiPfQw40m3BChSsmlXzoMTHpPuWIr2M-Mp4omUdnGJ0SOvzL9UxCWmnBTRv0jOIW5FcewScqsYbkiWXzplTws_43pY26U4MbdqteQ5t7UwONCbQA_8WKwzeWzu4LEdjMj1pS3vFy3HzY8EreFSTV6VMa7oj7Go57lccmKGSNFx74CV0CKSFCZ5RJPG0bdpMB4XQLZXTQrE30XLwA"
-      },body: data);
+        "Authorization": "Bearer $token",},body: data);
       print("response1::$response");
       if (response.statusCode == 200) {
         print("Response2::${response}");
@@ -234,25 +241,12 @@ class AuthController extends GetxController{
 
 
     };
+    String? token = await AuthController().getToken();
+
     http.Response response = await http
         .post(Uri.tryParse('https://api.crownsync.ai/api/gmail/send-email')!,headers: {
       "Accept": "application/json",
-      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
-          ".eyJhdWQiOiIzIiwianRpIjoiZjBiYjViY2FjOTM5MzEzNjI2MDlmYmYzZGYwYz"
-          "A4ZGE5ZDFjNTRjMDgyNzY3ZTAzOWIyZjdkNzlhMDgzYjU4OTEzMjYxMjg5NWJj"
-          "OTI4ZjgiLCJpYXQiOjE3MTM5MzU0MjIuMDgyNzgsIm5iZiI6MTcxMzkzNTQyMi"
-          "4wODI3ODIsImV4cCI6MTc0NTQ3MTQyMi4wODIwMjQsInN1YiI6IjI1Iiwic2Nv"
-          "cGVzIjpbXX0.L0ypgsJFChQDmFq9Vr6w3DgxyXEGiSedTQHPokyp8aMgTj7uKMOc"
-          "e3aMvJ0bRsRFUHR0m284VVVjUpqL15JYdVw6YuNA13_RfmvtihDRs9LaxM9g-ZIz"
-          "_avrxd-QGJ000zisk63vG_NegXBRgVp8jsp2DiG_D3YdNAs4e1wQKGlYoQyYNifS2"
-          "1w4hY2g7_qhZi_wJa28RdpKdWqgYefJ-vHEMgicnRuNTfXWkWwzWM-rr_cZLwhib7"
-          "tQRXA9oTBLSRq8tkqP1u0vxy5s1w6CqBtVdiyJ-fGMTCBOXCpB2oMFUOJipxMVDu6"
-          "vSmFiBWGJQ6XLZ3KXZxs_2qXTjCj3pYC2vEf8MSFKmOMze4ZP11md2HpEzBmeAqbtVx"
-          "TmbBPN8nXovzdXcz_Ma35d-P49qvZZ-By0kVa3utmSTqcsLG7iYZfJe7OKJ7nSUI3R5k"
-          "jQ0fMZ_hfLJOtqcb-1NauNlh-qvuNeiPfQw40m3BChSsmlXzoMTHpPuWIr2M-Mp4omUdn"
-          "GJ0SOvzL9UxCWmnBTRv0jOIW5FcewScqsYbkiWXzplTws_43pY26U4MbdqteQ5t7UwONCb"
-          "QA_8WKwzeWzu4LEdjMj1pS3vFy3HzY8EreFSTV6VMa7oj7Go57lccmKGSNFx74CV0CKSFCZ"
-          "5RJPG0bdpMB4XQLZXTQrE30XLwA"
+      "Authorization": "Bearer $token"
     },body: data);
     print("response1::$response");
     if (response.statusCode == 200) {
@@ -263,6 +257,7 @@ class AuthController extends GetxController{
           msg: 'Success',
           backgroundColor: Colors.black,textColor: Colors.white
       );
+      Get.to(LayoutScreen());
 
     } else  {
       Fluttertoast.showToast(

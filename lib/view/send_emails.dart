@@ -34,39 +34,7 @@ class _SendEmailsState extends State<SendEmails> {
                     ),
                   ],
                 ),
-                Spacer(),
-                Container(
-                    height: 5.h,
-                    width: 32.w,
-                    padding: EdgeInsets.only(right: 1.w,left: 1.w),
-                    decoration: BoxDecoration(
-                        color: Color(0xffE2545E),
-                        borderRadius: BorderRadius.circular(4.h)),
-                    child: Center(
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 2.w,
-                            ),
 
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Text(
-                              'khanmana983@gmail.com',
-                              style: GoogleFonts.inter(
-                                  color: Colors.white,
-                                  fontSize: 7.sp),
-                            ),
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Image.asset(
-                              'assets/images/drop_arrow.png',
-                              height: 1.h,
-                            )
-                          ],
-                        ))),
 
               ],
             ),
@@ -78,7 +46,7 @@ class _SendEmailsState extends State<SendEmails> {
                     itemCount: apiController.getSentMailsModel?.data?.length,
                     itemBuilder: (context, index) {
                       return Container(
-                        height: 15.h,
+                        height: 13.h,
                         width: double.infinity,
                         margin: EdgeInsets.only(top: 1.h,bottom: 1.h),
                         padding: EdgeInsets.only(left: 4.w, top: 2.5.h, right: 2.w),
@@ -124,7 +92,7 @@ class _SendEmailsState extends State<SendEmails> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(height: 1.h,),
+                                    SizedBox(height: 1.5.h,),
                                     Text(
                                       '${apiController.getSentMailsModel?.data?[index].recipientEmail}',
                                       style: GoogleFonts.inter(
@@ -132,23 +100,17 @@ class _SendEmailsState extends State<SendEmails> {
                                           fontWeight: FontWeight.w500,
                                           fontSize: 10.sp),
                                     ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '1min',
-                                          style: GoogleFonts.inter(
-                                              color: Color(0xff7B7B7D),
-                                              fontSize: 7.sp),
-                                        ),
-                                        SizedBox(
-                                          width: 1.w,
-                                        ),
-                                        Icon(
-                                          Icons.history,
-                                          size: 10.sp,
-                                          color: Color(0xff7B7B7D),
-                                        )
-                                      ],
+                                    Container(
+                                      width: 60.w,
+                                      // color: Colors.blue,
+                                      child: Text(
+                                        '${apiController.getSentMailsModel?.data?[index].senderEmail}',
+
+                                        style: GoogleFonts.inter(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 8.sp),
+                                      ),
                                     ),
                                     Container(
                                       width: 60.w,
@@ -162,30 +124,7 @@ class _SendEmailsState extends State<SendEmails> {
                                             fontSize: 8.sp),
                                       ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(
-                                          width: 40.w,
-                                        ),
-                                        Icon(
-                                          Icons.delete_outline,
-                                          color: Colors.black12,
-                                          size: 15.sp,
-                                        ),
-                                        SizedBox(
-                                          width: 2.w,
-                                        ),
-                                        Icon(Icons.visibility_off_outlined,
-                                            color: Colors.black12, size: 15.sp),
-                                        SizedBox(
-                                          width: 2.w,
-                                        ),
-                                        Icon(Icons.messenger_outline,
-                                            color: Colors.black12, size: 15.sp),
-                                      ],
-                                    ),
+
                                   ],
                                 ),
 

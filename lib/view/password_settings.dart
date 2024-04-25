@@ -22,6 +22,7 @@ class _PasswordSettingsState extends State<PasswordSettings> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
           body: SingleChildScrollView(
             child: Column(
               children: [
@@ -65,13 +66,18 @@ class _PasswordSettingsState extends State<PasswordSettings> {
 
                 Padding(
                   padding:
-                      EdgeInsets.only(left: 4.w, right: 4.w, top: 7.h, bottom: 10.h),
+                      EdgeInsets.only(left: 4.w, right: 4.w, top: 4.h, bottom: 10.h),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
-                      TextFormField(
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
+                        child: Image.asset("assets/images/logo1.png"),
+                      ),
+                      SizedBox(
+                        height: 6.h,
+                      ),                      TextFormField(
                         cursorColor: Color(0xff00233D),
 controller: passwordController,
                         decoration: InputDecoration(

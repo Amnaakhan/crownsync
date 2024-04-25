@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobiledesign/Model/check_login.dart';
 import 'package:mobiledesign/Model/collection_model.dart';
 import 'package:mobiledesign/Model/emailmessages_model.dart';
 import 'package:mobiledesign/Model/getsentmails_model.dart';
@@ -9,14 +10,15 @@ import 'package:mobiledesign/Model/login_model.dart';
 import 'package:mobiledesign/Model/rolex_model.dart';
 import 'package:mobiledesign/Model/user_model.dart';
 import 'package:mobiledesign/Model/user_profile.dart';
+import 'package:mobiledesign/view/Controller/auth_controller.dart';
 
 class ApiController extends GetxController {
-  CollectionModel? collectionModel;
+  Checklogin? loginModel;
   RolexxModel? rolexxModel;
   InboxModel? emailMessagesModel;
   GetSentMailsModel? getSentMailsModel;
   RxList<Userlist> user = RxList();
-  LoginModel? loginModel;
+  // LoginModel? loginModel;
 
 
   // Userlist? userlist;
@@ -27,10 +29,11 @@ class ApiController extends GetxController {
   // var selectedUser = Rxn<Userlist>(); // Rxn<User> for an optional user
 
   var isLoading = true.obs;
+  AuthController authController = Get.put(AuthController());
 
   @override
   Future<void> onInit() async {
-    get_collection();
+    get_checklogin();
     get_rolexmodel();
     postlogin();
     getEmailMsgs();
@@ -39,16 +42,23 @@ class ApiController extends GetxController {
     super.onInit();
   }
 
-  get_collection() async {
+  get_checklogin() async {
     isLoading(true);
     // log(isLoading.toString());
+    String? token = await AuthController().getToken();
+    print('usertoken $token');
+
     http.Response response =
-    await http.get(Uri.tryParse('https://api.crownsync.ai/api/collects')!);
+    await http.get(Uri.tryParse('https://api.crownsync.ai/api/check-login')!,  headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer $token",
+
+    });
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-      collectionModel = CollectionModel.fromJson(result);
+      loginModel = Checklogin.fromJson(result);
       // log(result.toString());
-      print('Response = ${result}');
+      print('checkLogin = ${result}');
       isLoading(false);
     }
   }
@@ -56,26 +66,13 @@ class ApiController extends GetxController {
   get_rolexmodel() async {
     isLoading(true);
     // log(isLoading.toString());
+    String? token = await AuthController().getToken();
+    print('usertoken $token');
     http.Response response = await http.get(
         Uri.tryParse('https://api.crownsync.ai/api/rolex_models')!,
         headers: {
           "Accept": "application/json",
-          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
-              ".eyJhdWQiOiIzIiwianRpIjoiZGFiNmY1YTRkMTM5ZTY5YWZmYjJjN2Z"
-              "lNjQ4NjUyZmVjYzIzNzk4YWVjN2U5YTM5OWNlNzhlNWYwZTRkOTViOG"
-              "RhNmQ5ODU4OGExZjM0OGYiLCJpYXQiOjE3MTM3ODYwMzEuODcxMDQsIm"
-              "5iZiI6MTcxMzc4NjAzMS44NzEwNDIsImV4cCI6MTc0NTMyMjAzMS44NzA"
-              "xODEsInN1YiI6IjE5Iiwic2NvcGVzIjpbXX0.MmKAS-eNgm12sKqzfS_T9"
-              "80dGBEJpXVxT7xOuJ0zcrxiq7ri0geSjWMTYecUvfFxWShPbDoHNE_jy4O"
-              "DFvEwTkG-byCZdWflKEc72HC1zfeuTZUblWKfP4R1nNh6qbQTdUdyvzpue0I"
-              "1MTTztpsKcLpbe96VYvaOQM3nn8_G4qYQ7td0P7oNSpbwrwE85x6g1wuRTj8u"
-              "8acZ4OZhrYvxEf0nZgZiYqBPwFkQiTe8bFOfJV9CR3zLHUupVG_Ba0OCi9fcgL"
-              "ZGRGs7Y_WaDIu-CLaTUIaJ3JW3ivnJyZDMo2xm_icxx-xWtE5xb-8M_urP7gOJm"
-              "Xp6lUBFmFcRKxwLfVuwkGSWktjss_PVB7TNBryuxNsEAtWVtQmM50eOLCUw5VOdyy"
-              "LIAqujuxIsLhQ604-bQQH-OpeO6SgDdcJ8amNt3fyveD-weWWUMw5yeG9yL27k7Eez9"
-              "YAmFdCeeYZDe1hmE5RJ3DIZWt75q2Kml9AkqhVi2BIYhf9PD_FHZ7K0Fq9apjnWh0iRxc"
-              "VYlA8Hbn4aE4OxB8AL08hjON7nDl0pTfrDIqiRQH0ex3shkle0a-whKFv1RR__B4Urp9scn"
-              "RcTTxbMexwC20dIgHTaDnXb-hWoqdOiAMBPU3rj7i84ko7QTbVYhgduixC4MjfZe5Lmwr9h6nSLpM3_uwoI82Y",
+          "Authorization": "Bearer $token",
 
         }
         );
@@ -108,26 +105,15 @@ class ApiController extends GetxController {
   get_sentemails() async {
     isLoading(true);
     // log(isLoading.toString());
+    String? token = await AuthController().getToken();
+    print('usertoken $token');
     http.Response response = await http.get(
         Uri.tryParse('https://api.crownsync.ai/api/getsentmails')!,
         headers: {
           "Accept": "application/json",
           "Authorization":
-          "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
-              ".eyJhdWQiOiIzIiwianRpIjoiZjBiYjViY2FjOTM5MzEzNjI2"
-              "MDlmYmYzZGYwYzA4ZGE5ZDFjNTRjMDgyNzY3ZTAzOWIyZjdkNzlhMDgzYjU4"
-              "OTEzMjYxMjg5NWJjOTI4ZjgiLCJpYXQiOjE3MTM5MzU0MjIuMDgyNzgsIm5"
-              "iZiI6MTcxMzkzNTQyMi4wODI3ODIsImV4cCI6MTc0NTQ3MTQyMi4wODIwMjQsInN1"
-              "YiI6IjI1Iiwic2NvcGVzIjpbXX0.L0ypgsJFChQDmFq9Vr6w3DgxyXEGiSedTQHPok"
-              "yp8aMgTj7uKMOce3aMvJ0bRsRFUHR0m284VVVjUpqL15JYdVw6YuNA13_RfmvtihDRs9La"
-              "xM9g-ZIz_avrxd-QGJ000zisk63vG_NegXBRgVp8jsp2DiG_D3YdNAs4e1wQKGlYoQyYNifS"
-              "21w4hY2g7_qhZi_wJa28RdpKdWqgYefJ-vHEMgicnRuNTfXWkWwzWM-rr_cZLwhib7tQRXA9o"
-              "TBLSRq8tkqP1u0vxy5s1w6CqBtVdiyJ-fGMTCBOXCpB2oMFUOJipxMVDu6vSmFiBWGJQ6XLZ3KX"
-              "Zxs_2qXTjCj3pYC2vEf8MSFKmOMze4ZP11md2HpEzBmeAqbtVxTmbBPN8nXovzdXcz_Ma35d-P49q"
-              "vZZ-By0kVa3utmSTqcsLG7iYZfJe7OKJ7nSUI3R5kjQ0fMZ_hfLJOtqcb-1NauNlh-qvuNeiPfQw40m"
-              "3BChSsmlXzoMTHpPuWIr2M-Mp4omUdnGJ0SOvzL9UxCWmnBTRv0jOIW5FcewScqsYbkiWXzplTws_43pY"
-              "26U4MbdqteQ5t7UwONCbQA_8WKwzeWzu4LEdjMj1pS3vFy3HzY8EreFSTV6VMa7oj7Go57lccmKGSNFx74"
-              "CV0CKSFCZ5RJPG0bdpMB4XQLZXTQrE30XLwA" }
+          "Bearer $token"
+        }
     );
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
@@ -146,7 +132,7 @@ class ApiController extends GetxController {
     );
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-      loginModel = LoginModel.fromJson(result);
+      // loginModel = LoginModel.fromJson(result);
       // log(result.toString());
       print('Logins = ${result}');
       isLoading(false);
@@ -156,25 +142,12 @@ class ApiController extends GetxController {
   get_profile() async {
     isLoading(true);
     // log(isLoading.toString());
+    String? token = await AuthController().getToken();
+    print('usertoken $token');
     http.Response response = await http
         .get(Uri.tryParse('https://api.crownsync.ai/api/profile')!, headers: {
       "Accept": "application/json",
-      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
-          ".eyJhdWQiOiIzIiwianRpIjoiZGFiNmY1YTRkMTM5ZTY5YWZmYjJjN2Z"
-          "lNjQ4NjUyZmVjYzIzNzk4YWVjN2U5YTM5OWNlNzhlNWYwZTRkOTViOG"
-          "RhNmQ5ODU4OGExZjM0OGYiLCJpYXQiOjE3MTM3ODYwMzEuODcxMDQsIm"
-          "5iZiI6MTcxMzc4NjAzMS44NzEwNDIsImV4cCI6MTc0NTMyMjAzMS44NzA"
-          "xODEsInN1YiI6IjE5Iiwic2NvcGVzIjpbXX0.MmKAS-eNgm12sKqzfS_T9"
-          "80dGBEJpXVxT7xOuJ0zcrxiq7ri0geSjWMTYecUvfFxWShPbDoHNE_jy4O"
-          "DFvEwTkG-byCZdWflKEc72HC1zfeuTZUblWKfP4R1nNh6qbQTdUdyvzpue0I"
-          "1MTTztpsKcLpbe96VYvaOQM3nn8_G4qYQ7td0P7oNSpbwrwE85x6g1wuRTj8u"
-          "8acZ4OZhrYvxEf0nZgZiYqBPwFkQiTe8bFOfJV9CR3zLHUupVG_Ba0OCi9fcgL"
-          "ZGRGs7Y_WaDIu-CLaTUIaJ3JW3ivnJyZDMo2xm_icxx-xWtE5xb-8M_urP7gOJm"
-          "Xp6lUBFmFcRKxwLfVuwkGSWktjss_PVB7TNBryuxNsEAtWVtQmM50eOLCUw5VOdyy"
-          "LIAqujuxIsLhQ604-bQQH-OpeO6SgDdcJ8amNt3fyveD-weWWUMw5yeG9yL27k7Eez9"
-          "YAmFdCeeYZDe1hmE5RJ3DIZWt75q2Kml9AkqhVi2BIYhf9PD_FHZ7K0Fq9apjnWh0iRxc"
-          "VYlA8Hbn4aE4OxB8AL08hjON7nDl0pTfrDIqiRQH0ex3shkle0a-whKFv1RR__B4Urp9scn"
-          "RcTTxbMexwC20dIgHTaDnXb-hWoqdOiAMBPU3rj7i84ko7QTbVYhgduixC4MjfZe5Lmwr9h6nSLpM3_uwoI82Y",
+      "Authorization": "Bearer $token",
 
     },);
     if (response.statusCode == 200) {

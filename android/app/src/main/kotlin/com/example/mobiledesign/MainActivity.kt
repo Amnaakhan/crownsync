@@ -1,4 +1,4 @@
-package com.example.mobiledesign
+package com.example.crownsync
 
 import io.flutter.embedding.android.FlutterActivity
 

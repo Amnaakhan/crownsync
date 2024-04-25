@@ -48,38 +48,7 @@ body:
                     ],
                   ),
                   Spacer(),
-                  Container(
-                      height: 5.h,
-                      width: 32.w,
-                      padding: EdgeInsets.only(right: 1.w,left: 1.w),
-                      decoration: BoxDecoration(
-                          color: Color(0xffE2545E),
-                          borderRadius: BorderRadius.circular(4.h)),
-                      child: Center(
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 2.w,
-                              ),
 
-                              SizedBox(
-                                width: 1.w,
-                              ),
-                              Text(
-                                'khanamna983@gmail',
-                                style: GoogleFonts.inter(
-                                    color: Colors.white,
-                                    fontSize: 7.sp),
-                              ),
-                              SizedBox(
-                                width: 1.w,
-                              ),
-                              Image.asset(
-                                'assets/images/drop_arrow.png',
-                                height: 1.h,
-                              )
-                            ],
-                          ))),
 
                 ],
               ),

@@ -26,14 +26,15 @@ class GetSentMailsModel {
 
 class Datum {
   int? id;
-  SenderEmail ?senderEmail;
-  String ?recipientEmail;
-  Subject? subject;
+  String? senderEmail;
+  String? recipientEmail;
+  String? subject;
   String? message;
-  Status ?status;
+  String? status;
   DateTime? createdAt;
   DateTime? updatedAt;
-  String ?receivedMessage;
+  String? receivedMessage;
+  int? userId;
 
   Datum({
     this.id,
@@ -45,69 +46,32 @@ class Datum {
     this.createdAt,
     this.updatedAt,
     this.receivedMessage,
+    this.userId,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     id: json["id"],
-    senderEmail: senderEmailValues.map[json["sender_email"]],
+    senderEmail: json["sender_email"],
     recipientEmail: json["recipient_email"],
-    subject: subjectValues.map[json["subject"]],
+    subject: json["subject"],
     message: json["message"],
-    status: statusValues.map[json["status"]],
+    status: json["status"],
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
     receivedMessage: json["received_message"],
+    userId: json["user_id"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
-    "sender_email": senderEmailValues.reverse[senderEmail],
+    "sender_email": senderEmail,
     "recipient_email": recipientEmail,
-    "subject": subjectValues.reverse[subject],
+    "subject": subject,
     "message": message,
-    "status": statusValues.reverse[status],
+    "status": status,
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
     "received_message": receivedMessage,
+    "user_id": userId,
   };
-}
-
-enum SenderEmail {
-  MZUBAIRKHAN_OFFICIAL_GMAIL_COM,
-  THEZUBAIRKHAN_DEVELOPER_GMAIL_COM
-}
-
-final senderEmailValues = EnumValues({
-  "mzubairkhan.official@gmail.com": SenderEmail.MZUBAIRKHAN_OFFICIAL_GMAIL_COM,
-  "thezubairkhan.developer@gmail.com": SenderEmail.THEZUBAIRKHAN_DEVELOPER_GMAIL_COM
-});
-
-enum Status {
-  SENT
-}
-
-final statusValues = EnumValues({
-  "sent": Status.SENT
-});
-
-enum Subject {
-  THIS_FROM_TEXT,
-  THIS_MAIL_FROM_CROWN_SYNC_AI
-}
-
-final subjectValues = EnumValues({
-  "This from Text": Subject.THIS_FROM_TEXT,
-  "This mail from CrownSyncAI": Subject.THIS_MAIL_FROM_CROWN_SYNC_AI
-});
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }

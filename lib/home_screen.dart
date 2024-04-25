@@ -6,6 +6,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobiledesign/view/Controller/auth_controller.dart';
 import 'package:mobiledesign/view/inbox_screen.dart';
+import 'package:mobiledesign/view/layout_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_sign_in/google_sign_in.dart';
@@ -32,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _googleSignIn = GoogleSignIn(
       scopes:
       ['https://www.googleapis.com/auth/userinfo.email',
-        // 'https://mail.google.com/',
+        'https://mail.google.com/',
         // 'https://www.googleapis.com/auth/gmail.readonly'
       ],
 
@@ -60,19 +61,20 @@ class _HomeScreenState extends State<HomeScreen> {
       print('token == ${googleAuth.accessToken}');
       String? token = await AuthController().getToken();
       print('usertoken $token');
+
       var response = await http.post(
         Uri.parse('https://api.crownsync.ai/api/auth/google'),
         body: jsonEncoded,
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token', // Use this if you have an additional token from your AuthController
+          'Authorization': 'Bearer $token'
         },
       );
-
+      print('body $token');
       if (response.statusCode == 200) {
         print('Success');
-        Get.to(() => InboxScreen()); // Using GetX for navigation
+        Get.to(() => LayoutScreen()); // Using GetX for navigation
       } else {
         print('HTTP error: ${response.statusCode}');
         // Log or handle the error message from the response body
