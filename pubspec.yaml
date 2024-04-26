@@ -49,6 +49,8 @@ dependencies:
   googleapis_auth: ^1.0.0
   dropdown_button2: ^2.3.9
   url_launcher: ^6.1.7
+  intl: ^0.17.0
+  date_ranger: ^0.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

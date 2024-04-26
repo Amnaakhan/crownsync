@@ -34,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
       scopes:
       ['https://www.googleapis.com/auth/userinfo.email',
         'https://mail.google.com/',
-        // 'https://www.googleapis.com/auth/gmail.readonly'
       ],
 
 

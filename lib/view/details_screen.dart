@@ -33,6 +33,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   int? collectionid;
   String? _selectedModelId;
   int? _selectedModelIdInt;
+  String? selectedLocation;
   AuthController authController = Get.put(AuthController());
 
   @override
@@ -580,21 +581,32 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       itemCount: apiController.rolexxModel?.data?.length,
                         itemBuilder: (context, index) {
 
-                      return Container(
-                        margin: EdgeInsets.only(top: 1.h,left: 1.w,right: 1.w,bottom: 1.h),
-                        height: 4.h,
-                        width: 27.w,
-                        decoration: BoxDecoration(
-                          color: Color(0xffE0E1E1),
-                          borderRadius: BorderRadius.circular(1.h),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${apiController.rolexxModel?.data?[index].location}',
-                            style: GoogleFonts.inter(
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xff808686),
-                                fontSize: 9.sp),
+                      return InkWell(
+                        onTap: (){
+                          setState(() {
+                            selectedLocation = apiController.rolexxModel?.data?[index].location;
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(top: 1.h,left: 1.w,right: 1.w,bottom: 1.h),
+                          height: 4.h,
+                          width: 27.w,
+                          decoration: BoxDecoration(
+                            color: apiController.rolexxModel?.data?[index].location == selectedLocation
+                                ? Color(0xffE2545E) // Change color for selected location
+                                : Color(0xffE0E1E1), // Default color
+                            borderRadius: BorderRadius.circular(1.h),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${apiController.rolexxModel?.data?[index].location}',
+                              style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.w500,
+                                  color: apiController.rolexxModel?.data?[index].location == selectedLocation
+                                      ? Colors.white // Change text color for selected location
+                                      : Color(0xff808686),
+                                  fontSize: 9.sp),
+                            ),
                           ),
                         ),
                       );
