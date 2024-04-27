@@ -39,7 +39,11 @@ body:
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.arrow_back,),
+                      InkWell(
+                          onTap: (){
+                            Get.back();
+                          },
+                          child: Icon(Icons.arrow_back,)),
                       Text(
                         'EmailPreview',
                         style: GoogleFonts.inter(

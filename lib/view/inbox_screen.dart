@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,12 +11,13 @@ import 'package:mobiledesign/view/details_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class InboxScreen extends StatefulWidget {
+
   const InboxScreen({super.key});
 
   @override
   State<InboxScreen> createState() => _InboxScreenState();
 }
-
+bool isSearchVisible = false;
 class _InboxScreenState extends State<InboxScreen>
     with TickerProviderStateMixin {
   int _activeIndex = 0;
@@ -26,7 +26,6 @@ class _InboxScreenState extends State<InboxScreen>
   bool isLoading = true;
   List<Map<String, dynamic>> filteredEmailMessages = [];
   TextEditingController _searchController = TextEditingController();
-  bool isSearchVisible = false;
 
   @override
   void initState() {
@@ -49,7 +48,6 @@ class _InboxScreenState extends State<InboxScreen>
   @override
   void dispose() {
     _tabController.dispose();
-
     super.dispose();
   }
 

@@ -31,13 +31,15 @@ class _LayoutScreenState extends State<LayoutScreen> {
           SettingScreen(),
         ],
         onPageChanged: (index) {
-          setState(() => _currentPage = index);
+          setState(() {
+            _currentPage = index;
+          });
         },
       ),
       bottomNavigationBar: BottomBar(
         textStyle: const TextStyle(fontWeight: FontWeight.bold),
         selectedIndex: _currentPage,
-        backgroundColor: Color(0xffE2545E),
+        backgroundColor: const Color(0xffE2545E),
         onTap: (int index) {
           _pageController.jumpToPage(index);
           setState(() => _currentPage = index);

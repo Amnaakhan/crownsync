@@ -1,4 +1,4 @@
-package com.example.crownsync
+package com.crownsync.www
 
 import io.flutter.embedding.android.FlutterActivity
 

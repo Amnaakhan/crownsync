@@ -119,7 +119,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     hintText: "Search...",
                     hintStyle: TextStyle(
                         color: Colors.black.withOpacity(0.5), fontWeight: FontWeight.w400,fontSize: 12.sp),
-                    contentPadding: EdgeInsets.only(left: 20,),
+                    contentPadding: const EdgeInsets.only(left: 20,),
                     border: InputBorder.none,
                   ),
                 ),
@@ -141,7 +141,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         width: 27.w,
                         decoration: BoxDecoration(
                             color: selectedIndex == 0
-                                ? Color(0xffE2545E)
+                                ? const Color(0xffE2545E)
                                 : Colors.grey.shade200,
                             borderRadius: BorderRadius.circular(20)),
                         child: Center(
@@ -167,7 +167,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         width: 22.w,
                         decoration: BoxDecoration(
                             color: selectedIndex == 1
-                                ? Color(0xffE2545E)
+                                ? const Color(0xffE2545E)
                                 : Colors.grey.shade200,
                             borderRadius: BorderRadius.circular(20)),
                         child: Center(
@@ -193,7 +193,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         width: 39.w,
                         decoration: BoxDecoration(
                             color: selectedIndex == 2
-                                ? Color(0xffE2545E)
+                                ? const Color(0xffE2545E)
                                 : Colors.grey.shade200,
                             borderRadius: BorderRadius.circular(20)),
                         child: Center(
@@ -321,7 +321,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         child: Text(
                           "Learn more about us...",
                           style: GoogleFonts.inter(
-                            color: Color(0xffE2545E).withOpacity(0.7),
+                            color: const Color(0xffE2545E).withOpacity(0.7),
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
                           ),
@@ -493,7 +493,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         child: Text(
                           "Learn more about Privacy Policy...",
                           style: GoogleFonts.inter(
-                            color: Color(0xffE2545E).withOpacity(0.7),
+                            color: const Color(0xffE2545E).withOpacity(0.7),
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
                           ),

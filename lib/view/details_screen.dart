@@ -201,6 +201,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   ApiController apiController = Get.put(ApiController());
 
+
   @override
   Widget build(BuildContext context) {
     print('Sender Email ${widget.selectedemail}');
@@ -220,8 +221,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.arrow_back,
+                          InkWell(
+                            onTap: (){
+                              Get.back();
+                            },
+                            child: Icon(
+                              Icons.arrow_back,
+                            ),
                           ),
                           Text(
                             'Details',
@@ -929,10 +935,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
             InkWell(
               onTap: () {
                 authController.email_preview(
-                    respondername: "Zubair khan",
-                    responderemail: "thezubairkhan.developer@gmail.com",
-                    recivername: 'Amna khan',
-                    reciveremail: 'khanamna983@gmail.com',
+                    respondername: "Amna khan",
+                    responderemail: "${apiController.loginModel?.data?.contact}",
+                    recivername: '${apiController.profileModel?.data?.name}',
+                    reciveremail: '${apiController.profileModel?.data?.email}',
                     productid: _selectedModelId,
                     tempelateid: templateId.toString());
               },
@@ -953,6 +959,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               ),
             ),
             SizedBox(height: 4.h,),
+
           ],
         ),
       ),
