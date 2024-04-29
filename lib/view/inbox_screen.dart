@@ -111,6 +111,8 @@ class _InboxScreenState extends State<InboxScreen>
     }
   }
 
+
+  //filter emails
   void _filterEmails(String query) {
     setState(() {
       if (query.isNotEmpty) {
