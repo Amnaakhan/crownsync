@@ -5,7 +5,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobiledesign/view/Controller/auth_controller.dart';
-import 'package:mobiledesign/view/inbox_screen.dart';
 import 'package:mobiledesign/view/layout_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
@@ -38,31 +37,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
       serverClientId:
-      '371366179768-olq6fq6do1lg8eqcuv99qjev930k19lm.apps.googleusercontent.com',
+      '341429096489-e24lk8sq54ku9blm9o68v558pqces2mo.apps.googleusercontent.com',
       // clientId: '371366179768-jqqtha822p8ctdcb7h3d1ivgo26l5ns6.apps.googleusercontent.com',
-// hostedDomain: 'crownsync.ai',
-//     signInOption: SignInOption.standard
+      // forceCodeForRefreshToken: true,
+
     );
+
   }
 
   void googleSignIn() async {
     try {
       GoogleSignInAccount? result = await _googleSignIn.signIn();
 
-      print('result = $result');
+      // print('result = $result');
 
 
       // Proceed with the sign-in process since result is not null
       GoogleSignInAuthentication googleAuth = await result!.authentication;
       print('result === $result');
       var data = {'usertoken': googleAuth.accessToken};
+
       String jsonEncoded = jsonEncode(data);
-      print('token == ${googleAuth.accessToken}');
+      // print('token == ${googleAuth.accessToken}');
+      print('refreshtoken === ${googleAuth.idToken}');
       String? token = await AuthController().getToken();
-      print('usertoken $token');
+      // print('usertoken $token');
 
       var response = await http.post(
-        Uri.parse('https://api.crownsync.ai/api/auth/google'),
+        Uri.parse('https://testapi.crownsync.ai/api/auth/google'),
         body: jsonEncoded,
         headers: {
           'Accept': 'application/json',
@@ -70,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
           'Authorization': 'Bearer $token'
         },
       );
-      print('body $token');
+      // print('body $token');
       if (response.statusCode == 200) {
         print('Success');
         Get.to(() => LayoutScreen()); // Using GetX for navigation

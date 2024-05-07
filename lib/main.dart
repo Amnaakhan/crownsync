@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobiledesign/home_screen.dart';
 import 'package:mobiledesign/view/Auth/login_screen.dart';
-import 'package:mobiledesign/view/dashboard.dart';
-import 'package:mobiledesign/view/details_screen.dart';
-import 'package:mobiledesign/view/inbox_screen.dart';
-import 'package:mobiledesign/view/layout_screen.dart';
-import 'package:mobiledesign/view/profile_screen.dart';
-import 'package:mobiledesign/view/send_emails.dart';
-import 'package:mobiledesign/view/setting_screen.dart';
 import 'package:sizer/sizer.dart';
+
 
 
 void main() {
@@ -27,6 +20,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           home: LoginScreen()
+
         );
       },
     );

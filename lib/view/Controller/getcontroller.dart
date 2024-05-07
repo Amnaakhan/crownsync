@@ -108,7 +108,7 @@ class ApiController extends GetxController {
     String? token = await AuthController().getToken();
     print('usertoken $token');
     http.Response response = await http.get(
-        Uri.tryParse('https://api.crownsync.ai/api/getsentmails')!,
+        Uri.tryParse('https://testapi.crownsync.ai/api/getsentmails')!,
         headers: {
           "Accept": "application/json",
           "Authorization":
@@ -128,7 +128,7 @@ class ApiController extends GetxController {
     isLoading(true);
     // log(isLoading.toString());
     http.Response response = await http.post(
-      Uri.tryParse('https://api.crownsync.ai/api/login')!,
+      Uri.tryParse('https://testapi.crownsync.ai/api/login')!,
     );
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
@@ -145,7 +145,7 @@ class ApiController extends GetxController {
     String? token = await AuthController().getToken();
     print('usertoken $token');
     http.Response response = await http
-        .get(Uri.tryParse('https://api.crownsync.ai/api/profile')!, headers: {
+        .get(Uri.tryParse('https://testapi.crownsync.ai/api/profile')!, headers: {
       "Accept": "application/json",
       "Authorization": "Bearer $token",
 

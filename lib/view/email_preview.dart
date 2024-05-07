@@ -7,9 +7,10 @@ import 'package:mobiledesign/view/Controller/getcontroller.dart';
 import 'package:sizer/sizer.dart';
 
 class EmailPreview extends StatefulWidget {
-  final String responseBody;
+  final String? message;
+  final String? imageUrl;
 
-  EmailPreview({required this.responseBody});
+  const EmailPreview({super.key, this.message, this.imageUrl});
 
   @override
   State<EmailPreview> createState() => _EmailPreviewState();
@@ -87,7 +88,7 @@ body:
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${widget.responseBody}'
+                Text('${widget.message}'
                 ,
                   style: GoogleFonts.inter(
                     color: Colors.black,
@@ -116,7 +117,7 @@ body:
             alignment: Alignment.bottomCenter,
             child: InkWell(
               onTap: (){
-authController.sendemail();
+authController.sendemail(recivermail: '', responderemail: 'khanaman983@gmail.com', message: '');
               },
               child: Container(
                 height: 7.h,

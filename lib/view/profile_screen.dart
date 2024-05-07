@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/add_location.dart';
+import 'package:mobiledesign/view/add_store.dart';
+import 'package:mobiledesign/view/edit_profile.dart';
 import 'package:sizer/sizer.dart';
 
 import 'Controller/getcontroller.dart';
@@ -75,35 +78,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 5.h,
-                    width: 10.w,
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade200,
-                            spreadRadius: 0.3,
-                            blurRadius: 9,
-                            offset: const Offset(
-                                0, 1), // Apply shadow only to bottom
+                InkWell(
+onTap: (){
+  Get.to(EditProfile());
+},
+
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 5.h,
+                      width: 10.w,
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade200,
+                              spreadRadius: 0.3,
+                              blurRadius: 9,
+                              offset: const Offset(
+                                  0, 1), // Apply shadow only to bottom
+                            ),
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ColorFiltered(
+                          colorFilter: ColorFilter.mode(
+                            Colors.black.withOpacity(
+                                0.7), // Change the opacity value to adjust the shade
+                            BlendMode.srcIn,
                           ),
-                        ],
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(
-                              0.7), // Change the opacity value to adjust the shade
-                          BlendMode.srcIn,
-                        ),
-                        child: Image.asset(
-                          "assets/images/highlighter.png",
-                          height: 3.h,
-                          width: 6.w,
+                          child: Image.asset(
+                            "assets/images/highlighter.png",
+                            height: 3.h,
+                            width: 6.w,
+                          ),
                         ),
                       ),
                     ),
@@ -336,10 +345,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
+
                 ],
               ),
             ),
           ),
+      SizedBox(height: 2.h,),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          InkWell(
+            onTap: (){
+              Get.to(AddStore());
+            },
+            child: Container(
+              height: 5.h,
+              width: 25.w,
+              decoration: BoxDecoration(
+                  color: Color(0xffE2545E),
+                  borderRadius: BorderRadius.circular(20.h)),
+              child: Center(
+                  child: Text('Store',
+                      style: GoogleFonts.inter(
+                          color: Colors.white, fontSize: 12.sp))),
+            ),
+          ),
+          InkWell(
+            onTap: (){
+              Get.to(AddLocation());
+            },
+            child: Container(
+              height: 5.h,
+              width: 25.w,
+              decoration: BoxDecoration(
+                  color: Color(0xffE2545E),
+                  borderRadius: BorderRadius.circular(20.h)),
+              child: Center(
+                  child: Text('Location',
+                      style: GoogleFonts.inter(
+                          color: Colors.white, fontSize: 12.sp))),
+            ),
+          ),
+        ],
+      )
         ],
       ),
     );

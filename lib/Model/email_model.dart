@@ -1,50 +1,50 @@
 // To parse this JSON data, do
 //
-//     final inboxModel = inboxModelFromJson(jsonString);
+//     final emailModel = emailModelFromJson(jsonString);
 
 import 'dart:convert';
 
-InboxModel inboxModelFromJson(String str) => InboxModel.fromJson(json.decode(str));
+EmailModel emailModelFromJson(String str) => EmailModel.fromJson(json.decode(str));
 
-String inboxModelToJson(InboxModel data) => json.encode(data.toJson());
+String emailModelToJson(EmailModel data) => json.encode(data.toJson());
 
-class InboxModel {
-  String? status;
-  Body? body;
+class EmailModel {
+  String status;
+  Body body;
 
-  InboxModel({
-    this.status,
-    this.body,
+  EmailModel({
+    required this.status,
+    required this.body,
   });
 
-  factory InboxModel.fromJson(Map<String, dynamic> json) => InboxModel(
+  factory EmailModel.fromJson(Map<String, dynamic> json) => EmailModel(
     status: json["status"],
     body: Body.fromJson(json["body"]),
   );
 
   Map<String, dynamic> toJson() => {
     "status": status,
-    "body": body!.toJson(),
+    "body": body.toJson(),
   };
 }
 
 class Body {
-  String? recipientEmail;
-  String? senderName;
-  String? senderTitle;
-  String? senderCompany;
-  String? companyDescription;
-  String? message;
-  String? image;
+  String recipientEmail;
+  String senderName;
+  String senderTitle;
+  String senderCompany;
+  String companyDescription;
+  String message;
+  String image;
 
   Body({
-    this.recipientEmail,
-    this.senderName,
-    this.senderTitle,
-    this.senderCompany,
-    this.companyDescription,
-    this.message,
-    this.image,
+    required this.recipientEmail,
+    required this.senderName,
+    required this.senderTitle,
+    required this.senderCompany,
+    required this.companyDescription,
+    required this.message,
+    required this.image,
   });
 
   factory Body.fromJson(Map<String, dynamic> json) => Body(

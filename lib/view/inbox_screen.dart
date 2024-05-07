@@ -26,12 +26,14 @@ class _InboxScreenState extends State<InboxScreen>
   bool isLoading = true;
   List<Map<String, dynamic>> filteredEmailMessages = [];
   TextEditingController _searchController = TextEditingController();
-
+  List<dynamic> originalEmailMessages = [];
   @override
   void initState() {
     super.initState();
     fetchUserList();
     fetchEmailMessages();
+    originalEmailMessages = List.from(emailMessages); // Initialize the original list
+
     _tabController = new TabController(vsync: this, length: 3);
   }
 
@@ -56,7 +58,7 @@ class _InboxScreenState extends State<InboxScreen>
     print('usertoken $token');
     try {
       final response = await http.get(
-        Uri.parse('https://api.crownsync.ai/api/getuserlist'),
+        Uri.parse('https://testapi.crownsync.ai/api/getuserlist'),
         headers: {
           "Accept": "application/json",
           "Authorization": "Bearer $token",
@@ -86,7 +88,7 @@ class _InboxScreenState extends State<InboxScreen>
     print('usertoken $token');
     try {
       final response = await http.get(
-        Uri.parse('https://api.crownsync.ai/api/email-messages'),
+        Uri.parse('https://testapi.crownsync.ai/api/email-messages'),
         headers: {
           "Accept": "application/json",
           "Authorization": "Bearer $token",
@@ -119,14 +121,14 @@ class _InboxScreenState extends State<InboxScreen>
         filteredEmailMessages = emailMessages.where((email) {
           final detail = json.decode(email['detail']);
           final fromField =
-              _parseField(detail['headers'], 'From').toLowerCase();
+          _parseField(detail['headers'], 'From').toLowerCase();
           final subject =
-              _parseField(detail['headers'], 'Subject').toLowerCase();
+          _parseField(detail['headers'], 'Subject').toLowerCase();
           return fromField.contains(query.toLowerCase()) ||
               subject.contains(query.toLowerCase());
         }).toList();
       } else {
-        filteredEmailMessages = List.from(emailMessages);
+        filteredEmailMessages = List.from(emailMessages); // Reset to original list
       }
     });
   }

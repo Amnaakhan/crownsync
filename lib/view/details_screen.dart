@@ -60,7 +60,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     String? token = await AuthController().getToken();
     print('usertoken $token');
     final response = await http.get(
-      Uri.parse('https://api.crownsync.ai/api/collects'),
+      Uri.parse('https://testapi.crownsync.ai/api/collects'),
       headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
     );
 
@@ -83,7 +83,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     String? token = await AuthController().getToken();
     print('usertoken $token');
     final response = await http.get(
-      Uri.parse('https://api.crownsync.ai/api/collects'),
+      Uri.parse('https://testapi.crownsync.ai/api/collects'),
       headers: {
         "Accept": "application/json",
         "Authorization": "Bearer $token",
@@ -112,7 +112,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     print('usertoken $token');
     try {
       final response = await http.get(
-        Uri.parse('https://api.crownsync.ai/api/admin/mail_templates'),
+        Uri.parse('https://testapi.crownsync.ai/api/admin/mail_templates'),
         headers: {
           "Accept": "application/json",
           "Authorization": "Bearer $token",
@@ -145,7 +145,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     print('usertoken $token');
     try {
       final response = await http.get(
-        Uri.parse('https://api.crownsync.ai/api/collects'),
+        Uri.parse('https://testapi.crownsync.ai/api/collects'),
         headers: {
           "Accept": "application/json",
           "Authorization": "Bearer $token",
@@ -174,7 +174,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     print('usertoken $token');
     try {
       final response = await http.get(
-        Uri.parse('https://api.crownsync.ai/api/getuserlist'),
+        Uri.parse('https://testapi.crownsync.ai/api/getuserlist'),
         headers: {
           "Accept": "application/json",
           "Authorization": "Bearer $token",
@@ -364,66 +364,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             SizedBox(
               height: 2.h,
             ),
-            Container(
-              height: 12.h,
-              width: double.infinity,
-              margin: EdgeInsets.only(left: 4.w, right: 4.w),
-              padding: EdgeInsets.only(left: 4.w, top: 1.h, right: 4.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(1.h),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0xff000000).withOpacity(0.10),
-                    blurRadius: 4, // soften the shadow
-                    spreadRadius: 0, //extend the shadow
-                    offset: Offset(
-                      0, // Move to right 10  horizontally
-                      4, // Move to bottom 10 Vertically
-                    ),
-                  )
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Responder Email',
-                    style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xff808686),
-                        fontSize: 12.sp),
-                  ),
-                  SizedBox(
-                    height: 1.h,
-                  ),
-                  Container(
-                    height: 6.h,
-                    width: double.infinity,
-                    padding: EdgeInsets.only(
-                      top: 1.5.h,
-                      left: 3.w,
-                    ),
-                    decoration: BoxDecoration(
-                        color: Color(0xffE0E1E1),
-                        borderRadius: BorderRadius.circular(1.h),
-                        border: Border.all(
-                          color: Color(0xff808686),
-                        )),
-                    child: Text(
-                      '${apiController.loginModel?.data?.contact}',
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xff808686),
-                          fontSize: 12.sp),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 2.h,
-            ),
+
             Container(
               height: 12.h,
               width: double.infinity,
@@ -940,7 +881,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     recivername: '${apiController.profileModel?.data?.name}',
                     reciveremail: '${apiController.profileModel?.data?.email}',
                     productid: _selectedModelId,
-                    tempelateid: templateId.toString());
+                    tempelateid: templateId.toString(),
+                    subject: '',
+                    location: '',
+                    greeting: '');
               },
               child: Container(
                 height: 7.h,
