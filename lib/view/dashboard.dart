@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobiledesign/home_screen.dart';
 import 'package:mobiledesign/view/Controller/getcontroller.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 
 class DashBoard extends StatefulWidget {
@@ -55,20 +56,9 @@ class _DashBoardState extends State<DashBoard> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "${apiController.profileModel?.data?.name}",
-                              style: GoogleFonts.inter(
-                                  color: Colors.white,
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                              "${apiController.profileModel?.data?.email}",
-                              style: GoogleFonts.inter(
-                                  color: Colors.white,
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.w500),
-                            ),
+                            _buildName(),
+
+                           _buildEmail()
                           ],
                         ),
                       )
@@ -260,6 +250,53 @@ class _DashBoardState extends State<DashBoard> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+  Widget _buildName() {
+    return   Obx(()=>
+    apiController.isLoading.value
+
+          ? Shimmer.fromColors(
+        baseColor: Color(0xffE2545E),
+        highlightColor: Colors.grey.shade500,
+        child: Container(
+          width: 50.w,
+          height: 20.0, // Adjust height as needed
+          color: Colors.white,
+        ),
+      ):
+      Text(
+        "${apiController.profileModel?.data?.name}",
+        style: GoogleFonts.inter(
+          color: Colors.white,
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+
+
+  }
+  Widget _buildEmail() {
+    return Obx(()=>
+      apiController.isLoading.value
+          ? Shimmer.fromColors(
+        baseColor: Color(0xffE2545E),
+        highlightColor: Colors.grey.shade500,
+        child: Container(
+          width: 60.w,
+          height: 20.0, // Adjust height as needed
+          color: Colors.white,
+        ),
+      ):
+      Text(
+        "${apiController.profileModel?.data?.email}",
+        style: GoogleFonts.inter(
+          color: Colors.white,
+          fontSize: 12 .sp,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );

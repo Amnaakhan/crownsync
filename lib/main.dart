@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobiledesign/view/Auth/login_screen.dart';
+import 'package:mobiledesign/view/Auth/register_screen.dart';
+import 'package:mobiledesign/view/details_screen.dart';
+import 'package:mobiledesign/view/profile_screen.dart';
+import 'package:mobiledesign/view/setting_screen.dart';
 import 'package:sizer/sizer.dart';
 
 

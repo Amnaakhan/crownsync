@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/add_location.dart';
+import 'package:mobiledesign/view/add_store.dart';
+import 'package:mobiledesign/view/add_tempelet.dart';
 import 'package:mobiledesign/view/add_user.dart';
 import 'package:mobiledesign/view/password_settings.dart';
 import 'package:mobiledesign/view/profile_screen.dart';
@@ -472,7 +475,10 @@ class _SettingScreenState extends State<SettingScreen> {
     List<String> accountSettings = [
       "Profile",
       "Users/Team",
-      "Password Settings"
+      "Password Settings",
+      "Store",
+      "Template",
+      'Location'
     ];
 
     // Filter data based on search query
@@ -497,6 +503,15 @@ class _SettingScreenState extends State<SettingScreen> {
                     Get.to(const AddUsers());
                   } else if (setting == "Password Settings") {
                     Get.to(const PasswordSettings());
+                  }
+                  else if (setting == "Store") {
+                    Get.to(const AddStore());
+                  }
+                  else if (setting == "Template") {
+                    Get.to(const CreateTemplete());
+                  }
+                  else if (setting == "Location") {
+                    Get.to(const AddLocation());
                   }
                 },
                 child: Padding(
@@ -543,6 +558,12 @@ class _SettingScreenState extends State<SettingScreen> {
         return "assets/images/user.png";
       case "Password Settings":
         return "assets/images/locked-computer.png";
+      case "Store":
+        return "assets/images/home_icon.png";
+      case "Template":
+        return "assets/images/home_icon.png";
+      case "Location":
+        return "assets/images/location.png";
       default:
         return ""; // Return empty string if no matching setting found
     }

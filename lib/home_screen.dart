@@ -58,10 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
       var data = {'usertoken': googleAuth.accessToken};
 
       String jsonEncoded = jsonEncode(data);
-      // print('token == ${googleAuth.accessToken}');
-      print('refreshtoken === ${googleAuth.idToken}');
+      print('token == ${googleAuth.accessToken}');
       String? token = await AuthController().getToken();
-      // print('usertoken $token');
 
       var response = await http.post(
         Uri.parse('https://testapi.crownsync.ai/api/auth/google'),

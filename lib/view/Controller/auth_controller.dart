@@ -61,21 +61,13 @@ class AuthController extends GetxController{
         print(response);
 
       } else {
-        // userEmail.value = response['body']['email'];
-        // this.send_verification_code(email: userEmail.value);
-        // Get.to(
-        //       () => VerifyEmail(phone: phone,
-        //     // text: userEmail.value,
-        //   ),
-        //   transition: Transition.fade,
-        //   duration: Duration(
-        //     milliseconds: 600,
-        //   ),
-        // );
-        Fluttertoast.showToast(
-          msg: response['body']['errors'],
 
-            backgroundColor: Colors.black,textColor: Colors.white
+        List<dynamic> errors = response['body']['errors'];
+        String errorMessage = errors.join(', '); // Join error messages into a string
+        Fluttertoast.showToast(
+          msg: errorMessage,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
         );
         print(response);
       }
@@ -134,7 +126,7 @@ class AuthController extends GetxController{
       String? token = await AuthController().getToken();
 
       http.Response response = await http
-          .post(Uri.tryParse('https://api.crownsync.ai/api/update/password')!,headers: {
+          .post(Uri.tryParse('https://testapi.crownsync.ai/api/update/password')!,headers: {
         "Accept": "application/json",
         "Authorization": "Bearer $token"
       },body: data);
@@ -362,6 +354,44 @@ class AuthController extends GetxController{
       isLoading.value = false;
     }
   }
+
+  logout() async {
+    try {
+
+
+      String? token = await AuthController().getToken();
+
+      http.Response response = await http
+          .post(Uri.tryParse('https://testapi.crownsync.ai/api/logout')!,
+          headers: {
+            "Accept": "application/json",
+            "Authorization": "Bearer $token"
+          },
+      );
+      print("response1::$response");
+      if (response.statusCode == 200) {
+        print("Response2::${response}");
+
+
+        Fluttertoast.showToast(
+            msg: 'logout Sucessfully',
+            backgroundColor: Colors.black, textColor: Colors.white
+        );
+        Get.to(LoginScreen());
+      } else {
+        Fluttertoast.showToast(
+            msg: 'Error , Please Try Again',
+
+            backgroundColor: Colors.black, textColor: Colors.white
+        );
+      }
+    } catch (e) {
+      print("Error" + e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 
 
 

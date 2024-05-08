@@ -19,7 +19,11 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen> {
   List<String> asignuserlist = [];
+  List<String> locationlist = [];
+
   String? selectedUser;
+  String? selectedlocation;
+
   List<String> collectionlist = [];
   String? selectedcollection;
   List<String> templatelist = [];
@@ -33,15 +37,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
   int? collectionid;
   String? _selectedModelId;
   int? _selectedModelIdInt;
-  String? selectedLocation;
   AuthController authController = Get.put(AuthController());
+  final List<String> items = [
+    'Nothing to show',
 
+  ];
   @override
   void initState() {
     super.initState();
     fetchAssignUserList();
     fetchCollectionList();
     fetchTemplateList();
+    fetchLocation();
     _fetchData();
   }
 
@@ -177,7 +184,21 @@ class _DetailsScreenState extends State<DetailsScreen> {
         Uri.parse('https://testapi.crownsync.ai/api/getuserlist'),
         headers: {
           "Accept": "application/json",
-          "Authorization": "Bearer $token",
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9."
+              "eyJhdWQiOiIzIiwianRpIjoiNzQxZjRlZWZlMmFiYzFhMDFhMzBlNzAxO"
+              "GY5YjBmMTY1NTYzNTk4NGQ2NjhjZGViNGE1NmE1N2VmYmM5NDIxYTE2Nzc5NjA"
+              "yOWZkMWFiMDgiLCJpYXQiOjE3MTUxNDY5MzYuNTc4Mjc5LCJuYmYiOjE3MTUxNDY5M"
+              "zYuNTc4MjgsImV4cCI6MTc0NjY4MjkzNi41NzQ4MDQsInN1YiI6IjMyIiwic2NvcGVzIjpb"
+              "XX0.lEY7JTi8D3GmAMsO5sXGaysTNVvrJzGu7mEK8VaSKWewh3EMXQUkxaNdODcNmdHWg-Un8PD"
+              "ZrcUvKQ-uSb8TT4DFyAFYF0r1BHflkyPKa-Gnrik63OKws5xrDKHaqMoq9eB121t4JkKM5wwnYo2n"
+              "8Wqc3ie9Ieh0B4Ot624mZeBSug-z0lpqZU7qiL_VLC7ruMkMFM0kUBheTnaxQXxRUvjT_E9d8KNhW"
+              "lGocKOUAW-bTvD3N1hVzzotKns-RgzRjprxIU3xU1t-iJuAwtCmQcZT3Gfm53f2u4PsmJAS16Eo_v"
+              "GZ_6J3So43vuRKqS6onLy55Es-dvsFN1yhws2IsPIIw0B8F1XDHjkerovWNQzv-E7qf2ic"
+              "A01dtPDmmSNOmwoAsSbKiv9Ef_gi-ivXagJuaEiZgfhXO5R1DJN-bjvrUzM7C2JROU-uJ5neM2pt"
+              "iLLwCTg7rDBYZKR0-bGvcVxYOTJawWB40r62o1UNpYJTjlzxxGAWPWXeHdT68EKLYt3_13KTBhv4W"
+              "-GwnApphJXzXWP0IEu1fMWGUT4kSvJ1jZ5bt6LPyWv6_J1a1U498MPc1OHkCHv7u7bYJWXhlWfS"
+              "F2JW-6TEyE8JblAcz6IlsBoaisNUhYbR92ohtMpT4i-2j5xAVV-2A_raeK60Ud8_pKER5nWyqPz5"
+              "J-hKs2s",
         },
       );
       if (response.statusCode == 200) {
@@ -192,6 +213,48 @@ class _DetailsScreenState extends State<DetailsScreen> {
         print('userlist ${asignuserlist}');
       } else {
         throw Exception('Failed to load user list');
+      }
+    } catch (e) {
+      print('Error fetching user list: $e');
+      // Handle error here
+    }
+  }
+  Future<void> fetchLocation() async {
+    String? token = await AuthController().getToken();
+    print('usertoken $token');
+    try {
+      final response = await http.get(
+        Uri.parse('https://testapi.crownsync.ai/api/fetch-locations'),
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9."
+              "eyJhdWQiOiIzIiwianRpIjoiNzQxZjRlZWZlMmFiYzFhMDFhMzBlNzAxO"
+              "GY5YjBmMTY1NTYzNTk4NGQ2NjhjZGViNGE1NmE1N2VmYmM5NDIxYTE2Nzc5NjA"
+              "yOWZkMWFiMDgiLCJpYXQiOjE3MTUxNDY5MzYuNTc4Mjc5LCJuYmYiOjE3MTUxNDY5M"
+              "zYuNTc4MjgsImV4cCI6MTc0NjY4MjkzNi41NzQ4MDQsInN1YiI6IjMyIiwic2NvcGVzIjpb"
+              "XX0.lEY7JTi8D3GmAMsO5sXGaysTNVvrJzGu7mEK8VaSKWewh3EMXQUkxaNdODcNmdHWg-Un8PD"
+              "ZrcUvKQ-uSb8TT4DFyAFYF0r1BHflkyPKa-Gnrik63OKws5xrDKHaqMoq9eB121t4JkKM5wwnYo2n"
+              "8Wqc3ie9Ieh0B4Ot624mZeBSug-z0lpqZU7qiL_VLC7ruMkMFM0kUBheTnaxQXxRUvjT_E9d8KNhW"
+              "lGocKOUAW-bTvD3N1hVzzotKns-RgzRjprxIU3xU1t-iJuAwtCmQcZT3Gfm53f2u4PsmJAS16Eo_v"
+              "GZ_6J3So43vuRKqS6onLy55Es-dvsFN1yhws2IsPIIw0B8F1XDHjkerovWNQzv-E7qf2ic"
+              "A01dtPDmmSNOmwoAsSbKiv9Ef_gi-ivXagJuaEiZgfhXO5R1DJN-bjvrUzM7C2JROU-uJ5neM2pt"
+              "iLLwCTg7rDBYZKR0-bGvcVxYOTJawWB40r62o1UNpYJTjlzxxGAWPWXeHdT68EKLYt3_13KTBhv4W"
+              "-GwnApphJXzXWP0IEu1fMWGUT4kSvJ1jZ5bt6LPyWv6_J1a1U498MPc1OHkCHv7u7bYJWXhlWfS"
+              "F2JW-6TEyE8JblAcz6IlsBoaisNUhYbR92ohtMpT4i-2j5xAVV-2A_raeK60Ud8_pKER5nWyqPz5"
+              "J-hKs2s",        },
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        List<String> location = [];
+        for (var user in data['data']) {
+          location.add(user['location']);
+        }
+        setState(() {
+          locationlist = location;
+        });
+        print('location ${locationlist}');
+      } else {
+        throw Exception('Failed to load location ');
       }
     } catch (e) {
       print('Error fetching user list: $e');
@@ -279,7 +342,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     height: 1.h,
                   ),
                   DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
+                    child:
+                         DropdownButton2<String>(
                       isExpanded: true,
                       hint: Row(
                         children: [
@@ -297,7 +361,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           ),
                         ],
                       ),
-                      items: asignuserlist.map((String email) {
+                      items: asignuserlist != null && asignuserlist.isNotEmpty?
+                      asignuserlist.map((String email) {
                         return DropdownMenuItem<String>(
                           value: email,
                           child: Text(
@@ -310,7 +375,20 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         );
-                      }).toList(),
+                      }).toList():items
+                          .map((String item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff808686),
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ))
+                          .toList(),
                       value: selectedUser,
                       onChanged: (String? value) {
                         setState(() {
@@ -349,14 +427,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           radius: const Radius.circular(40),
                           thickness: MaterialStateProperty.all<double>(6),
                           thumbVisibility:
-                              MaterialStateProperty.all<bool>(true),
+                          MaterialStateProperty.all<bool>(true),
                         ),
                       ),
                       menuItemStyleData: const MenuItemStyleData(
                         height: 40,
                         padding: EdgeInsets.only(left: 14, right: 14),
                       ),
-                    ),
+                    )
                   ),
                 ],
               ),
@@ -417,7 +495,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           ),
                         ],
                       ),
-                      items: templatelist.map((String email) {
+                      items: templatelist != null && templatelist.isNotEmpty?
+                      templatelist.map((String email) {
                         int index = templatelist.indexOf(email);
                         return DropdownMenuItem<String>(
                           value: email,
@@ -432,7 +511,20 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           ),
                           key: ValueKey(id[index]),
                         );
-                      }).toList(),
+                      }).toList():items
+                          .map((String item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff808686),
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ))
+                          .toList(),
                       value: selectedtemplate,
                       onChanged: (String? value) {
                         setState(() {
@@ -489,7 +581,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               height: 2.h,
             ),
             Container(
-              height: 13.h,
+              height: 12.h,
               width: double.infinity,
               margin: EdgeInsets.only(left: 4.w, right: 4.w),
               padding: EdgeInsets.only(left: 4.w, top: 1.h, right: 4.w),
@@ -521,97 +613,100 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   SizedBox(
                     height: 1.h,
                   ),
-                  Container(
-                    height: 8.h,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: apiController.rolexxModel?.data?.length,
-                        itemBuilder: (context, index) {
-
-                      return InkWell(
-                        onTap: (){
-                          setState(() {
-                            selectedLocation = apiController.rolexxModel?.data?[index].location;
-                          });
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(top: 1.h,left: 1.w,right: 1.w,bottom: 1.h),
-                          height: 4.h,
-                          width: 27.w,
-                          decoration: BoxDecoration(
-                            color: apiController.rolexxModel?.data?[index].location == selectedLocation
-                                ? Color(0xffE2545E) // Change color for selected location
-                                : Color(0xffE0E1E1), // Default color
-                            borderRadius: BorderRadius.circular(1.h),
-                          ),
-                          child: Center(
+                  DropdownButtonHideUnderline(
+                    child: DropdownButton2<String>(
+                      isExpanded: true,
+                      hint: Row(
+                        children: [
+                          SizedBox(width: 4),
+                          Expanded(
                             child: Text(
-                              '${apiController.rolexxModel?.data?[index].location}',
-                              style: GoogleFonts.inter(
-                                  fontWeight: FontWeight.w500,
-                                  color: apiController.rolexxModel?.data?[index].location == selectedLocation
-                                      ? Colors.white // Change text color for selected location
-                                      : Color(0xff808686),
-                                  fontSize: 9.sp),
+                              'Select Location',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff808686),
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
+                        ],
+                      ),
+                      items: locationlist != null && locationlist.isNotEmpty?
+                      locationlist.map((String email) {
+                        return DropdownMenuItem<String>(
+                          value: email,
+                          child: Text(
+                            email,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff808686),
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        );
+                      }).toList(): items
+                          .map((String item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      );
-                    }),
+                      ))
+                          .toList(),
+                      value: selectedlocation,
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedcollection = value;
+                        });
+                      },
+                      buttonStyleData: ButtonStyleData(
+                        height: 5.h,
+                        width: double.infinity,
+                        padding: const EdgeInsets.only(left: 14, right: 14),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Color(0xff808686),
+                          ),
+                          color: Color(0xffE0E1E1),
+                        ),
+                        elevation: 2,
+                      ),
+                      iconStyleData: const IconStyleData(
+                        icon: Icon(
+                          Icons.keyboard_arrow_down_outlined,
+                        ),
+                        iconSize: 30,
+                        iconEnabledColor: Color(0xff808686),
+                        iconDisabledColor: Color(0xff808686),
+                      ),
+                      dropdownStyleData: DropdownStyleData(
+                        maxHeight: 200,
+                        width: 300,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Color(0xffE0E1E1),
+                        ),
+                        scrollbarTheme: ScrollbarThemeData(
+                          radius: const Radius.circular(40),
+                          thickness: MaterialStateProperty.all<double>(6),
+                          thumbVisibility:
+                          MaterialStateProperty.all<bool>(true),
+                        ),
+                      ),
+                      menuItemStyleData: const MenuItemStyleData(
+                        height: 40,
+                        padding: EdgeInsets.only(left: 14, right: 14),
+                      ),
+                    ),
                   ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Container(
-                  //       height: 4.h,
-                  //       width: 27.w,
-                  //       decoration: BoxDecoration(
-                  //         color: Color(0xffE0E1E1),
-                  //         borderRadius: BorderRadius.circular(1.h),
-                  //
-                  //       ),
-                  //       child: Center(
-                  //         child:
-                  //       Text('${apiController.rolexxModel?.data?[0].location}'
-                  //         ,style: GoogleFonts.inter(
-                  //           fontWeight: FontWeight.w500,
-                  //           color: Color(0xff808686),
-                  //
-                  //           fontSize: 9.sp),),),
-                  //     ),
-                  //     Container(
-                  //       height: 4.h,
-                  //       width: 27.w,
-                  //       decoration: BoxDecoration(
-                  //           color: Color(0xffE0E1E1),
-                  //           borderRadius: BorderRadius.circular(1.h),
-                  //
-                  //       ),
-                  //       child: Center(child:
-                  //       Text('${apiController.rolexxModel?.data?[1].location}'
-                  //         ,style: GoogleFonts.inter(
-                  //           fontWeight: FontWeight.w500,
-                  //           color: Color(0xff808686),
-                  //
-                  //           fontSize: 9.sp),),),
-                  //     ),
-                  //     Container(
-                  //       height: 4.h,
-                  //       width: 25.w,
-                  //       decoration: BoxDecoration(
-                  //           color: Color(0xffE0E1E1),
-                  //           borderRadius: BorderRadius.circular(1.h),
-                  //       ),
-                  //       child: Center(child:
-                  //       Text('${apiController.rolexxModel?.data?[2].location}',
-                  //         style: GoogleFonts.inter(
-                  //           fontWeight: FontWeight.w500,
-                  //           color: Color(0xff808686),
-                  //
-                  //           fontSize: 10.sp),),),
-                  //
-                  //     )
-                  //   ],)
                 ],
               ),
             ),
@@ -883,7 +978,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     productid: _selectedModelId,
                     tempelateid: templateId.toString(),
                     subject: '',
-                    location: '',
+                    location: selectedlocation,
                     greeting: '');
               },
               child: Container(

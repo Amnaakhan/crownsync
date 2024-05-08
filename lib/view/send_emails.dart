@@ -41,7 +41,11 @@ class _SendEmailsState extends State<SendEmails> {
             Expanded(
 
               child: Obx(()=>apiController.isLoading.value?
+
               Center(child: CircularProgressIndicator(),):
+                  apiController.getSentMailsModel?.data==null
+                  ? Center(child: Text('')):
+
               ListView.builder(
                     itemCount: apiController.getSentMailsModel?.data?.length,
                     itemBuilder: (context, index) {

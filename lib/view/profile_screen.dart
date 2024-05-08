@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/Controller/auth_controller.dart';
 import 'package:mobiledesign/view/add_location.dart';
 import 'package:mobiledesign/view/add_store.dart';
 import 'package:mobiledesign/view/edit_profile.dart';
@@ -20,6 +21,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   ApiController apiController = Get.put(ApiController());
+  AuthController authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -315,12 +317,19 @@ onTap: (){
                       SizedBox(
                         width: 5.w,
                       ),
-                      Text(
-                        "Log out",
-                        style: GoogleFonts.inter(
-                          color: Colors.red,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
+                      InkWell(
+                        onTap: (){
+                          authController.logout();
+                        },
+
+                        child: Text
+                          (
+                          "Log out",
+                          style: GoogleFonts.inter(
+                            color: Colors.red,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],
@@ -351,43 +360,7 @@ onTap: (){
             ),
           ),
       SizedBox(height: 2.h,),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          InkWell(
-            onTap: (){
-              Get.to(AddStore());
-            },
-            child: Container(
-              height: 5.h,
-              width: 25.w,
-              decoration: BoxDecoration(
-                  color: Color(0xffE2545E),
-                  borderRadius: BorderRadius.circular(20.h)),
-              child: Center(
-                  child: Text('Store',
-                      style: GoogleFonts.inter(
-                          color: Colors.white, fontSize: 12.sp))),
-            ),
-          ),
-          InkWell(
-            onTap: (){
-              Get.to(AddLocation());
-            },
-            child: Container(
-              height: 5.h,
-              width: 25.w,
-              decoration: BoxDecoration(
-                  color: Color(0xffE2545E),
-                  borderRadius: BorderRadius.circular(20.h)),
-              child: Center(
-                  child: Text('Location',
-                      style: GoogleFonts.inter(
-                          color: Colors.white, fontSize: 12.sp))),
-            ),
-          ),
-        ],
-      )
+
         ],
       ),
     );
