@@ -271,7 +271,7 @@ class _DashBoardState extends State<DashBoard> {
         "${apiController.profileModel?.data?.name}",
         style: GoogleFonts.inter(
           color: Colors.white,
-          fontSize: 12.sp,
+          fontSize: 13.sp,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -295,7 +295,7 @@ class _DashBoardState extends State<DashBoard> {
         "${apiController.profileModel?.data?.email}",
         style: GoogleFonts.inter(
           color: Colors.white,
-          fontSize: 12 .sp,
+          fontSize: 10 .sp,
           fontWeight: FontWeight.w500,
         ),
       ),

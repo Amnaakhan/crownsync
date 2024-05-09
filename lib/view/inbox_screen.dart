@@ -498,7 +498,7 @@ class _InboxScreenState extends State<InboxScreen>
                                                             )));
                                               },
                                               child: Container(
-                                                height: 16.h,
+                                                height: 17.h,
                                                 width: double.infinity,
                                                 margin: EdgeInsets.only(
                                                     left: 4.w,

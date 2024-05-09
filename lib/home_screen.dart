@@ -9,6 +9,7 @@ import 'package:mobiledesign/view/layout_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -98,7 +99,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: InkWell(
               onTap: () {
                 googleSignIn();
+                // _launchUrlPrivacy();
+                    print('');
               },
+
               child: Container(
                 height: 7.h,
                 width: double.infinity,
@@ -143,4 +147,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  final Uri _urlPrivacy = Uri.parse('https://testapi.crownsync.ai/auth/redirect?userId=47');
+  Future<void> _launchUrlPrivacy() async {
+    if (!await launchUrl(_urlPrivacy)) {
+      throw Exception('Could not launch $_urlPrivacy');
+    }
+  }
 }
+

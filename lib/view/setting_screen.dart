@@ -579,7 +579,7 @@ class _SettingScreenState extends State<SettingScreen> {
   final Uri _urlPrivacy = Uri.parse('https://crownsync.ai/privacy-policy');
   Future<void> _launchUrlPrivacy() async {
     if (!await launchUrl(_urlPrivacy)) {
-      throw Exception('Could not launch $_url');
+      throw Exception('Could not launch $_urlPrivacy');
     }
   }
 }
