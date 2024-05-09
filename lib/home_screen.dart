@@ -42,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // clientId: '371366179768-jqqtha822p8ctdcb7h3d1ivgo26l5ns6.apps.googleusercontent.com',
       // forceCodeForRefreshToken: true,
 
+
     );
 
   }
@@ -55,11 +56,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
       // Proceed with the sign-in process since result is not null
       GoogleSignInAuthentication googleAuth = await result!.authentication;
+      print(''
+          'Auth code ${result.serverAuthCode}');
       print('result === $result');
       var data = {'usertoken': googleAuth.accessToken};
 
       String jsonEncoded = jsonEncode(data);
       print('token == ${googleAuth.accessToken}');
+      print('id token == ${googleAuth.idToken}');
+
       String? token = await AuthController().getToken();
 
       var response = await http.post(
