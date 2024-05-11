@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:mobiledesign/view/Auth/login_screen.dart';
+import 'package:mobiledesign/view/Controller/getcontroller.dart';
 import 'package:mobiledesign/view/email_preview.dart';
 import 'package:mobiledesign/view/layout_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
-
 import '../../Helper/helper.dart';
 import '../../Model/emailmessages_model.dart';
+
 
 class AuthController extends GetxController{
   var userId = null;
@@ -33,6 +33,7 @@ class AuthController extends GetxController{
   var userrole = ''.obs;
   // Rx<User?> user = Rx(null);
 
+  // ApiController apiController = Get.put(ApiController());
 
   register({
     required String name,
@@ -231,6 +232,71 @@ class AuthController extends GetxController{
       isLoading.value = false;
     }
   }
+  add_query({required String query}) async {
+    try {
+      isLoading.value = true;
+
+      var data = {
+        'query': query,
+      };
+      String? token = await AuthController().getToken();
+
+      http.Response response = await http
+          .post(Uri.tryParse('https://testapi.crownsync.ai/api/admin/scop_settings')!,headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer $token"
+      },
+          body: data
+      );
+      print("response1::$response");
+      if (response.statusCode == 200) {
+        print("Response2::${response}");
+
+
+        Fluttertoast.showToast(
+            msg: 'Query Added successfully',
+            backgroundColor: Colors.black,textColor: Colors.white
+        );
+        Get.to(LayoutScreen());
+      } else  {
+        Fluttertoast.showToast(
+            msg: 'Error , Please Try Again',
+
+            backgroundColor: Colors.black,textColor: Colors.white
+        );
+      }
+    }catch (e) {
+      print("Error" + e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  Future<void> deleteUser(int? userId) async {
+    try {
+      String? token = await AuthController().getToken();
+
+      final response = await http.delete(
+        Uri.parse('https://testapi.crownsync.ai/api/admin/scop_settings/$userId'),
+        headers: <String, String>{
+          "Accept": "application/json",
+          "Authorization": "Bearer $token"
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Handle successful deletion
+        print('User deleted successfully');
+
+      } else {
+        // Handle errors
+        print('Failed to delete user. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle network errors
+      print('Error: $e');
+    }
+  }
+
   add_location({required String locationname}) async {
     try {
       isLoading.value = true;

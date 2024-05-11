@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,15 +8,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mobiledesign/view/Controller/auth_controller.dart';
 import 'package:sizer/sizer.dart';
 
-class AddLocation extends StatefulWidget {
-  const AddLocation({super.key});
+class AddScope extends StatefulWidget {
+  const AddScope({super.key});
 
   @override
-  State<AddLocation> createState() => _AddLocationState();
+  State<AddScope> createState() => _AddScopeState();
 }
 
-class _AddLocationState extends State<AddLocation> {
-  final addlocation = TextEditingController();
+class _AddScopeState extends State<AddScope> {
+  final addquery = TextEditingController();
   AuthController authController = Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class _AddLocationState extends State<AddLocation> {
                 ),
 
                 Text(
-                  "Create Location",
+                  "Create Scope",
                   style: GoogleFonts.inter(
                     color: Colors.black,
                     fontSize: 18.sp,
@@ -77,7 +79,7 @@ class _AddLocationState extends State<AddLocation> {
                   ),
                   TextFormField(
                     cursorColor: Color(0xff00233D),
-                    controller: addlocation,
+                    controller: addquery,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(1.h),
@@ -86,7 +88,7 @@ class _AddLocationState extends State<AddLocation> {
                         borderSide: BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.circular(1.h),
                       ),
-                      labelText: "Location Name",
+                      labelText: "Query",
                       contentPadding: EdgeInsets.only(left: 5.w),
                       labelStyle: GoogleFonts.inter(color: Color(0xff00233D)),
                       floatingLabelStyle: GoogleFonts.inter(color: Color(0xff00233D)),
@@ -105,8 +107,8 @@ class _AddLocationState extends State<AddLocation> {
                   InkWell(
 
                     onTap: (){
-                      if (addlocation.text.isEmpty) {
-                        Get.snackbar("Error", "Please Enter Location",
+                      if (addquery.text.isEmpty) {
+                        Get.snackbar("Error", "Please Enter query",
                             backgroundColor:
                             Colors.black,
                             colorText: Colors.white,
@@ -117,7 +119,7 @@ class _AddLocationState extends State<AddLocation> {
                       }
 
                       else{
-                        authController.add_location( locationname: addlocation.text);
+                        authController.add_query(query: addquery.text );
                       }
                     },
 
@@ -132,7 +134,7 @@ class _AddLocationState extends State<AddLocation> {
 
                       ),
                       child: Center(child:
-                      Text('Add Location',
+                      Text('Add Query',
                           style: GoogleFonts.inter(color: Colors.white, fontSize: 15.sp))),
                     ),
                   ),
@@ -147,3 +149,4 @@ class _AddLocationState extends State<AddLocation> {
     );
   }
 }
+

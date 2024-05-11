@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(1.h),
                     ),
                     labelText: "Email",
-                    contentPadding: EdgeInsets.only(left: 5.w),
+                    contentPadding: EdgeInsets.only(left: 3.w,right: 2.w),
                     labelStyle: GoogleFonts.inter(color: const Color(0xff00233D)),
                     floatingLabelStyle: GoogleFonts.inter(color: const Color(0xff00233D)),
                     alignLabelWithHint: true,
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(1.h),
                     ),
                     labelText: "Password",
-                    contentPadding: EdgeInsets.only(left: 5.w),
+                    contentPadding: EdgeInsets.only(left: 3.w,right: 2.w),
                     labelStyle: GoogleFonts.inter(color: const Color(0xff00233D)),
                     floatingLabelStyle: GoogleFonts.inter(color: const Color(0xff00233D)),
                     alignLabelWithHint: true,
@@ -171,7 +171,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 Wrap(
                   children: [
-                    Text(' Don’t have an account? ',style: GoogleFonts.inter(color: const Color(0xff00233D), fontSize: 10.sp),),
+                    Text(' Don’t have an account?',
+                      style: GoogleFonts.inter(color: const Color(0xff00233D),
+                          fontSize: 10.sp),),
                     InkWell(
                         onTap: (){
                           Navigator.push(

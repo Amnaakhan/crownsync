@@ -7,6 +7,7 @@ import 'package:mobiledesign/Model/collection_model.dart';
 import 'package:mobiledesign/Model/emailmessages_model.dart';
 import 'package:mobiledesign/Model/getsentmails_model.dart';
 import 'package:mobiledesign/Model/login_model.dart';
+import 'package:mobiledesign/Model/query_model.dart';
 import 'package:mobiledesign/Model/rolex_model.dart';
 import 'package:mobiledesign/Model/user_model.dart';
 import 'package:mobiledesign/Model/user_profile.dart';
@@ -17,18 +18,15 @@ class ApiController extends GetxController {
   RolexxModel? rolexxModel;
   InboxModel? emailMessagesModel;
   GetSentMailsModel? getSentMailsModel;
+  Querydata?  querydata;
   RxList<Userlist> user = RxList();
-  // LoginModel? loginModel;
 
-
-  // Userlist? userlist;
 
   ProfileModel? profileModel;
 
-  // var userList = <Userlist>[].obs; // List to store user models
-  // var selectedUser = Rxn<Userlist>(); // Rxn<User> for an optional user
 
   var isLoading = true.obs;
+  var isloader = true.obs;
   AuthController authController = Get.put(AuthController());
 
   @override
@@ -39,6 +37,7 @@ class ApiController extends GetxController {
     getEmailMsgs();
     get_sentemails();
     get_profile();
+    get_querydata();
     super.onInit();
   }
 
@@ -60,6 +59,25 @@ class ApiController extends GetxController {
       // log(result.toString());
       print('checkLogin = ${result}');
       isLoading(false);
+    }
+  }
+  get_querydata() async {
+    isLoading.value = true;
+    String? token = await AuthController().getToken();
+    print('usertoken $token');
+
+    http.Response response =
+    await http.get(Uri.tryParse('https://testapi.crownsync.ai/api/admin/scop_settings')!,  headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer $token",
+
+    });
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+      querydata = Querydata.fromJson(result);
+      // log(result.toString());
+      print('querydata = ${result}');
+      isLoading.value = false;
     }
   }
 

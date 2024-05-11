@@ -7,6 +7,7 @@ import 'package:mobiledesign/view/add_tempelet.dart';
 import 'package:mobiledesign/view/add_user.dart';
 import 'package:mobiledesign/view/password_settings.dart';
 import 'package:mobiledesign/view/profile_screen.dart';
+import 'package:mobiledesign/view/scope_setting.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -478,7 +479,8 @@ class _SettingScreenState extends State<SettingScreen> {
       "Password Settings",
       "Store",
       "Template",
-      'Location'
+      'Location',
+      'Scope Setting'
     ];
 
     // Filter data based on search query
@@ -512,6 +514,9 @@ class _SettingScreenState extends State<SettingScreen> {
                   }
                   else if (setting == "Location") {
                     Get.to(const AddLocation());
+                  }
+                  else if (setting == "Scope Setting") {
+                    Get.to(const ScopeSetting());
                   }
                 },
                 child: Padding(
@@ -564,6 +569,8 @@ class _SettingScreenState extends State<SettingScreen> {
         return "assets/images/home_icon.png";
       case "Location":
         return "assets/images/location.png";
+      case "Scope Setting":
+        return "assets/images/setting1.png";
       default:
         return ""; // Return empty string if no matching setting found
     }
