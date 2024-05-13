@@ -187,34 +187,35 @@
 // }
 //
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobiledesign/view/dashboard.dart';
+import 'package:mobiledesign/view/layout_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreen extends StatelessWidget {
   final Uri _urlSignIn = Uri.parse('https://testapi.crownsync.ai/auth/redirect?userId=47');
-  final String _dashboardUrl = 'https://testapp.crownsync.ai/user/dashboard';
+  final String _dashboardUrl = 'https://testapi.crownsync.ai/auth/google/callback';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
             child: InkWell(
-              onTap: _launchUrlSignin,
+              onTap: () {
+                Get.to(WebViewPage(url: _urlSignIn.toString()));
+              },
               child: Container(
                 height: 50,
                 width: double.infinity,
@@ -240,24 +241,31 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           SizedBox(height: 20),
-          Container(
-            height: 50,
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Color(0xffE2545E),
-                width: 1,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: Text(
-                'Connect with Facebook',
-                style: GoogleFonts.inter(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 18,
+          Center(
+            child: InkWell(
+              onTap: () {
+                // Handle Connect with Facebook
+              },
+              child: Container(
+                height: 50,
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xffE2545E),
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    'Connect with Facebook',
+                    style: GoogleFonts.inter(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -266,32 +274,43 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
 
+class WebViewPage extends StatefulWidget {
+  final String url;
 
-  final Uri _urlsignin = Uri.parse('https://testapi.crownsync.ai/auth/redirect?userId=47');
-  Future<void> _launchUrlSignin() async {
-    if (await launchUrl(_urlsignin)) {
-      listenForDashboardUrl();
+  WebViewPage({required this.url});
 
-    }
-    else{
-      throw Exception('Could not launch $_urlsignin');
+  @override
+  _WebViewPageState createState() => _WebViewPageState();
+}
 
-    }
-  }
+class _WebViewPageState extends State<WebViewPage> {
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
 
-  // Listen for the dashboard URL after authentication
-  void listenForDashboardUrl() {
-    // Create a WebView widget to listen for the URL
-    WebView(
-      initialUrl: _dashboardUrl,
-      javascriptMode: JavascriptMode.unrestricted,
-      onPageFinished: (String url) {
-        if (url == _dashboardUrl) {
-          // If the URL matches the dashboard URL, navigate to the dashboard screen
-          Get.offAll(DashBoard());
-        }
-      },
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('WebView'),
+      ),
+      body: WebView(
+        initialUrl: widget.url,
+        javascriptMode: JavascriptMode.unrestricted,
+        userAgent: 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Mobile Safari/537.36',
+
+        onWebViewCreated: (WebViewController webViewController) {
+          _controller.complete(webViewController);
+        },
+        navigationDelegate: (NavigationRequest request) {
+          if (request.url.startsWith('https://testapi.crownsync.ai/auth/google/callback')) {
+            // Redirect to Dashboard after successful authentication
+            Get.offAll(LayoutScreen());
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
+      ),
     );
   }
 }

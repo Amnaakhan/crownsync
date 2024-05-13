@@ -226,7 +226,7 @@ class _DashBoardState extends State<DashBoard> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomeScreen()),
+                      MaterialPageRoute(builder: (context) =>  HomeScreen()),
                     );
                   },
                   child: Container(
