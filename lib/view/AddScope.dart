@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobiledesign/view/Controller/auth_controller.dart';
+import 'package:mobiledesign/view/Controller/getcontroller.dart';
 import 'package:sizer/sizer.dart';
 
 class AddScope extends StatefulWidget {
@@ -119,7 +120,15 @@ class _AddScopeState extends State<AddScope> {
                       }
 
                       else{
-                        authController.add_query(query: addquery.text );
+                        authController.add_query(query: addquery.text, onQueryAdded: (success ) {
+                          if (success) {
+                            // Query added successfully, refresh the list
+                            Get.find<ApiController>().get_querydata();
+                            // Navigate back
+                            Get.back();
+                          }
+                        } );
+                        // Get.find<ApiController>().get_querydata();
                       }
                     },
 

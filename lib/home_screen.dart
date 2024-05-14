@@ -198,8 +198,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
-  final Uri _urlSignIn = Uri.parse('https://testapi.crownsync.ai/auth/redirect?userId=47');
-  final String _dashboardUrl = 'https://testapi.crownsync.ai/auth/google/callback';
+  final Uri _urlSignIn = Uri.parse('https://testapi.crownsync.ai/auth/redirect?userId=39');
 
   @override
   Widget build(BuildContext context) {
@@ -291,9 +290,7 @@ class _WebViewPageState extends State<WebViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('WebView'),
-      ),
+
       body: WebView(
         initialUrl: widget.url,
         javascriptMode: JavascriptMode.unrestricted,
@@ -302,14 +299,14 @@ class _WebViewPageState extends State<WebViewPage> {
         onWebViewCreated: (WebViewController webViewController) {
           _controller.complete(webViewController);
         },
-        navigationDelegate: (NavigationRequest request) {
-          if (request.url.startsWith('https://testapi.crownsync.ai/auth/google/callback')) {
-            // Redirect to Dashboard after successful authentication
-            Get.offAll(LayoutScreen());
-            return NavigationDecision.prevent;
-          }
-          return NavigationDecision.navigate;
-        },
+        // navigationDelegate: (NavigationRequest request) {
+        //   if (request.url.startsWith('https://testapi.crownsync.ai/auth/google/callback')) {
+        //     // Redirect to Dashboard after successful authentication
+        //     Get.offAll(LayoutScreen());
+        //     return NavigationDecision.prevent;
+        //   }
+        //   return NavigationDecision.navigate;
+        // },
       ),
     );
   }

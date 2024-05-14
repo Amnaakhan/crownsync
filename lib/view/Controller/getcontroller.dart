@@ -62,9 +62,10 @@ class ApiController extends GetxController {
     }
   }
   get_querydata() async {
-    isLoading.value = true;
+    isloader(true);
     String? token = await AuthController().getToken();
     print('usertoken $token');
+    isloader(true);
 
     http.Response response =
     await http.get(Uri.tryParse('https://testapi.crownsync.ai/api/admin/scop_settings')!,  headers: {
@@ -72,13 +73,14 @@ class ApiController extends GetxController {
       "Authorization": "Bearer $token",
 
     });
+    isloader(true);
+
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
       querydata = Querydata.fromJson(result);
       // log(result.toString());
       print('querydata = ${result}');
-      isLoading.value = false;
-    }
+      isloader(false);    }
   }
 
   get_rolexmodel() async {
@@ -99,7 +101,6 @@ class ApiController extends GetxController {
       rolexxModel = RolexxModel.fromJson(result);
       // log(result.toString());
       print('Rolex Model = ${result}');
-      isLoading(false);
     }
   }
 
@@ -158,22 +159,25 @@ class ApiController extends GetxController {
   }
 
   get_profile() async {
-    isLoading(true);
+    isloader(true);
     // log(isLoading.toString());
     String? token = await AuthController().getToken();
+
     print('usertoken $token');
+    isloader(true);
     http.Response response = await http
         .get(Uri.tryParse('https://testapi.crownsync.ai/api/profile')!, headers: {
       "Accept": "application/json",
       "Authorization": "Bearer $token",
 
     },);
+    isloader(true);
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
       profileModel = ProfileModel.fromJson(result);
       // log(result.toString());
       print('profile = ${result}');
-      isLoading(false);
+      isloader(false);
     }
   }
 

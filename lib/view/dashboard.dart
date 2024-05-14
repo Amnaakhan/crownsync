@@ -256,7 +256,7 @@ class _DashBoardState extends State<DashBoard> {
   }
   Widget _buildName() {
     return   Obx(()=>
-    apiController.isLoading.value
+    apiController.isloader.isTrue
 
           ? Shimmer.fromColors(
         baseColor: Color(0xffE2545E),
@@ -281,7 +281,7 @@ class _DashBoardState extends State<DashBoard> {
   }
   Widget _buildEmail() {
     return Obx(()=>
-      apiController.isLoading.value
+      apiController.isloader.value
           ? Shimmer.fromColors(
         baseColor: Color(0xffE2545E),
         highlightColor: Colors.grey.shade500,
@@ -291,6 +291,8 @@ class _DashBoardState extends State<DashBoard> {
           color: Colors.white,
         ),
       ):
+      apiController.profileModel?.data?.email==null?
+          Text(''):
       Text(
         "${apiController.profileModel?.data?.email}",
         style: GoogleFonts.inter(

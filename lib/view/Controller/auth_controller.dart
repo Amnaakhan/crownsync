@@ -232,7 +232,7 @@ class AuthController extends GetxController{
       isLoading.value = false;
     }
   }
-  add_query({required String query}) async {
+  add_query({required String query,required Function(bool) onQueryAdded}) async {
     try {
       isLoading.value = true;
 
@@ -257,6 +257,8 @@ class AuthController extends GetxController{
             msg: 'Query Added successfully',
             backgroundColor: Colors.black,textColor: Colors.white
         );
+        onQueryAdded(true);
+
         Get.to(LayoutScreen());
       } else  {
         Fluttertoast.showToast(
@@ -264,14 +266,18 @@ class AuthController extends GetxController{
 
             backgroundColor: Colors.black,textColor: Colors.white
         );
+        onQueryAdded(false);
+
       }
     }catch (e) {
       print("Error" + e.toString());
+      onQueryAdded(false);
+
     } finally {
       isLoading.value = false;
     }
   }
-  Future<void> deleteUser(int? userId) async {
+  Future<void> deleteUser(int? userId , {required Function(bool) onScopeDeleted}) async {
     try {
       String? token = await AuthController().getToken();
 
@@ -286,14 +292,18 @@ class AuthController extends GetxController{
       if (response.statusCode == 200) {
         // Handle successful deletion
         print('User deleted successfully');
+        onScopeDeleted(true);
 
       } else {
-        // Handle errors
+        onScopeDeleted(false);
+
         print('Failed to delete user. Status code: ${response.statusCode}');
       }
     } catch (e) {
       // Handle network errors
       print('Error: $e');
+      onScopeDeleted(false);
+
     }
   }
 

@@ -19,7 +19,6 @@ class _ScopeSettingState extends State<ScopeSetting> {
   ApiController apiController = Get.put(ApiController());
   AuthController authController = Get.put(AuthController());
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +69,7 @@ class _ScopeSettingState extends State<ScopeSetting> {
           Align(
             alignment: Alignment.centerRight,
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Get.to(AddScope());
               },
               child: Container(
@@ -79,12 +78,11 @@ class _ScopeSettingState extends State<ScopeSetting> {
                 margin: EdgeInsets.only(right: 5.w),
                 decoration: BoxDecoration(
                     color: Color(0xffE2545E),
-
-                    borderRadius: BorderRadius.circular(4.h)
-                ),
-                child: Center(child:
-                Text('Create Scope',
-                    style: GoogleFonts.inter(color: Colors.white, fontSize: 10.sp))),
+                    borderRadius: BorderRadius.circular(4.h)),
+                child: Center(
+                    child: Text('Create Scope',
+                        style: GoogleFonts.inter(
+                            color: Colors.white, fontSize: 10.sp))),
               ),
             ),
           ),
@@ -92,72 +90,82 @@ class _ScopeSettingState extends State<ScopeSetting> {
             height: 3.h,
           ),
           Expanded(
-            child: Obx(()=> apiController.isLoading.value?
-                Center(child: CircularProgressIndicator()):
-              ListView.builder(
-                itemCount: apiController.querydata?.data?.length,
-                padding: EdgeInsets.zero,
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: 8.h,
-                    width: double.infinity,
-                    margin: EdgeInsets.only(
-                        top: 1.h, bottom: 1.h, left: 5.w, right: 5.w),
-                    padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(2.h),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0xff000000).withOpacity(0.10),
-                          blurRadius: 4,
-                          spreadRadius: 0,
-                          offset: Offset(0, 4),
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 1.5.h),
-                        Text(
-                          '${apiController.querydata?.data?[index].query}',
-                          style: GoogleFonts.inter(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 10.sp,
+            child: Obx(
+              () => apiController.isloader.value
+                  ? Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      itemCount: apiController.querydata?.data?.length,
+                      padding: EdgeInsets.zero,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          height: 8.h,
+                          width: double.infinity,
+                          margin: EdgeInsets.only(
+                              top: 1.h, bottom: 1.h, left: 5.w, right: 5.w),
+                          padding: EdgeInsets.only(left: 5.w, right: 5.w),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(2.h),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xff000000).withOpacity(0.10),
+                                blurRadius: 4,
+                                spreadRadius: 0,
+                                offset: Offset(0, 4),
+                              )
+                            ],
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            InkWell(
-                  onTap: (){
-              authController.deleteUser(apiController.querydata?.data?[index].id);
-                  },
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.black12,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 1.5.h),
+                              Text(
+                                '${apiController.querydata?.data?[index].query}',
+                                style: GoogleFonts.inter(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 10.sp,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 2.w,
-                            ),
-                            Icon(
-                              Icons.edit,
-                              color: Colors.black12,
-                            )
-                          ],
-                        )
-                      ],
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      authController.deleteUser(apiController
+                                          .querydata?.data?[index].id, onScopeDeleted: (sucess ) {
+                                        if (sucess) {
+                                          // Scope deleted successfully, refresh the list
+                                          refreshList();
+                                        }
+                                      });
+                                    },
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.black12,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 2.w,
+                                  ),
+                                  Icon(
+                                    Icons.edit,
+                                    color: Colors.black12,
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ),
         ],
       ),
     );
+  }
+  void refreshList() {
+    apiController.get_querydata();
   }
 }
