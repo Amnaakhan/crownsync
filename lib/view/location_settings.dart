@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mobiledesign/view/AddScope.dart';
 import 'package:mobiledesign/view/Controller/auth_controller.dart';
 import 'package:mobiledesign/view/Controller/getcontroller.dart';
+import 'package:mobiledesign/view/add_location.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
-class ScopeSetting extends StatefulWidget {
-  const ScopeSetting({super.key});
+class LocationSetting extends StatefulWidget {
+  const LocationSetting({super.key});
 
   @override
-  State<ScopeSetting> createState() => _ScopeSettingState();
+  State<LocationSetting> createState() => _LocationSettingState();
 }
 
-class _ScopeSettingState extends State<ScopeSetting> {
+class _LocationSettingState extends State<LocationSetting> {
   ApiController apiController = Get.put(ApiController());
   AuthController authController = Get.put(AuthController());
 
@@ -46,7 +46,7 @@ class _ScopeSettingState extends State<ScopeSetting> {
                           ),
                         ),
                         Text(
-                          'Scope Setting',
+                          'Location Setting',
                           style: GoogleFonts.inter(
                               fontWeight: FontWeight.w500, fontSize: 18.sp),
                         ),
@@ -71,7 +71,7 @@ class _ScopeSettingState extends State<ScopeSetting> {
             alignment: Alignment.centerRight,
             child: InkWell(
               onTap: () {
-                Get.to(AddScope());
+                Get.to(AddLocation());
               },
               child: Container(
                 height: 5.h,
@@ -81,7 +81,7 @@ class _ScopeSettingState extends State<ScopeSetting> {
                     color: Color(0xffE2545E),
                     borderRadius: BorderRadius.circular(4.h)),
                 child: Center(
-                    child: Text('Create Scope',
+                    child: Text('Add Location',
                         style: GoogleFonts.inter(
                             color: Colors.white, fontSize: 10.sp))),
               ),
@@ -92,81 +92,83 @@ class _ScopeSettingState extends State<ScopeSetting> {
           ),
           Expanded(
             child: Obx(
-              () => apiController.isloader.value
+                  () =>
+                  apiController.isloader.value
                   ? Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      itemCount: apiController.querydata?.data?.length,
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          height: 8.h,
-                          width: double.infinity,
-                          margin: EdgeInsets.only(
-                              top: 1.h, bottom: 1.h, left: 5.w, right: 5.w),
-                          padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(2.h),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xff000000).withOpacity(0.10),
-                                blurRadius: 4,
-                                spreadRadius: 0,
-                                offset: Offset(0, 4),
-                              )
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 1.5.h),
-                              Text(
-                                '${apiController.querydata?.data?[index].query}',
-                                style: GoogleFonts.inter(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 10.sp,
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      authController.deleteScope(
-                                          apiController.querydata?.data?[index]
-                                              .id, onScopeDeleted: (sucess) {
-                                        if (sucess) {
-                                          // Scope deleted successfully, refresh the list
-                                          refreshList();
-                                        }
-                                      });
-                                    },
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: Colors.black12,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 2.w,
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      showEditDialog(index);
-
-                                    },
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: Colors.black12,
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        );
-                      },
+                  :
+                  ListView.builder(
+                itemCount: apiController.locationdata?.data?.length,
+                padding: EdgeInsets.zero,
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: 8.h,
+                    width: double.infinity,
+                    margin: EdgeInsets.only(
+                        top: 1.h, bottom: 1.h, left: 5.w, right: 5.w),
+                    padding: EdgeInsets.only(left: 5.w, right: 5.w),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(2.h),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xff000000).withOpacity(0.10),
+                          blurRadius: 4,
+                          spreadRadius: 0,
+                          offset: Offset(0, 4),
+                        )
+                      ],
                     ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 1.5.h),
+                        Text(
+                          '${apiController.locationdata?.data?[index].location}',
+                          style: GoogleFonts.inter(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 10.sp,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                authController.deleteLocation(
+                                    apiController.locationdata?.data?[index]
+                                        .id, onScopeDeleted: (sucess) {
+                                  if (sucess) {
+                                    // Scope deleted successfully, refresh the list
+                                    refreshList();
+                                  }
+                                });
+                              },
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.black12,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 2.w,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                // showEditDialog(index);
+
+                              },
+                              child: Icon(
+                                Icons.edit,
+                                color: Colors.black12,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ],
@@ -175,30 +177,30 @@ class _ScopeSettingState extends State<ScopeSetting> {
   }
 
   void refreshList() {
-    apiController.get_querydata();
+    apiController.get_location();
   }
 
-  Future<void> updateScope(int? id, String newQuery) async {
+  Future<void> updateLocation(int? id, String newQuery) async {
     try {
       String? token = await AuthController().getToken();
 
       final response = await http.put(
-        Uri.parse('https://testapi.crownsync.ai/api/admin/scop_settings/$id'),
+        Uri.parse('https://testapi.crownsync.ai/api/admin/update-location/$id'),
         headers: <String, String>{
           "Accept": "application/json",
           "Authorization": "Bearer $token"
         },
-        body: {'query': newQuery},
+        body: {'location': newQuery},
       );
 
       if (response.statusCode == 200) {
         // Scope updated successfully
-        print('Scope updated successfully');
+        print('Location updated successfully');
         // Refresh the list
         refreshList();
       } else {
         // Handle errors
-        print('Failed to update scope. Status code: ${response.statusCode}');
+        print('Failed to update location. Status code: ${response.statusCode}');
       }
     } catch (e) {
       // Handle network errors
@@ -261,8 +263,8 @@ class _ScopeSettingState extends State<ScopeSetting> {
             InkWell(
               onTap: () async{
                 await updateScope(
-                            apiController.querydata?.data?[index].id, controller.text);
-                        Navigator.pop(context);
+                    apiController.querydata?.data?[index].id, controller.text);
+                Navigator.pop(context);
               },
               child: Container(
                 height: 5.h,
@@ -278,15 +280,7 @@ class _ScopeSettingState extends State<ScopeSetting> {
                     style: GoogleFonts.inter(color: Colors.white, fontSize: 12.sp))),
               ),
             ),
-            // TextButton(
-            //   onPressed: () async {
-            //     // Update API call
-            //     await updateScope(
-            //         apiController.querydata?.data?[index].id, controller.text);
-            //     Navigator.pop(context); // Close dialog
-            //   },
-            //   child: Text('Update'),
-            // ),
+
           ],
         );
       },

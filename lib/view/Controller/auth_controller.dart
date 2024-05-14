@@ -277,7 +277,7 @@ class AuthController extends GetxController{
       isLoading.value = false;
     }
   }
-  Future<void> deleteUser(int? userId , {required Function(bool) onScopeDeleted}) async {
+  Future<void> deleteScope(int? userId , {required Function(bool) onScopeDeleted}) async {
     try {
       String? token = await AuthController().getToken();
 
@@ -291,7 +291,36 @@ class AuthController extends GetxController{
 
       if (response.statusCode == 200) {
         // Handle successful deletion
-        print('User deleted successfully');
+        print('Query deleted successfully');
+        onScopeDeleted(true);
+
+      } else {
+        onScopeDeleted(false);
+
+        print('Failed to delete user. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle network errors
+      print('Error: $e');
+      onScopeDeleted(false);
+
+    }
+  }
+  Future<void> deleteLocation(int? userId , {required Function(bool) onScopeDeleted}) async {
+    try {
+      String? token = await AuthController().getToken();
+
+      final response = await http.delete(
+        Uri.parse('https://testapi.crownsync.ai/api/delete-location/$userId'),
+        headers: <String, String>{
+          "Accept": "application/json",
+          "Authorization": "Bearer $token"
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Handle successful deletion
+        print('Location deleted successfully');
         onScopeDeleted(true);
 
       } else {
@@ -307,7 +336,7 @@ class AuthController extends GetxController{
     }
   }
 
-  add_location({required String locationname}) async {
+  add_location({required String locationname, required Function(bool) onQueryAdded}) async {
     try {
       isLoading.value = true;
       EmailPasswordError.value ='';
@@ -332,6 +361,8 @@ class AuthController extends GetxController{
             msg: 'Location Added successfully',
             backgroundColor: Colors.black,textColor: Colors.white
         );
+        onQueryAdded(true);
+
         Get.to(LayoutScreen());
       } else  {
         Fluttertoast.showToast(
@@ -339,9 +370,13 @@ class AuthController extends GetxController{
 
             backgroundColor: Colors.black,textColor: Colors.white
         );
+        onQueryAdded(false);
+
       }
     }catch (e) {
       print("Error" + e.toString());
+      onQueryAdded(false);
+
     } finally {
       isLoading.value = false;
     }

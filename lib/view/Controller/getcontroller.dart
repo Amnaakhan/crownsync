@@ -6,6 +6,7 @@ import 'package:mobiledesign/Model/check_login.dart';
 import 'package:mobiledesign/Model/collection_model.dart';
 import 'package:mobiledesign/Model/emailmessages_model.dart';
 import 'package:mobiledesign/Model/getsentmails_model.dart';
+import 'package:mobiledesign/Model/location_model.dart';
 import 'package:mobiledesign/Model/login_model.dart';
 import 'package:mobiledesign/Model/query_model.dart';
 import 'package:mobiledesign/Model/rolex_model.dart';
@@ -19,6 +20,7 @@ class ApiController extends GetxController {
   InboxModel? emailMessagesModel;
   GetSentMailsModel? getSentMailsModel;
   Querydata?  querydata;
+  Locationdata? locationdata;
   RxList<Userlist> user = RxList();
 
 
@@ -38,6 +40,7 @@ class ApiController extends GetxController {
     get_sentemails();
     get_profile();
     get_querydata();
+    get_location();
     super.onInit();
   }
 
@@ -80,6 +83,27 @@ class ApiController extends GetxController {
       querydata = Querydata.fromJson(result);
       // log(result.toString());
       print('querydata = ${result}');
+      isloader(false);    }
+  }
+  get_location() async {
+    isloader(true);
+    String? token = await AuthController().getToken();
+    print('usertoken $token');
+    isloader(true);
+
+    http.Response response =
+    await http.get(Uri.tryParse('https://testapi.crownsync.ai/api/fetch-locations')!,  headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer $token",
+
+    });
+    isloader(true);
+
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+      locationdata = Locationdata.fromJson(result);
+      // log(result.toString());
+      print('locationdata = ${result}');
       isloader(false);    }
   }
 

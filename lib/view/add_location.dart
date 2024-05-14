@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobiledesign/view/Controller/auth_controller.dart';
+import 'package:mobiledesign/view/Controller/getcontroller.dart';
 import 'package:sizer/sizer.dart';
 
 class AddLocation extends StatefulWidget {
@@ -117,7 +118,15 @@ class _AddLocationState extends State<AddLocation> {
                       }
 
                       else{
-                        authController.add_location( locationname: addlocation.text);
+                        authController.add_location( locationname: addlocation.text, onQueryAdded: (success ) {
+                          if (success) {
+                            // Query added successfully, refresh the list
+                            Get.find<ApiController>().get_location();
+                            // Navigate back
+                            Get.back();
+                          }
+
+                        });
                       }
                     },
 

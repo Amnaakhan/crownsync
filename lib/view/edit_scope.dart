@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobiledesign/view/Controller/auth_controller.dart';
-import 'package:mobiledesign/view/Controller/getcontroller.dart';
 import 'package:sizer/sizer.dart';
 
 class AddScope extends StatefulWidget {
@@ -104,30 +103,30 @@ class _AddScopeState extends State<AddScope> {
 
                   InkWell(
 
-                    onTap: (){
-                      if (addquery.text.isEmpty) {
-                        Get.snackbar("Error", "Please Enter query",
-                            backgroundColor:
-                            Colors.black,
-                            colorText: Colors.white,
-
-                            snackPosition: SnackPosition.BOTTOM,
-                            margin: EdgeInsets.only(
-                                bottom: 8.h, left: 5.w, right: 5.w));
-                      }
-
-                      else{
-                        authController.add_query(query: addquery.text, onQueryAdded: (success ) {
-                          if (success) {
-                            // Query added successfully, refresh the list
-                            Get.find<ApiController>().get_querydata();
-                            // Navigate back
-                            Get.back();
-                          }
-                        } );
-                        // Get.find<ApiController>().get_querydata();
-                      }
-                    },
+                    // onTap: (){
+                    //   if (addquery.text.isEmpty) {
+                    //     Get.snackbar("Error", "Please Enter query",
+                    //         backgroundColor:
+                    //         Colors.black,
+                    //         colorText: Colors.white,
+                    //
+                    //         snackPosition: SnackPosition.BOTTOM,
+                    //         margin: EdgeInsets.only(
+                    //             bottom: 8.h, left: 5.w, right: 5.w));
+                    //   }
+                    //
+                    //   else{
+                    //     authController.add_query(query: addquery.text, onQueryAdded: (success ) {
+                    //       if (success) {
+                    //         // Query added successfully, refresh the list
+                    //         Get.find<ApiController>().get_querydata();
+                    //         // Navigate back
+                    //         Get.back();
+                    //       }
+                    //     } );
+                    //     // Get.find<ApiController>().get_querydata();
+                    //   }
+                    // },
 
 
                     child: Container(
@@ -140,7 +139,7 @@ class _AddScopeState extends State<AddScope> {
 
                       ),
                       child: Center(child:
-                      Text('Add Query',
+                      Text('Update',
                           style: GoogleFonts.inter(color: Colors.white, fontSize: 15.sp))),
                     ),
                   ),

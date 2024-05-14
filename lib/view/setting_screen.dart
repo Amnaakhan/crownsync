@@ -5,6 +5,7 @@ import 'package:mobiledesign/view/add_location.dart';
 import 'package:mobiledesign/view/add_store.dart';
 import 'package:mobiledesign/view/add_tempelet.dart';
 import 'package:mobiledesign/view/add_user.dart';
+import 'package:mobiledesign/view/location_settings.dart';
 import 'package:mobiledesign/view/password_settings.dart';
 import 'package:mobiledesign/view/profile_screen.dart';
 import 'package:mobiledesign/view/scope_setting.dart';
@@ -513,7 +514,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     Get.to(const CreateTemplete());
                   }
                   else if (setting == "Location") {
-                    Get.to(const AddLocation());
+                    Get.to(const LocationSetting());
                   }
                   else if (setting == "Scope Setting") {
                     Get.to(const ScopeSetting());
