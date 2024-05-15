@@ -6,17 +6,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mobiledesign/view/Controller/auth_controller.dart';
 import 'package:mobiledesign/view/Controller/getcontroller.dart';
 import 'package:mobiledesign/view/add_location.dart';
+import 'package:mobiledesign/view/add_store.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
-class LocationSetting extends StatefulWidget {
-  const LocationSetting({super.key});
+class StoreSetting extends StatefulWidget {
+  const StoreSetting({super.key});
 
   @override
-  State<LocationSetting> createState() => _LocationSettingState();
+  State<StoreSetting> createState() => _StoreSettingState();
 }
 
-class _LocationSettingState extends State<LocationSetting> {
+class _StoreSettingState extends State<StoreSetting> {
   ApiController apiController = Get.put(ApiController());
   AuthController authController = Get.put(AuthController());
 
@@ -46,7 +47,7 @@ class _LocationSettingState extends State<LocationSetting> {
                           ),
                         ),
                         Text(
-                          'Location Setting',
+                          'Store Setting',
                           style: GoogleFonts.inter(
                               fontWeight: FontWeight.w500, fontSize: 18.sp),
                         ),
@@ -71,7 +72,7 @@ class _LocationSettingState extends State<LocationSetting> {
             alignment: Alignment.centerRight,
             child: InkWell(
               onTap: () {
-                Get.to(AddLocation());
+                Get.to(AddStore());
               },
               child: Container(
                 height: 5.h,
@@ -81,7 +82,7 @@ class _LocationSettingState extends State<LocationSetting> {
                     color: Color(0xffE2545E),
                     borderRadius: BorderRadius.circular(4.h)),
                 child: Center(
-                    child: Text('Add Location',
+                    child: Text('Create Store',
                         style: GoogleFonts.inter(
                             color: Colors.white, fontSize: 10.sp))),
               ),
@@ -93,11 +94,10 @@ class _LocationSettingState extends State<LocationSetting> {
           Expanded(
             child: Obx(
                   () =>
-                  apiController.isloader.value
-                  ? Center(child: CircularProgressIndicator())
-                  :
-                  ListView.builder(
-                itemCount: apiController.locationdata?.data?.length,
+              apiController.isloader.value
+                  ? Center(child: CircularProgressIndicator()):
+              ListView.builder(
+                itemCount: apiController.storedata?.data?.length,
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   return Container(
@@ -123,7 +123,7 @@ class _LocationSettingState extends State<LocationSetting> {
                       children: [
                         SizedBox(height: 1.5.h),
                         Text(
-                          '${apiController.locationdata?.data?[index].location}',
+                          '${apiController.storedata?.data?[index].name}',
                           style: GoogleFonts.inter(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
@@ -135,8 +135,8 @@ class _LocationSettingState extends State<LocationSetting> {
                           children: [
                             InkWell(
                               onTap: () {
-                                authController.deleteLocation(
-                                    apiController.locationdata?.data?[index]
+                                authController.deleteStore(
+                                    apiController.storedata?.data?[index]
                                         .id, onScopeDeleted: (sucess) {
                                   if (sucess) {
                                     // Scope deleted successfully, refresh the list
@@ -177,31 +177,31 @@ class _LocationSettingState extends State<LocationSetting> {
   }
 
   void refreshList() {
-    apiController.get_location();
+    apiController.get_store();
   }
 
-  Future<void> updateLocation(int? id, String location) async {
+  Future<void> updateStore(int? id, String store) async {
     try {
       String? token = await AuthController().getToken();
 
       final response = await http.put(
-        Uri.parse('https://testapi.crownsync.ai/api/update-location/$id'),
+        Uri.parse('https://testapi.crownsync.ai/api/update-store/$id'),
         headers: <String, String>{
           "Accept": "application/json",
           "Authorization": "Bearer $token"
         },
-        body: {'location': location},
+        body: {'name': store},
       );
 
       if (response.statusCode == 200) {
         // Scope updated successfully
-        print('Location updated successfully');
+        print('Store updated successfully');
         // Refresh the list
         refreshList();
       }
       else {
         // Handle errors
-        print('Failed to update location. Status code: ${response.statusCode}');
+        print('Failed to update Store. Status code: ${response.statusCode}');
       }
     } catch (e) {
       // Handle network errors
@@ -217,7 +217,7 @@ class _LocationSettingState extends State<LocationSetting> {
       builder: (context) {
         TextEditingController controller = TextEditingController(text: location);
         return AlertDialog(
-          title: Text('Edit location',style: GoogleFonts.inter(color: Colors.black, fontSize: 15.sp)),
+          title: Text('Edit Store',style: GoogleFonts.inter(color: Colors.black, fontSize: 15.sp)),
           content: TextFormField(
             cursorColor: Color(0xff00233D),
             controller: controller,
@@ -229,7 +229,7 @@ class _LocationSettingState extends State<LocationSetting> {
                 borderSide: BorderSide(color: Colors.black),
                 borderRadius: BorderRadius.circular(1.h),
               ),
-              labelText: "Edit Location",
+              labelText: "Edit Store",
               contentPadding: EdgeInsets.only(left: 5.w),
               labelStyle: GoogleFonts.inter(color: Color(0xff00233D)),
               floatingLabelStyle: GoogleFonts.inter(color: Color(0xff00233D)),
@@ -258,13 +258,13 @@ class _LocationSettingState extends State<LocationSetting> {
                 ),
                 child: Center(
                     child:
-                Text('Cancel',
-                    style: GoogleFonts.inter(color: Colors.white, fontSize: 12.sp))),
+                    Text('Cancel',
+                        style: GoogleFonts.inter(color: Colors.white, fontSize: 12.sp))),
               ),
             ),
             InkWell(
               onTap: () async{
-                await updateLocation(
+                await updateStore(
                     apiController.locationdata?.data?[index].id, controller.text);
                 Navigator.pop(context);
               },

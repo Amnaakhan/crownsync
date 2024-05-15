@@ -9,6 +9,7 @@ import 'package:mobiledesign/view/location_settings.dart';
 import 'package:mobiledesign/view/password_settings.dart';
 import 'package:mobiledesign/view/profile_screen.dart';
 import 'package:mobiledesign/view/scope_setting.dart';
+import 'package:mobiledesign/view/store_setting.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -508,7 +509,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     Get.to(const PasswordSettings());
                   }
                   else if (setting == "Store") {
-                    Get.to(const AddStore());
+                    Get.to(const StoreSetting());
                   }
                   else if (setting == "Template") {
                     Get.to(const CreateTemplete());

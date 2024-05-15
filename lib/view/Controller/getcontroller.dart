@@ -10,6 +10,7 @@ import 'package:mobiledesign/Model/location_model.dart';
 import 'package:mobiledesign/Model/login_model.dart';
 import 'package:mobiledesign/Model/query_model.dart';
 import 'package:mobiledesign/Model/rolex_model.dart';
+import 'package:mobiledesign/Model/store_model.dart';
 import 'package:mobiledesign/Model/user_model.dart';
 import 'package:mobiledesign/Model/user_profile.dart';
 import 'package:mobiledesign/view/Controller/auth_controller.dart';
@@ -22,7 +23,7 @@ class ApiController extends GetxController {
   Querydata?  querydata;
   Locationdata? locationdata;
   RxList<Userlist> user = RxList();
-
+  Storedata? storedata;
 
   ProfileModel? profileModel;
 
@@ -36,11 +37,11 @@ class ApiController extends GetxController {
     get_checklogin();
     get_rolexmodel();
     postlogin();
-    getEmailMsgs();
     get_sentemails();
     get_profile();
     get_querydata();
     get_location();
+    get_store();
     super.onInit();
   }
 
@@ -106,7 +107,27 @@ class ApiController extends GetxController {
       print('locationdata = ${result}');
       isloader(false);    }
   }
+  get_store() async {
+    isloader(true);
+    String? token = await AuthController().getToken();
+    print('usertoken $token');
+    isloader(true);
 
+    http.Response response =
+    await http.get(Uri.tryParse('https://testapi.crownsync.ai/api/fetch-store')!,  headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer $token",
+
+    });
+    isloader(true);
+
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+      storedata = Storedata.fromJson(result);
+      // log(result.toString());
+      print('Storedata = ${result}');
+      isloader(false);    }
+  }
   get_rolexmodel() async {
     isLoading(true);
     // log(isLoading.toString());
@@ -287,45 +308,5 @@ class ApiController extends GetxController {
   //     isLoading.value = false; // Set loading to false on exception
   //   }
   // }
-  Future<void> getEmailMsgs() async {
-    isLoading(true);
 
-    http.Response response = await http.get(
-      Uri.tryParse('https://api.crownsync.ai/api/email-messages')!,
-      headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
-            ".eyJhdWQiOiIzIiwianRpIjoiY2UwYzIyMmI1NjZiMWRlYzM2ZWJjOGU3Y"
-            "zBmMDE3NzI2NmM4ZmFkMTZiMTk3MWFiMzU0MDJmMDRmZmMwNTliNjQ0YzNk"
-            "ZDE1NmYyYWE5ZjkiLCJpYXQiOjE3MTM3ODMwMjIuMzg4MTI5LCJuYmYiOjE3"
-            "MTM3ODMwMjIuMzg4MTMxLCJleHAiOjE3NDUzMTkwMjIuMzg3MTk3LCJzdWIiOi"
-            "IxOSIsInNjb3BlcyI6W119.IfaT156xsXoW1XYj64vNkt5PmdWuCV1IWyGHimKAE"
-            "7fEaYQFCYbMZBC_wBeYJYDYzMwcAVtbqKp1gyBmibromFLtJNWkqQtYrLVkWajOzs1C"
-            "0YhHAAdibCX0Zt9IBg6oImbfmqQNXkPSWSzXh6y2JQx3R-3NwFdbxaCfIxd_conJKcuuW"
-            "EoU504-sHkLfHdqKlJJwJ_ZkWpJSo68qPhtBkZ_1OCqXL6BVhnnCmNNKfmZpw5oKVXp26iw"
-            "RHnwlDGjgXdMrvIrGCLcw2XbI3SCczgpoWeRLdBOu7RQwPhbA69_3UMb0ILSGgHX1zRMrpeJK"
-            "8RiZzdeEMUh825LaBGpPk_ooRtwl11vi2b10kFDueNR-lBb2Wj3JSBi5wKAghgCvfhsklgqbTl"
-            "QtDJwv71sCO0m5fMCPtXjetYKan5D4G_4LuVKdbnllFb_uyrTVKo-AYgUK4mYeXbmgROpbJgCZPS"
-            "ynz5I5We3j3CIRv-h_V-xApewvMe2xrgxKtDq445MkBLuZuVPsBoXx6_oLX2Gx_2HuDYBDXITrbBNn7"
-            "RNGTQUjNFnF60YDVRwxkz-aohfRJhrrSprn85YdkmXgUuNQAHhlhUyYhMHXXCV1TxDXLmd5Iwo1seeTEU"
-            "nt_wDHCurONDkudWPFwykOx1m2zvbrCvJi6ixNN1pwKF2od9SIRc",
-      },
-    );
-
-    if (response.statusCode == 200) {
-      print('Email Msgs: ${response.body}');
-
-      // Parse response body only if it is valid JSON
-
-        var result = jsonDecode(response.body);
-        emailMessagesModel = InboxModel.fromJson(result);
-        print('Email Msgs == ${result}');
-
-    } else {
-      print('Failed to load email messages: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-    }
-
-    isLoading(false);
-  }
 }

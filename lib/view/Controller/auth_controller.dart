@@ -335,6 +335,35 @@ class AuthController extends GetxController{
 
     }
   }
+  Future<void> deleteStore(int? userId , {required Function(bool) onScopeDeleted}) async {
+    try {
+      String? token = await AuthController().getToken();
+
+      final response = await http.delete(
+        Uri.parse('https://testapi.crownsync.ai/api/delete-store/$userId'),
+        headers: <String, String>{
+          "Accept": "application/json",
+          "Authorization": "Bearer $token"
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Handle successful deletion
+        print('Store deleted successfully');
+        onScopeDeleted(true);
+
+      } else {
+        onScopeDeleted(false);
+
+        print('Failed to delete Store. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle network errors
+      print('Error: $e');
+      onScopeDeleted(false);
+
+    }
+  }
 
   add_location({required String locationname, required Function(bool) onQueryAdded}) async {
     try {
