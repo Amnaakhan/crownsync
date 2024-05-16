@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/add_collection.dart';
 import 'package:mobiledesign/view/add_location.dart';
 import 'package:mobiledesign/view/add_store.dart';
 import 'package:mobiledesign/view/add_tempelet.dart';
 import 'package:mobiledesign/view/add_user.dart';
+import 'package:mobiledesign/view/collection_setting.dart';
 import 'package:mobiledesign/view/location_settings.dart';
 import 'package:mobiledesign/view/password_settings.dart';
 import 'package:mobiledesign/view/profile_screen.dart';
@@ -479,10 +481,12 @@ class _SettingScreenState extends State<SettingScreen> {
       "Profile",
       "Users/Team",
       "Password Settings",
+      'Collection',
       "Store",
       "Template",
       'Location',
-      'Scope Setting'
+      'Scope Setting',
+
     ];
 
     // Filter data based on search query
@@ -519,6 +523,9 @@ class _SettingScreenState extends State<SettingScreen> {
                   }
                   else if (setting == "Scope Setting") {
                     Get.to(const ScopeSetting());
+                  }
+                  else if (setting == "Collection") {
+                    Get.to(const CollectionSetting());
                   }
                 },
                 child: Padding(
@@ -568,6 +575,8 @@ class _SettingScreenState extends State<SettingScreen> {
       case "Store":
         return "assets/images/home_icon.png";
       case "Template":
+        return "assets/images/home_icon.png";
+      case "Collection":
         return "assets/images/home_icon.png";
       case "Location":
         return "assets/images/location.png";

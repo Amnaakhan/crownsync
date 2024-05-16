@@ -117,7 +117,7 @@ class _AddStoreState extends State<AddStore> {
                           authController.add_store(storename: addstore.text, onQueryAdded: (success ) {
                             if (success) {
                               // Query added successfully, refresh the list
-                              Get.find<ApiController>().get_store();
+                              // Get.find<ApiController>().get_store();
                               // Navigate back
                               Get.back();
                             }

@@ -129,46 +129,57 @@ class _AddCollectionState extends State<AddCollection> {
                   SizedBox(height: 5.h,),
 
 
-                  InkWell(
+                  Obx(()=> authController.isLoading.value?
+                      Center(child: CircularProgressIndicator(),):
+                   InkWell(
 
-                    // onTap: (){
-                    //   if (addCollection.text.isEmpty) {
-                    //     Get.snackbar("Error", "Please Enter name",
-                    //         backgroundColor:
-                    //         Colors.black,
-                    //         colorText: Colors.white,
-                    //
-                    //         snackPosition: SnackPosition.BOTTOM,
-                    //         margin: EdgeInsets.only(
-                    //             bottom: 8.h, left: 5.w, right: 5.w));
-                    //   }
-                    //
-                    //   else{
-                    //     authController.add_location( locationname: addlocation.text, onQueryAdded: (success ) {
-                    //       if (success) {
-                    //         // Query added successfully, refresh the list
-                    //         Get.find<ApiController>().get_location();
-                    //         // Navigate back
-                    //         Get.back();
-                    //       }
-                    //
-                    //     });
-                    //   }
-                    // },
+                      onTap: (){
+                        if (addname.text.isEmpty) {
+                          Get.snackbar("Error", "Please Enter Collection name",
+                              backgroundColor:
+                              Colors.black,
+                              colorText: Colors.white,
+
+                              snackPosition: SnackPosition.BOTTOM,
+                              margin: EdgeInsets.only(
+                                  bottom: 8.h, left: 5.w, right: 5.w));
+                        } else if(addslug.text.isEmpty){
+                          Get.snackbar("Error", "Please Enter slug",
+                              backgroundColor:
+                              Colors.black,
+                              colorText: Colors.white,
+
+                              snackPosition: SnackPosition.BOTTOM,
+                              margin: EdgeInsets.only(
+                                  bottom: 8.h, left: 5.w, right: 5.w));
+                        }
+
+                        else{
+                          authController.add_collection(collectionname: addname.text,
+                              slug: addslug.text, onQueryAdded: (success) {
+                        if (success) {
+                                // Query added successfully, refresh the list
+                                Get.find<ApiController>().get_collection();
+                                // Navigate back
+                                Get.back();
+                              }
+                            }, );
+                        }
+                      },
 
 
-                    child: Container(
-                      height: 7.h,
-                      width: double.infinity,
+                      child: Container(
+                        height: 7.h,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: Color(0xffE2545E),
+                            borderRadius: BorderRadius.circular(24.h)
 
-                      decoration: BoxDecoration(
-                          color: Color(0xffE2545E),
-                          borderRadius: BorderRadius.circular(24.h)
-
+                        ),
+                        child: Center(child:
+                        Text('Add Collection',
+                            style: GoogleFonts.inter(color: Colors.white, fontSize: 15.sp))),
                       ),
-                      child: Center(child:
-                      Text('Add Collection',
-                          style: GoogleFonts.inter(color: Colors.white, fontSize: 15.sp))),
                     ),
                   ),
 

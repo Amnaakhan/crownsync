@@ -238,6 +238,54 @@ class AuthController extends GetxController{
       isLoading.value = false;
     }
   }
+  add_collection({required String collectionname, required String slug, required Function(bool) onQueryAdded}) async {
+    try {
+      isLoading.value = true;
+      EmailPasswordError.value ='';
+      var data = {
+        'name': collectionname,
+        'slug': slug,
+
+      };
+      String? token = await AuthController().getToken();
+
+      http.Response response = await http
+          .post(Uri.tryParse('https://testapi.crownsync.ai/api/store-collection')!,headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer $token"
+      },
+          body: data
+      );
+      print("response1::$response");
+      if (response.statusCode == 200) {
+        print("Response2::${response}");
+
+
+        Fluttertoast.showToast(
+            msg: 'Data Save Successfully',
+            backgroundColor: Colors.black,
+            textColor: Colors.white
+        );
+        onQueryAdded(true);
+
+        Get.to(LayoutScreen());
+      } else  {
+        Fluttertoast.showToast(
+            msg: 'Error , Please Try Again',
+
+            backgroundColor: Colors.black,textColor: Colors.white
+        );
+        onQueryAdded(false);
+
+      }
+    }catch (e) {
+      print("Error" + e.toString());
+      onQueryAdded(false);
+
+    } finally {
+      isLoading.value = false;
+    }
+  }
   add_query({required String query,required Function(bool) onQueryAdded}) async {
     try {
       isLoading.value = true;
@@ -362,6 +410,35 @@ class AuthController extends GetxController{
         onScopeDeleted(false);
 
         print('Failed to delete Store. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle network errors
+      print('Error: $e');
+      onScopeDeleted(false);
+
+    }
+  }
+  Future<void> deleteCollection(int? userId , {required Function(bool) onScopeDeleted}) async {
+    try {
+      String? token = await AuthController().getToken();
+
+      final response = await http.delete(
+        Uri.parse('https://testapi.crownsync.ai/api/collects/$userId'),
+        headers: <String, String>{
+          "Accept": "application/json",
+          "Authorization": "Bearer $token"
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Handle successful deletion
+        print('Collectio n deleted successfully');
+        onScopeDeleted(true);
+
+      } else {
+        onScopeDeleted(false);
+
+        print('Failed to delete Collection. Status code: ${response.statusCode}');
       }
     } catch (e) {
       // Handle network errors
