@@ -193,7 +193,7 @@ class AuthController extends GetxController{
     }
   }
 
-  add_store({required String storename}) async {
+  add_store({required String storename, required Function(bool) onQueryAdded}) async {
     try {
       isLoading.value = true;
       EmailPasswordError.value ='';
@@ -218,6 +218,8 @@ class AuthController extends GetxController{
             msg: 'Store Added successfully',
             backgroundColor: Colors.black,textColor: Colors.white
         );
+        onQueryAdded(true);
+
         Get.to(LayoutScreen());
       } else  {
         Fluttertoast.showToast(
@@ -225,9 +227,13 @@ class AuthController extends GetxController{
 
             backgroundColor: Colors.black,textColor: Colors.white
         );
+        onQueryAdded(false);
+
       }
     }catch (e) {
       print("Error" + e.toString());
+      onQueryAdded(false);
+
     } finally {
       isLoading.value = false;
     }

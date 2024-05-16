@@ -107,6 +107,7 @@ class ApiController extends GetxController {
       print('locationdata = ${result}');
       isloader(false);    }
   }
+
   get_store() async {
     isloader(true);
     String? token = await AuthController().getToken();
@@ -126,7 +127,8 @@ class ApiController extends GetxController {
       storedata = Storedata.fromJson(result);
       // log(result.toString());
       print('Storedata = ${result}');
-      isloader(false);    }
+      isloader(false);
+    }
   }
   get_rolexmodel() async {
     isLoading(true);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobiledesign/view/Auth/login_screen.dart';
 import 'package:mobiledesign/view/Auth/register_screen.dart';
+import 'package:mobiledesign/view/add_collection.dart';
 import 'package:mobiledesign/view/details_screen.dart';
 import 'package:mobiledesign/view/profile_screen.dart';
 import 'package:mobiledesign/view/scope_setting.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          home: LoginScreen()
+          home: AddCollection()
 
         );
       },

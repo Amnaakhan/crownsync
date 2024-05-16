@@ -144,7 +144,7 @@ class _StoreSettingState extends State<StoreSetting> {
                                   }
                                 });
                               },
-                              child: Icon(
+                              child: const Icon(
                                 Icons.delete,
                                 color: Colors.black12,
                               ),
@@ -210,12 +210,12 @@ class _StoreSettingState extends State<StoreSetting> {
   }
 
   void showEditDialog(int index) {
-    String location = apiController.locationdata?.data?[index].location ?? '';
+    String store = apiController.storedata?.data?[index].name ?? '';
 
     showDialog(
       context: context,
       builder: (context) {
-        TextEditingController controller = TextEditingController(text: location);
+        TextEditingController controller = TextEditingController(text: store);
         return AlertDialog(
           title: Text('Edit Store',style: GoogleFonts.inter(color: Colors.black, fontSize: 15.sp)),
           content: TextFormField(
@@ -265,7 +265,7 @@ class _StoreSettingState extends State<StoreSetting> {
             InkWell(
               onTap: () async{
                 await updateStore(
-                    apiController.locationdata?.data?[index].id, controller.text);
+                    apiController.storedata?.data?[index].id, controller.text);
                 Navigator.pop(context);
               },
               child: Container(
