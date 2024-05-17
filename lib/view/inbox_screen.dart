@@ -11,13 +11,14 @@ import 'package:mobiledesign/view/details_screen.dart';
 import 'package:sizer/sizer.dart';
 
 class InboxScreen extends StatefulWidget {
-
   const InboxScreen({super.key});
 
   @override
   State<InboxScreen> createState() => _InboxScreenState();
 }
+
 bool isSearchVisible = false;
+
 class _InboxScreenState extends State<InboxScreen>
     with TickerProviderStateMixin {
   int _activeIndex = 0;
@@ -32,7 +33,8 @@ class _InboxScreenState extends State<InboxScreen>
     super.initState();
     fetchUserList();
     fetchEmailMessages();
-    originalEmailMessages = List.from(emailMessages); // Initialize the original list
+    originalEmailMessages =
+        List.from(emailMessages); // Initialize the original list
 
     _tabController = new TabController(vsync: this, length: 3);
   }
@@ -113,22 +115,61 @@ class _InboxScreenState extends State<InboxScreen>
     }
   }
 
+  String _parseField1(Map<String, dynamic> headers, String field) {
+    return headers[field] ?? '';
+  }
+
+  DateTime _parseDate(String dateStr) {
+    try {
+      return DateFormat("EEE, d MMM yyyy HH:mm:ss Z").parse(dateStr);
+    } catch (e) {
+      print("Date parsing error: $e");
+      return DateTime(1970); // return epoch if parsing fails
+    }
+  }
 
   //filter emails
+  void sortEmailsByDateAscending() {
+    print('Before sorting:');
+    for (var email in filteredEmailMessages) {
+      final dateStr =
+          _parseField1(json.decode(email['detail'])['headers'], 'Date');
+      print(dateStr);
+    }
+
+    setState(() {
+      filteredEmailMessages.sort((a, b) {
+        DateTime dateA = _parseDate(
+            _parseField1(json.decode(a['detail'])['headers'], 'Date'));
+        DateTime dateB = _parseDate(
+            _parseField1(json.decode(b['detail'])['headers'], 'Date'));
+        return dateA.compareTo(dateB); // For ascending order
+      });
+    });
+
+    print('After sorting:');
+    for (var email in filteredEmailMessages) {
+      final dateStr =
+          _parseField1(json.decode(email['detail'])['headers'], 'Date');
+      print(dateStr);
+    }
+  }
+
   void _filterEmails(String query) {
     setState(() {
       if (query.isNotEmpty) {
         filteredEmailMessages = emailMessages.where((email) {
           final detail = json.decode(email['detail']);
           final fromField =
-          _parseField(detail['headers'], 'From').toLowerCase();
+              _parseField(detail['headers'], 'From').toLowerCase();
           final subject =
-          _parseField(detail['headers'], 'Subject').toLowerCase();
+              _parseField(detail['headers'], 'Subject').toLowerCase();
           return fromField.contains(query.toLowerCase()) ||
               subject.contains(query.toLowerCase());
         }).toList();
       } else {
-        filteredEmailMessages = List.from(emailMessages); // Reset to original list
+        filteredEmailMessages =
+            List.from(emailMessages); // Reset to original list
       }
     });
   }
@@ -159,7 +200,7 @@ class _InboxScreenState extends State<InboxScreen>
   Future<void> selectDateRange(BuildContext context) async {
     final DateTimeRange? picked = await showDateRangePicker(
       context: context,
-      firstDate: DateTime(2020),  // Adjust based on your requirement
+      firstDate: DateTime(2020), // Adjust based on your requirement
       lastDate: DateTime.now(),
       initialDateRange: startDate != null && endDate != null
           ? DateTimeRange(start: startDate!, end: endDate!)
@@ -174,10 +215,12 @@ class _InboxScreenState extends State<InboxScreen>
       });
     }
   }
+
   void filterEmailsByDate() {
     if (startDate == null || endDate == null) return;
 
-    DateTime endOfDay = DateTime(endDate!.year, endDate!.month, endDate!.day, 23, 59, 59);
+    DateTime endOfDay =
+        DateTime(endDate!.year, endDate!.month, endDate!.day, 23, 59, 59);
 
     List<Map<String, dynamic>> newFilteredEmails = emailMessages.where((email) {
       Map<String, dynamic> detail = json.decode(email['detail']);
@@ -192,7 +235,6 @@ class _InboxScreenState extends State<InboxScreen>
       isLoading = false;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -222,12 +264,12 @@ class _InboxScreenState extends State<InboxScreen>
                             fontWeight: FontWeight.w500, fontSize: 18.sp),
                       ),
                       Spacer(),
-                      apiController.loginModel?.data?.contact == null
+                      apiController.profileModel?.data?.email == null
                           ? Container()
                           : Container(
                               height: 5.h,
                               width: 71.w,
-                              padding: EdgeInsets.only(right: 2.w),
+                              padding: EdgeInsets.only(left: 3.w, right: 3.w),
                               decoration: BoxDecoration(
                                   color: Color(0xffF0F0F0),
                                   borderRadius: BorderRadius.circular(4.h)),
@@ -238,13 +280,11 @@ class _InboxScreenState extends State<InboxScreen>
                                     width: 2.w,
                                   ),
                                   Text(
-                                    '${apiController.loginModel?.data?.contact}',
+                                    '${apiController.profileModel?.data?.email}',
                                     style: GoogleFonts.inter(
                                         color: Colors.grey, fontSize: 10.sp),
                                   ),
-                                  SizedBox(
-                                    width: 2.w,
-                                  ),
+                                  Spacer(),
                                   Image.asset(
                                     'assets/images/drop_arrow.png',
                                     height: 1.h,
@@ -258,90 +298,8 @@ class _InboxScreenState extends State<InboxScreen>
                     height: 2.h,
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton2<String>(
-                          isExpanded: true,
-                          hint: Row(
-                            children: [
-                              SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  'User List',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                          items: emails.map((String email) {
-                            return DropdownMenuItem<String>(
-                              value: email,
-                              child: Text(
-                                email,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            );
-                          }).toList(),
-                          value: selectedEmail,
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedEmail = value;
-                            });
-                          },
-                          buttonStyleData: ButtonStyleData(
-                            height: 5.h,
-                            width: 180,
-                            padding: const EdgeInsets.only(left: 14, right: 14),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.transparent,
-                              ),
-                              color: Color(0xffE2545E),
-                            ),
-                            elevation: 2,
-                          ),
-                          iconStyleData: const IconStyleData(
-                            icon: Icon(
-                              Icons.keyboard_arrow_down_outlined,
-                            ),
-                            iconSize: 30,
-                            iconEnabledColor: Colors.white,
-                            iconDisabledColor: Colors.white,
-                          ),
-                          dropdownStyleData: DropdownStyleData(
-                            maxHeight: 200,
-                            width: 180,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Color(0xffE2545E),
-                            ),
-                            scrollbarTheme: ScrollbarThemeData(
-                              radius: const Radius.circular(40),
-                              thickness: MaterialStateProperty.all<double>(6),
-                              thumbVisibility:
-                                  MaterialStateProperty.all<bool>(true),
-                            ),
-                          ),
-                          menuItemStyleData: const MenuItemStyleData(
-                            height: 40,
-                            padding: EdgeInsets.only(left: 14, right: 14),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 2.w,
-                      ),
                       InkWell(
                         onTap: () {
                           selectDateRange(context);
@@ -358,9 +316,6 @@ class _InboxScreenState extends State<InboxScreen>
                             child: Icon(Icons.calendar_month_outlined),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 2.w,
                       ),
                       InkWell(
                         onTap: () {
@@ -391,9 +346,6 @@ class _InboxScreenState extends State<InboxScreen>
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 2.w,
-                      ),
                       Container(
                         height: 5.h,
                         width: 5.h,
@@ -406,14 +358,42 @@ class _InboxScreenState extends State<InboxScreen>
                           child: Icon(Icons.check_circle_outline),
                         ),
                       ),
+                      InkWell(
+                        onTap: () {
+                          sortEmailsByDateAscending();
+                        },
+                        child: Container(
+                          height: 5.h,
+                          width: 5.h,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(1.h),
+                              border: Border.all(
+                                color: Color(0xff4D4D4D),
+                              )),
+                          child: Center(
+                            child: Icon(Icons.sort),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        child: Container(
+                          height: 5.h,
+                          width: 5.h,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(1.h),
+                              border: Border.all(
+                                color: Color(0xff4D4D4D),
+                              )),
+                          child: Center(
+                            child: Icon(Icons.refresh),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(
                     height: 1.5.h,
                   ),
-
-
-
                   Visibility(
                     visible: isSearchVisible,
                     child: Container(
@@ -476,6 +456,7 @@ class _InboxScreenState extends State<InboxScreen>
                                   : filteredEmailMessages.isEmpty
                                       ? Center(child: Text('No emails found'))
                                       : ListView.builder(
+                                          padding: EdgeInsets.zero,
                                           itemCount:
                                               filteredEmailMessages.length,
                                           itemBuilder: (context, index) {
@@ -565,6 +546,9 @@ class _InboxScreenState extends State<InboxScreen>
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
+                                                            SizedBox(
+                                                              height: 2.h,
+                                                            ),
                                                             Text(
                                                               '${fromField}',
                                                               style: GoogleFonts.inter(
@@ -612,50 +596,45 @@ class _InboxScreenState extends State<InboxScreen>
                                                                         8.sp),
                                                               ),
                                                             ),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                SizedBox(
-                                                                  width: 40.w,
-                                                                ),
-                                                                Icon(
-                                                                  Icons
-                                                                      .delete_outline,
-                                                                  color: Colors
-                                                                      .black12,
-                                                                  size: 15.sp,
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 2.w,
-                                                                ),
-                                                                Icon(
-                                                                    Icons
-                                                                        .visibility_off_outlined,
-                                                                    color: Colors
-                                                                        .black12,
-                                                                    size:
-                                                                        15.sp),
-                                                                SizedBox(
-                                                                  width: 2.w,
-                                                                ),
-                                                                Icon(
-                                                                    Icons
-                                                                        .messenger_outline,
-                                                                    color: Colors
-                                                                        .black12,
-                                                                    size:
-                                                                        15.sp),
-                                                              ],
-                                                            ),
                                                           ],
                                                         ),
 
                                                         // Icon(Icons.more_vert,size: 12.sp,color: Color(0xff7B7B7D))
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 40.w,
+                                                        ),
+                                                        Icon(
+                                                          Icons.delete_outline,
+                                                          color: Colors.black12,
+                                                          size: 15.sp,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 2.w,
+                                                        ),
+                                                        Icon(
+                                                            Icons
+                                                                .visibility_off_outlined,
+                                                            color:
+                                                                Colors.black12,
+                                                            size: 15.sp),
+                                                        SizedBox(
+                                                          width: 2.w,
+                                                        ),
+                                                        Icon(
+                                                            Icons
+                                                                .messenger_outline,
+                                                            color:
+                                                                Colors.black12,
+                                                            size: 15.sp),
                                                       ],
                                                     ),
                                                   ],
@@ -672,7 +651,6 @@ class _InboxScreenState extends State<InboxScreen>
       ),
     );
   }
-
 }
 
 // SizedBox(

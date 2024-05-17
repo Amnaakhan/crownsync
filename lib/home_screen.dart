@@ -192,13 +192,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobiledesign/view/Controller/getcontroller.dart';
 import 'package:mobiledesign/view/dashboard.dart';
 import 'package:mobiledesign/view/layout_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class HomeScreen extends StatelessWidget {
-  final Uri _urlSignIn = Uri.parse('https://testapi.crownsync.ai/auth/redirect?userId=39');
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  ApiController apiController = Get.put(ApiController());
+
+  // final Uri _urlSignIn = Uri.parse('https://testapi.crownsync.ai/auth/redirect?userId=${}');
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +221,8 @@ class HomeScreen extends StatelessWidget {
           Center(
             child: InkWell(
               onTap: () {
-                Get.to(WebViewPage(url: _urlSignIn.toString()));
+                Get.to(WebViewPage(url:
+                Uri.parse('https://testapi.crownsync.ai/auth/redirect?userId=52').toString()));
               },
               child: Container(
                 height: 50,
@@ -299,14 +308,14 @@ class _WebViewPageState extends State<WebViewPage> {
         onWebViewCreated: (WebViewController webViewController) {
           _controller.complete(webViewController);
         },
-        // navigationDelegate: (NavigationRequest request) {
-        //   if (request.url.startsWith('https://testapi.crownsync.ai/auth/google/callback')) {
-        //     // Redirect to Dashboard after successful authentication
-        //     Get.offAll(LayoutScreen());
-        //     return NavigationDecision.prevent;
-        //   }
-        //   return NavigationDecision.navigate;
-        // },
+        navigationDelegate: (NavigationRequest request) {
+          if (request.url.startsWith('https://testapp.crownsync.ai/')) {
+            // Redirect to Dashboard after successful authentication
+            Get.offAll(LayoutScreen());
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
       ),
     );
   }
