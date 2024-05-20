@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobiledesign/view/add_collection.dart';
 import 'package:mobiledesign/view/add_location.dart';
+import 'package:mobiledesign/view/add_model.dart';
 import 'package:mobiledesign/view/add_store.dart';
 import 'package:mobiledesign/view/add_tempelet.dart';
 import 'package:mobiledesign/view/add_user.dart';
@@ -486,6 +487,7 @@ class _SettingScreenState extends State<SettingScreen> {
       "Template",
       'Location',
       'Scope Setting',
+      'Model'
 
     ];
 
@@ -526,6 +528,9 @@ class _SettingScreenState extends State<SettingScreen> {
                   }
                   else if (setting == "Collection") {
                     Get.to(const CollectionSetting());
+                  }
+                  else if (setting == "Model") {
+                    Get.to(const AddModel());
                   }
                 },
                 child: Padding(
@@ -581,6 +586,8 @@ class _SettingScreenState extends State<SettingScreen> {
       case "Location":
         return "assets/images/location.png";
       case "Scope Setting":
+        return "assets/images/setting1.png";
+      case "Model":
         return "assets/images/setting1.png";
       default:
         return ""; // Return empty string if no matching setting found
