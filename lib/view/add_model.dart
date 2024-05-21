@@ -1,11 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobiledesign/view/Controller/postapicontroller.dart';
 import 'package:sizer/sizer.dart';
+
+import 'Controller/auth_controller.dart';
 
 class AddModel extends StatefulWidget {
   const AddModel({super.key});
@@ -15,8 +20,13 @@ class AddModel extends StatefulWidget {
 }
 
 class _AddModelState extends State<AddModel> {
-  String? selectedcollection;
-  String? selectedstock;
+  List<String> collectionIds = [];
+  List<String> collection = [];
+  String? selectedCollectionId;
+  String? selectedCollectionName;
+
+
+
 
   final addname = TextEditingController();
   final addslug = TextEditingController();
@@ -24,8 +34,13 @@ class _AddModelState extends State<AddModel> {
   final addlink = TextEditingController();
   final addbenefit = TextEditingController();
   final addfeatures = TextEditingController();
-  File? galleryFile;
+  final add = TextEditingController();
+  String? selectedstock;
+
+   File? galleryFile;
   final picker = ImagePicker();
+  ModelController modelController = Get.put(ModelController());
+
 
   Future getImage(
     ImageSource img,
@@ -48,6 +63,40 @@ class _AddModelState extends State<AddModel> {
     'Nothing to show',
   ];
   final List<String> item = ['Select Stock', 'Available', 'Out of Stock'];
+  Future<void> fetchCollectionList() async {
+    String? token = await AuthController().getToken();
+    print('usertoken $token');
+    try {
+      final response = await http.get(
+        Uri.parse('https://testapi.crownsync.ai/api/collects'),
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        List<String> collectionList = [];
+        for (var user in data['data']) {
+          collectionList.add(user['name']);
+        }
+        setState(() {
+          collection = collectionList;
+        });
+        print('collection list == ${collection}');
+      } else {
+        throw Exception('Failed to load collection list');
+      }
+    } catch (e) {
+      print('Error fetching user list: $e');
+      // Handle error here
+    }
+  }
+  @override
+  void initState() {
+    fetchCollectionList();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,12 +114,12 @@ class _AddModelState extends State<AddModel> {
                       Get.back();
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding:  EdgeInsets.all(8.0),
                       child: Container(
                         decoration: BoxDecoration(
                             color: Colors.white, shape: BoxShape.circle),
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding:  EdgeInsets.all(8.0),
                           child: Icon(
                             Icons.arrow_back,
                             size: 20,
@@ -107,82 +156,100 @@ class _AddModelState extends State<AddModel> {
                       height: 5.h,
                     ),
                     DropdownButtonHideUnderline(
-                        child: DropdownButton2<String>(
-                      isExpanded: true,
-                      hint: Row(
-                        children: [
-                          SizedBox(width: 4),
-                          Expanded(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
+                        hint: Row(
+                          children: [
+                            SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                'Select Collection',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        items: collection.isNotEmpty
+                            ? collection.map((String name) {
+                          int index = collection.indexOf(name);
+                          return DropdownMenuItem<String>(
+                            value: name,
                             child: Text(
-                              'Select Collection',
+                              name,
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff808686),
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
+                          );
+                        }).toList()
+                            : items
+                            .map((String item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(
+                            item,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ],
-                      ),
-                      items: items
-                          .map((String item) => DropdownMenuItem<String>(
-                                value: item,
-                                child: Text(
-                                  item,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ))
-                          .toList(),
-                      value: selectedcollection,
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedcollection = value;
-                        });
-                      },
-                      buttonStyleData: ButtonStyleData(
-                        height: 7.h,
-                        width: double.infinity,
-                        padding: const EdgeInsets.only(left: 14, right: 14),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: Colors.black,
+                        ))
+                            .toList(),
+                        value: selectedCollectionId,
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedCollectionId = value;
+                            int index = collectionIds.indexOf(value!);
+                            selectedCollectionName = collection[index];
+                          });
+                        },
+                        buttonStyleData: ButtonStyleData(
+                          height: 7.h,
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.black,
+                            ),
+                            color: Colors.transparent,
                           ),
-                          color: Colors.transparent,
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_outlined,
+                          ),
+                          iconSize: 30,
+                          iconEnabledColor: Colors.black,
+                          iconDisabledColor: Colors.black,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 200,
+                          width: 320,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          scrollbarTheme: ScrollbarThemeData(
+                            radius: const Radius.circular(40),
+                            thumbVisibility: MaterialStateProperty.all<bool>(true),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                          padding: EdgeInsets.only(left: 14, right: 14),
                         ),
                       ),
-                      iconStyleData: const IconStyleData(
-                        icon: Icon(
-                          Icons.keyboard_arrow_down_outlined,
-                        ),
-                        iconSize: 30,
-                        iconEnabledColor: Colors.black,
-                        iconDisabledColor: Colors.black,
-                      ),
-                      dropdownStyleData: DropdownStyleData(
-                        maxHeight: 200,
-                        width: 320,
-                        padding: const EdgeInsets.only(left: 14, right: 14),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                        ),
-                        scrollbarTheme: ScrollbarThemeData(
-                          radius: const Radius.circular(40),
-                          thumbVisibility:
-                              MaterialStateProperty.all<bool>(true),
-                        ),
-                      ),
-                      menuItemStyleData: const MenuItemStyleData(
-                        height: 40,
-                        padding: EdgeInsets.only(left: 14, right: 14),
-                      ),
-                    )),
+                    ),
                     SizedBox(
                       height: 2.h,
                     ),
@@ -197,7 +264,7 @@ class _AddModelState extends State<AddModel> {
                           borderSide: BorderSide(color: Colors.black),
                           borderRadius: BorderRadius.circular(1.h),
                         ),
-                        labelText: "Enetr Name",
+                        labelText: "Enter Name",
                         contentPadding: EdgeInsets.only(left: 5.w),
                         labelStyle: GoogleFonts.inter(color: Color(0xff00233D)),
                         alignLabelWithHint: true,
@@ -436,7 +503,12 @@ class _AddModelState extends State<AddModel> {
                       height: 8.h,
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        modelController.model_data(imageFile: galleryFile, name: addname.text,
+                            slug: addslug.text, price: addprice.text,
+                            stock: selectedstock, collectionid: selectedstock, link: addlink.text,
+                            features: addfeatures.text, benefits: addbenefit.text);
+                      },
                       child: Container(
                         height: 7.h,
                         width: double.infinity,

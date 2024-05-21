@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:mobiledesign/view/Auth/login_screen.dart';
-import 'package:mobiledesign/view/Controller/getcontroller.dart';
 import 'package:mobiledesign/view/email_preview.dart';
 import 'package:mobiledesign/view/layout_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -238,7 +237,8 @@ class AuthController extends GetxController{
       isLoading.value = false;
     }
   }
-  add_collection({required String collectionname, required String slug, required Function(bool) onQueryAdded}) async {
+  add_collection({required String collectionname,
+    required String slug, required Function(bool) onQueryAdded}) async {
     try {
       isLoading.value = true;
       EmailPasswordError.value ='';
