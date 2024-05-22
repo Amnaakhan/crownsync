@@ -21,8 +21,8 @@ class AddModel extends StatefulWidget {
 
 class _AddModelState extends State<AddModel> {
   List<String> collectionIds = [];
-  List<String> collection = [];
-  String? selectedCollectionId;
+  Map<String, String> collectionMap = {};
+  String? collectionId;
   String? selectedCollectionName;
 
 
@@ -76,22 +76,22 @@ class _AddModelState extends State<AddModel> {
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        List<String> collectionList = [];
-        for (var user in data['data']) {
-          collectionList.add(user['name']);
+        Map<String, String> collectionData = {};
+        for (var item in data['data']) {
+          collectionData[item['name']] = item['id'].toString();
         }
         setState(() {
-          collection = collectionList;
+          collectionMap = collectionData;
         });
-        print('collection list == ${collection}');
+        print('collection list == $collectionMap');
       } else {
         throw Exception('Failed to load collection list');
       }
     } catch (e) {
       print('Error fetching user list: $e');
-      // Handle error here
     }
   }
+
   @override
   void initState() {
     fetchCollectionList();
@@ -155,101 +155,82 @@ class _AddModelState extends State<AddModel> {
                     SizedBox(
                       height: 5.h,
                     ),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton2<String>(
-                        isExpanded: true,
-                        hint: Row(
-                          children: [
-                            SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                'Select Collection',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        items: collection.isNotEmpty
-                            ? collection.map((String name) {
-                          int index = collection.indexOf(name);
-                          return DropdownMenuItem<String>(
-                            value: name,
-                            child: Text(
-                              name,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff808686),
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          );
-                        }).toList()
-                            : items
-                            .map((String item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ))
-                            .toList(),
-                        value: selectedCollectionId,
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedCollectionId = value;
-                            int index = collectionIds.indexOf(value!);
-                            selectedCollectionName = collection[index];
-                          });
-                        },
-                        buttonStyleData: ButtonStyleData(
-                          height: 7.h,
-                          width: double.infinity,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Colors.black,
-                            ),
-                            color: Colors.transparent,
-                          ),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_outlined,
-                          ),
-                          iconSize: 30,
-                          iconEnabledColor: Colors.black,
-                          iconDisabledColor: Colors.black,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                          maxHeight: 200,
-                          width: 320,
-                          padding: const EdgeInsets.only(left: 14, right: 14),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                          ),
-                          scrollbarTheme: ScrollbarThemeData(
-                            radius: const Radius.circular(40),
-                            thumbVisibility: MaterialStateProperty.all<bool>(true),
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 40,
-                          padding: EdgeInsets.only(left: 14, right: 14),
-                        ),
+          DropdownButtonHideUnderline(
+            child: DropdownButton2<String>(
+              isExpanded: true,
+              hint: Row(
+                children: [
+                  SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      'Select Collection',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
+                  ),
+                ],
+              ),
+              items: collectionMap.keys
+                  .map((String name) => DropdownMenuItem<String>(
+                value: name,
+                child: Text(
+                  name,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff808686),
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ))
+                  .toList(),
+              value: selectedCollectionName,
+              onChanged: (String? value) {
+                setState(() {
+                  selectedCollectionName = value;
+                  collectionId = collectionMap[value];
+                });
+                print('Selected Collection ID: $collectionId');
+              },
+              buttonStyleData: ButtonStyleData(
+                height: 7.h,
+                width: double.infinity,
+                padding: const EdgeInsets.only(left: 14, right: 14),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.black),
+                  color: Colors.transparent,
+                ),
+              ),
+              iconStyleData: const IconStyleData(
+                icon: Icon(Icons.keyboard_arrow_down_outlined),
+                iconSize: 30,
+                iconEnabledColor: Colors.black,
+                iconDisabledColor: Colors.black,
+              ),
+              dropdownStyleData: DropdownStyleData(
+                maxHeight: 200,
+                width: 320,
+                padding: const EdgeInsets.only(left: 14, right: 14),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                scrollbarTheme: ScrollbarThemeData(
+                  radius: const Radius.circular(40),
+                  thumbVisibility:
+                  MaterialStateProperty.all<bool>(true),
+                ),
+              ),
+              menuItemStyleData: const MenuItemStyleData(
+                height: 40,
+                padding: EdgeInsets.only(left: 14, right: 14),
+              ),
+            ),
+          ),
                     SizedBox(
                       height: 2.h,
                     ),
@@ -506,7 +487,7 @@ class _AddModelState extends State<AddModel> {
                       onTap: () {
                         modelController.model_data(imageFile: galleryFile, name: addname.text,
                             slug: addslug.text, price: addprice.text,
-                            stock: selectedstock, collectionid: selectedstock, link: addlink.text,
+                            stock: selectedstock, collectionid: collectionId, link: addlink.text,
                             features: addfeatures.text, benefits: addbenefit.text);
                       },
                       child: Container(

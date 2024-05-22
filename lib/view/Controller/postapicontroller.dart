@@ -15,18 +15,17 @@ class ModelController extends GetxController {
 
   var isLoading = false.obs;
 
-  model_data({
 
-  required  File? imageFile,
+  model_data({
+    required File? imageFile,
     required String name,
     required String slug,
     required String price,
-    required  String? stock,
-    required  String? collectionid,
+    required String? stock,
+    required String? collectionid,
     required String link,
     required String features,
-    required String benefits
-
+    required String benefits,
   }) async {
     try {
       isLoading.value = true;
@@ -34,13 +33,12 @@ class ModelController extends GetxController {
       String? token = await AuthController().getToken();
 
       String basicAuth = 'Bearer ' + token!;
-      var stream =
-      new http.ByteStream(DelegatingStream.typed(imageFile!.openRead()));
-      var length = await imageFile?.length();
+      var stream = http.ByteStream(imageFile!.openRead().cast());
+      var length = await imageFile.length();
 
       var uri = Uri.parse(url);
 
-      var request = new http.MultipartRequest("POST", uri);
+      var request = http.MultipartRequest("POST", uri);
       request.headers["Authorization"] = basicAuth;
       request.fields['name'] = name;
       request.fields['slug'] = slug;
@@ -50,20 +48,45 @@ class ModelController extends GetxController {
       request.fields['link'] = link;
       request.fields['benefits'] = benefits;
       request.fields['features'] = features;
-      var multipartFile = new http.MultipartFile('image', stream, length!,
-          filename: basename(imageFile!.path));
+
+
+      var multipartFile = http.MultipartFile('image', stream, length, filename: basename(imageFile.path));
 
       request.files.add(multipartFile);
       var response = await request.send();
+      var responseBody = await response.stream.bytesToString();
 
-      response.stream.transform(utf8.decoder).listen((value) {
+      var responseData = json.decode(responseBody);
 
-        Fluttertoast.showToast(
-            msg: "Data Saved Successfully",
-            backgroundColor: Colors.black);
-        Get.offAll(() => LayoutScreen());
-      });
+      // Capture response status code and body
+      if (response.statusCode == 200) {
+        response.stream.transform(utf8.decoder).listen((value) {
+          Fluttertoast.showToast(
+            msg: responseData['message'] ?? "Data Saved Successfully",
+            backgroundColor: Colors.black,
+          );
+
+
+          Get.to(() => LayoutScreen());
+        });
+      } else {
+        response.stream.transform(utf8.decoder).listen((value) {
+          Fluttertoast.showToast(
+            msg: responseData['message'] ,
+            backgroundColor: Colors.red,
+
+          );
+          print(responseData['message']);
+
+        });
+
+
+      }
     } catch (e) {
+      Fluttertoast.showToast(
+        msg: "An error occurred: $e",
+        backgroundColor: Colors.red,
+      );
     } finally {
       isLoading.value = false;
     }
