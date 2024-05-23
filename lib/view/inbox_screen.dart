@@ -37,7 +37,6 @@ class _InboxScreenState extends State<InboxScreen>
     fetchUserList();
     fetchEmailMessages();
 
-
     _tabController = new TabController(vsync: this, length: 3);
   }
 
@@ -137,15 +136,16 @@ class _InboxScreenState extends State<InboxScreen>
         fetchEmailMessages();
       } else {
         filteredEmailMessages.sort((a, b) {
-          DateTime dateA = _parseDate(_parseField1(json.decode(a['detail'])['headers'], 'Date'));
-          DateTime dateB = _parseDate(_parseField1(json.decode(b['detail'])['headers'], 'Date'));
+          DateTime dateA = _parseDate(
+              _parseField1(json.decode(a['detail'])['headers'], 'Date'));
+          DateTime dateB = _parseDate(
+              _parseField1(json.decode(b['detail'])['headers'], 'Date'));
           return dateA.compareTo(dateB); // For ascending order
         });
       }
       isSorted = !isSorted; // Toggle the sorting state
     });
   }
-
 
   void _filterEmails(String query) {
     setState(() {
@@ -359,12 +359,15 @@ class _InboxScreenState extends State<InboxScreen>
                           width: 5.h,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(1.h),
-                              color: isSorted ? Color(0xffE2545E) :
-                              Colors.transparent, // Change color based on state
+                              color: isSorted
+                                  ? Color(0xffE2545E)
+                                  : Colors
+                                      .transparent, // Change color based on state
 
                               border: Border.all(
-                                color: isSorted ? Color(0xffE2545E) :
-                                Color(0xff4D4D4D),
+                                color: isSorted
+                                    ? Color(0xffE2545E)
+                                    : Color(0xff4D4D4D),
                               )),
                           child: Center(
                             child: Icon(Icons.sort),

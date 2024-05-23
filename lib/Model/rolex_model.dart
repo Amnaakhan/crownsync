@@ -1,21 +1,21 @@
 // To parse this JSON data, do
 //
-//     final rolexxModel = rolexxModelFromJson(jsonString);
+//     final modeldata = modeldataFromJson(jsonString);
 
 import 'dart:convert';
 
-RolexxModel rolexxModelFromJson(String str) => RolexxModel.fromJson(json.decode(str));
+Modeldata modeldataFromJson(String str) => Modeldata.fromJson(json.decode(str));
 
-String rolexxModelToJson(RolexxModel data) => json.encode(data.toJson());
+String modeldataToJson(Modeldata data) => json.encode(data.toJson());
 
-class RolexxModel {
+class Modeldata {
   List<Datum>? data;
 
-  RolexxModel({
+  Modeldata({
     this.data,
   });
 
-  factory RolexxModel.fromJson(Map<String, dynamic> json) => RolexxModel(
+  factory Modeldata.fromJson(Map<String, dynamic> json) => Modeldata(
     data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
   );
 
@@ -33,11 +33,9 @@ class Datum {
   int? price;
   String? stock;
   String? image;
-  String? location;
   String? features;
   String? link;
   String? benefits;
-  String? store;
   String? createdAt;
   String? updatedAt;
 
@@ -50,11 +48,9 @@ class Datum {
     this.price,
     this.stock,
     this.image,
-    this.location,
     this.features,
     this.link,
     this.benefits,
-    this.store,
     this.createdAt,
     this.updatedAt,
   });
@@ -68,11 +64,9 @@ class Datum {
     price: json["price"],
     stock: json["stock"],
     image: json["image"],
-    location: json["location"],
     features: json["features"],
     link: json["link"],
     benefits: json["benefits"],
-    store: json["store"],
     createdAt: json["created_at"],
     updatedAt: json["updated_at"],
   );
@@ -86,11 +80,9 @@ class Datum {
     "price": price,
     "stock": stock,
     "image": image,
-    "location": location,
     "features": features,
     "link": link,
     "benefits": benefits,
-    "store": store,
     "created_at": createdAt,
     "updated_at": updatedAt,
   };

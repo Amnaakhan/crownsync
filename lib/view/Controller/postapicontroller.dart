@@ -60,7 +60,6 @@ class ModelController extends GetxController {
 
       // Capture response status code and body
       if (response.statusCode == 200) {
-        response.stream.transform(utf8.decoder).listen((value) {
           Fluttertoast.showToast(
             msg: responseData['message'] ?? "Data Saved Successfully",
             backgroundColor: Colors.black,
@@ -68,9 +67,8 @@ class ModelController extends GetxController {
 
 
           Get.to(() => LayoutScreen());
-        });
+
       } else {
-        response.stream.transform(utf8.decoder).listen((value) {
           Fluttertoast.showToast(
             msg: responseData['message'] ,
             backgroundColor: Colors.red,
@@ -78,7 +76,7 @@ class ModelController extends GetxController {
           );
           print(responseData['message']);
 
-        });
+
 
 
       }
@@ -89,6 +87,29 @@ class ModelController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+    }
+  }
+  Future<void> deleteItem(int? id) async {
+    isLoading(true);
+    String? token = await AuthController().getToken();
+
+    final response = await http.delete(Uri.parse('https://testapi.crownsync.ai/api/rolex_models/$id'),headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer $token"
+    });
+    isLoading(false);
+
+    if (response.statusCode == 200) {
+      // Handle success
+      Fluttertoast.showToast(
+        msg: "Item has been deleted successfully",
+        backgroundColor: Colors.black,
+      );    } else {
+      // Handle error
+      Fluttertoast.showToast(
+        msg: "Failed to delete item ${response.statusCode}",
+        backgroundColor: Colors.black,
+      );
     }
   }
 }

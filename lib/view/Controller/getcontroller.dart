@@ -7,7 +7,6 @@ import 'package:mobiledesign/Model/collection_model.dart';
 import 'package:mobiledesign/Model/emailmessages_model.dart';
 import 'package:mobiledesign/Model/getsentmails_model.dart';
 import 'package:mobiledesign/Model/location_model.dart';
-import 'package:mobiledesign/Model/login_model.dart';
 import 'package:mobiledesign/Model/query_model.dart';
 import 'package:mobiledesign/Model/rolex_model.dart';
 import 'package:mobiledesign/Model/store_model.dart';
@@ -17,7 +16,7 @@ import 'package:mobiledesign/view/Controller/auth_controller.dart';
 
 class ApiController extends GetxController {
   Checklogin? loginModel;
-  RolexxModel? rolexxModel;
+  Modeldata? rolexxModel;
   InboxModel? emailMessagesModel;
   GetSentMailsModel? getSentMailsModel;
   Querydata?  querydata;
@@ -42,6 +41,7 @@ class ApiController extends GetxController {
     get_location();
     get_store();
     get_collection();
+    get_model();
     super.onInit();
   }
 
@@ -204,6 +204,31 @@ class ApiController extends GetxController {
     }
   }
 
-
+  get_model() async {
+    isLoading(true);
+    // log(isLoading.toString());
+    String? token = await AuthController().getToken();
+    print('usertoken $token');
+    http.Response response = await http.get(
+        Uri.tryParse('https://testapi.crownsync.ai/api/rolex_models')!,
+        headers: {
+          "Accept": "application/json",
+          "Authorization":
+          "Bearer $token"
+        }
+    );
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+      rolexxModel = Modeldata.fromJson(result);
+      // log(result.toString());
+      print('rolex_model = ${result}');
+      isLoading(false);
+    }
+  }
+  // void removeItem(int id) {
+  //   rolexxModel?.update((model) {
+  //     model?.data?.removeWhere((item) => item.id == id);
+  //   });
+  // }
 
 }

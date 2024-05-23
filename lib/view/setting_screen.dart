@@ -9,6 +9,7 @@ import 'package:mobiledesign/view/add_tempelet.dart';
 import 'package:mobiledesign/view/add_user.dart';
 import 'package:mobiledesign/view/collection_setting.dart';
 import 'package:mobiledesign/view/location_settings.dart';
+import 'package:mobiledesign/view/model_setting.dart';
 import 'package:mobiledesign/view/password_settings.dart';
 import 'package:mobiledesign/view/profile_screen.dart';
 import 'package:mobiledesign/view/scope_setting.dart';
@@ -530,7 +531,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     Get.to(const CollectionSetting());
                   }
                   else if (setting == "Model") {
-                    Get.to(const AddModel());
+                    Get.to(const ModelSetting());
                   }
                 },
                 child: Padding(

@@ -62,7 +62,7 @@ class _AddModelState extends State<AddModel> {
   final List<String> items = [
     'Nothing to show',
   ];
-  final List<String> item = ['Select Stock', 'Available', 'Out of Stock'];
+  final List<String> item = ['Select Stock', 'available', 'out of stock'];
   Future<void> fetchCollectionList() async {
     String? token = await AuthController().getToken();
     print('usertoken $token');
@@ -475,7 +475,7 @@ class _AddModelState extends State<AddModel> {
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.file(
                                   File(galleryFile!.path),
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.fill,
                                 ),
                               ),
                       ),
