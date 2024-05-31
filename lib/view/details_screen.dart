@@ -184,21 +184,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
         Uri.parse('https://testapi.crownsync.ai/api/getuserlist'),
         headers: {
           "Accept": "application/json",
-          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9."
-              "eyJhdWQiOiIzIiwianRpIjoiNzQxZjRlZWZlMmFiYzFhMDFhMzBlNzAxO"
-              "GY5YjBmMTY1NTYzNTk4NGQ2NjhjZGViNGE1NmE1N2VmYmM5NDIxYTE2Nzc5NjA"
-              "yOWZkMWFiMDgiLCJpYXQiOjE3MTUxNDY5MzYuNTc4Mjc5LCJuYmYiOjE3MTUxNDY5M"
-              "zYuNTc4MjgsImV4cCI6MTc0NjY4MjkzNi41NzQ4MDQsInN1YiI6IjMyIiwic2NvcGVzIjpb"
-              "XX0.lEY7JTi8D3GmAMsO5sXGaysTNVvrJzGu7mEK8VaSKWewh3EMXQUkxaNdODcNmdHWg-Un8PD"
-              "ZrcUvKQ-uSb8TT4DFyAFYF0r1BHflkyPKa-Gnrik63OKws5xrDKHaqMoq9eB121t4JkKM5wwnYo2n"
-              "8Wqc3ie9Ieh0B4Ot624mZeBSug-z0lpqZU7qiL_VLC7ruMkMFM0kUBheTnaxQXxRUvjT_E9d8KNhW"
-              "lGocKOUAW-bTvD3N1hVzzotKns-RgzRjprxIU3xU1t-iJuAwtCmQcZT3Gfm53f2u4PsmJAS16Eo_v"
-              "GZ_6J3So43vuRKqS6onLy55Es-dvsFN1yhws2IsPIIw0B8F1XDHjkerovWNQzv-E7qf2ic"
-              "A01dtPDmmSNOmwoAsSbKiv9Ef_gi-ivXagJuaEiZgfhXO5R1DJN-bjvrUzM7C2JROU-uJ5neM2pt"
-              "iLLwCTg7rDBYZKR0-bGvcVxYOTJawWB40r62o1UNpYJTjlzxxGAWPWXeHdT68EKLYt3_13KTBhv4W"
-              "-GwnApphJXzXWP0IEu1fMWGUT4kSvJ1jZ5bt6LPyWv6_J1a1U498MPc1OHkCHv7u7bYJWXhlWfS"
-              "F2JW-6TEyE8JblAcz6IlsBoaisNUhYbR92ohtMpT4i-2j5xAVV-2A_raeK60Ud8_pKER5nWyqPz5"
-              "J-hKs2s",
+          "Authorization": "Bearer ",
         },
       );
       if (response.statusCode == 200) {
@@ -227,21 +213,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
         Uri.parse('https://testapi.crownsync.ai/api/fetch-locations'),
         headers: {
           "Accept": "application/json",
-          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9."
-              "eyJhdWQiOiIzIiwianRpIjoiNzQxZjRlZWZlMmFiYzFhMDFhMzBlNzAxO"
-              "GY5YjBmMTY1NTYzNTk4NGQ2NjhjZGViNGE1NmE1N2VmYmM5NDIxYTE2Nzc5NjA"
-              "yOWZkMWFiMDgiLCJpYXQiOjE3MTUxNDY5MzYuNTc4Mjc5LCJuYmYiOjE3MTUxNDY5M"
-              "zYuNTc4MjgsImV4cCI6MTc0NjY4MjkzNi41NzQ4MDQsInN1YiI6IjMyIiwic2NvcGVzIjpb"
-              "XX0.lEY7JTi8D3GmAMsO5sXGaysTNVvrJzGu7mEK8VaSKWewh3EMXQUkxaNdODcNmdHWg-Un8PD"
-              "ZrcUvKQ-uSb8TT4DFyAFYF0r1BHflkyPKa-Gnrik63OKws5xrDKHaqMoq9eB121t4JkKM5wwnYo2n"
-              "8Wqc3ie9Ieh0B4Ot624mZeBSug-z0lpqZU7qiL_VLC7ruMkMFM0kUBheTnaxQXxRUvjT_E9d8KNhW"
-              "lGocKOUAW-bTvD3N1hVzzotKns-RgzRjprxIU3xU1t-iJuAwtCmQcZT3Gfm53f2u4PsmJAS16Eo_v"
-              "GZ_6J3So43vuRKqS6onLy55Es-dvsFN1yhws2IsPIIw0B8F1XDHjkerovWNQzv-E7qf2ic"
-              "A01dtPDmmSNOmwoAsSbKiv9Ef_gi-ivXagJuaEiZgfhXO5R1DJN-bjvrUzM7C2JROU-uJ5neM2pt"
-              "iLLwCTg7rDBYZKR0-bGvcVxYOTJawWB40r62o1UNpYJTjlzxxGAWPWXeHdT68EKLYt3_13KTBhv4W"
-              "-GwnApphJXzXWP0IEu1fMWGUT4kSvJ1jZ5bt6LPyWv6_J1a1U498MPc1OHkCHv7u7bYJWXhlWfS"
-              "F2JW-6TEyE8JblAcz6IlsBoaisNUhYbR92ohtMpT4i-2j5xAVV-2A_raeK60Ud8_pKER5nWyqPz5"
-              "J-hKs2s",        },
+          "Authorization": "Bearer ",        },
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
